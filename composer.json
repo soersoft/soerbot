@@ -1,0 +1,12 @@
+{
+    "name": "sal/bot",
+    "require": {
+        "charlottedunois/livia": "^0.3.1"
+    },
+    "authors": [
+        {
+            "name": "Evgeniy Sergeev",
+            "email": "esergeev777@yandex.ru"
+        }
+    ]
+}
