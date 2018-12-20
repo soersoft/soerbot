@@ -16,11 +16,6 @@ use React\Promise\ExtendedPromiseInterface;
 class Up extends Command
 {
     /**
-     * @var string
-     */
-    const RESPONSE_MESSAGE = '%s Pong! The message round-trip took %d ms. The WS heartbeat is %d ms.';
-
-    /**
      * Конфигурации команды.
      *
      * @var array
@@ -29,7 +24,7 @@ class Up extends Command
         'name' => 'up',
         'aliases' => array(),
         'group' => 'commands',
-        'description' => 'Sends a ping and measures the latency between command message and ping message. It will also display websocket ping.',
+        'description' => 'Увеличивает рейтинг пользователя.',
         'guildOnly' => false,
         'throttling' => array(
             'usages' => 5,
@@ -94,11 +89,9 @@ class Up extends Command
      */
     public function updateRank($user, $rankAdd)
     {
-        if (key_exists($user, $this->rank)) {
-            $this->rank[$user] += $rankAdd;
-        } else {
-            $this->rank[$user] = $rankAdd;
-        }
+        $this->rank[$user] = key_exists($user, $this->rank)
+            ? $this->rank[$user] + $rankAdd
+            : $rankAdd;
     }
 
     /**
