@@ -1,0 +1,7 @@
+language: php
+php: 
+  - 7.1
+before_install:
+  - sudo apt-get update > /dev/null
+install:  
+  - composer install

@@ -7,3 +7,4 @@ vendor/*
 *.token
 composer.lock
 index.php
+.idea
