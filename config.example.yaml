@@ -1,0 +1,6 @@
+auth-user: username
+auth-key: auth-key
+db-connection-login: dbuser
+db-connection-password: dbpassword
+db-connection-port: dbport
+db-connection-host: dbhost
