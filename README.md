@@ -1,4 +1,4 @@
-# soerbot
+# soerbot [![Build Status](https://travis-ci.org/esergeev/soerbot.svg?branch=master)](https://travis-ci.org/esergeev/soerbot)
 
 # Installation
 
