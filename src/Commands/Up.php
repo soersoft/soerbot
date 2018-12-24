@@ -3,14 +3,14 @@
 namespace SoerBot\Commands;
 
 use ArrayObject;
+use RuntimeException;
 use CharlotteDunois\Livia\CommandMessage;
-use CharlotteDunois\Livia\Commands\Command;
 use CharlotteDunois\Yasmin\Models\Message;
-use \RuntimeException;
+use CharlotteDunois\Livia\Commands\Command;
 use React\Promise\ExtendedPromiseInterface;
 
 /**
- * Class Up
+ * Class Up.
  * @package SoerBot\Commands\Up
  */
 class Up extends Command
@@ -22,15 +22,15 @@ class Up extends Command
      */
     private $config = [
         'name' => 'up',
-        'aliases' => array(),
+        'aliases' => [],
         'group' => 'commands',
         'description' => 'Увеличивает рейтинг пользователя.',
         'guildOnly' => false,
-        'throttling' => array(
+        'throttling' => [
             'usages' => 5,
-            'duration' => 10
-        ),
-        'guarded' => true
+            'duration' => 10,
+        ],
+        'guarded' => true,
     ];
 
     protected $rank = [];
@@ -73,7 +73,7 @@ class Up extends Command
         $arguments = $message->parseCommandArgs();
 
         if (empty($arguments)) {
-            throw new RuntimeException("Параметры отсутствуют");
+            throw new RuntimeException('Параметры отсутствуют');
         }
 
         list($user, $rankAdd) = $this->parseArguments($arguments);
@@ -102,9 +102,9 @@ class Up extends Command
     {
         $spliteArguments = explode(' ', $arguments);
 
-        return array(
+        return [
             $spliteArguments[1],
-            (int) $spliteArguments[0]
-        );
+            (int) $spliteArguments[0],
+        ];
     }
 }
