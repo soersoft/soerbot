@@ -4,6 +4,7 @@ namespace SoerBot;
 
 use React\EventLoop\Factory;
 use CharlotteDunois\Livia\LiviaClient;
+use SoerBot\Database\Settings\CapsuleSetup;
 
 class Runner
 {
@@ -28,6 +29,8 @@ class Runner
     {
         $this->loop = $loop ?? $this->makeLoop();
         $this->client = $client ?? $this->makeClient();
+
+        CapsuleSetup::setup();
     }
 
     public function execute()

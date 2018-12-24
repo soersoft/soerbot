@@ -67,10 +67,15 @@ class Configurator
     }
 
     /**
+     * @throws ConfigurationFileNotFound
      * @return array
      */
     public static function all()
     {
+        if (empty(self::$configurations)) {
+            self::load();
+        }
+
         return self::$configurations;
     }
 }
