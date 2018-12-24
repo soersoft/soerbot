@@ -2,11 +2,11 @@
 
 namespace SoerBot;
 
-use SoerBot\Exceptions\ConfigurationFileNotFound;
 use Symfony\Component\Yaml\Yaml;
+use SoerBot\Exceptions\ConfigurationFileNotFound;
 
 /**
- * Class Configurator
+ * Class Configurator.
  *
  * @package SoerBot
  */
@@ -41,8 +41,8 @@ class Configurator
     /**
      * @param $key
      * @param null $default
-     * @return mixed|null
      * @throws ConfigurationFileNotFound
+     * @return mixed|null
      */
     public static function get($key, $default = null)
     {
@@ -60,7 +60,6 @@ class Configurator
     public static function load()
     {
         if (!file_exists(self::$path)) {
-
             throw new ConfigurationFileNotFound();
         }
 

@@ -19,9 +19,11 @@
     "scripts": {
         "post-install-cmd": [
             "@php -r \"file_exists('config.yaml') || copy('config.example.yaml', 'config.yaml');\""
-        ]
+        ],
+        "style-fix": "vendor\\bin\\php-cs-fixer fix"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5"
+        "phpunit/phpunit": "^7.5",
+        "friendsofphp/php-cs-fixer": "^2.13"
     }
 }

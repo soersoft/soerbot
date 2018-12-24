@@ -1,5 +1,8 @@
-auth-user: username
-auth-key: auth-key
+users:
+  - username
+  - username
+key: auth-key
+command-prefix: $
 db-connection-login: dbuser
 db-connection-password: dbpassword
 db-connection-port: dbport

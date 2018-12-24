@@ -77,7 +77,6 @@ class ConfiguratorTest extends TestCase
      */
     public function testThrowExceptionIfConfigFileNotFound()
     {
-
         $this->expectException(ConfigurationFileNotFound::class);
         Configurator::setConfigPath('');
 
