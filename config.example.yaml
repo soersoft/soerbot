@@ -3,7 +3,10 @@ users:
   - username
 key: auth-key
 command-prefix: $
-db-connection-login: dbuser
-db-connection-password: dbpassword
-db-connection-port: dbport
-db-connection-host: dbhost
+db-connection:
+  driver: 'mysql'
+  username: dbuser
+  password: dbpassword
+  port: dbport
+  host: pdhost
+  database: dbname
