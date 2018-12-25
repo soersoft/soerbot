@@ -16,8 +16,4 @@ if (!Capsule::schema()->hasTable('ranks')) {
         $table->bigInteger('rank')->default(0);
         $table->timestamps();
     });
-
-    dump("Table ranks created!");
 }
-
-dump('Migration done!');
