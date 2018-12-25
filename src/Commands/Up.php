@@ -24,6 +24,21 @@ class Up extends Command
     const SUCCESS_MESSAGE = 'У пользователя: %s карма %d';
 
     /**
+     * Index argument for user.
+     *
+     * @var int
+     */
+    const USER_INDEX = 0;
+
+    /**
+     * Index argument for rank.
+     *
+     * @var int
+     */
+    const RANK_INDEX = 1;
+
+
+    /**
      * Конфигурации команды.
      *
      * @var array
@@ -110,8 +125,8 @@ class Up extends Command
         $spliteArguments = explode(' ', $arguments);
 
         return [
-            'user' => $spliteArguments[1],
-            'rank' => (int) $spliteArguments[0],
+            'user' => $spliteArguments[self::USER_INDEX],
+            'rank' => (int) $spliteArguments[self::RANK_INDEX],
         ];
     }
 
