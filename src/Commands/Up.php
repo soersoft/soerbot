@@ -4,6 +4,7 @@ namespace SoerBot\Commands;
 
 use ArrayObject;
 use RuntimeException;
+use SoerBot\Services\RankService;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Yasmin\Models\Message;
 use CharlotteDunois\Livia\Commands\Command;
@@ -15,6 +16,13 @@ use React\Promise\ExtendedPromiseInterface;
  */
 class Up extends Command
 {
+    /**
+     * Message for success response.
+     *
+     * @var string
+     */
+    const SUCCESS_MESSAGE = 'У пользователя: %s карма %d';
+
     /**
      * Конфигурации команды.
      *
@@ -33,8 +41,6 @@ class Up extends Command
         'guarded' => true,
     ];
 
-    protected $rank = [];
-
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client, array $info)
     {
         parent::__construct($client, $this->config);
@@ -50,25 +56,70 @@ class Up extends Command
     public function run(CommandMessage $message, ArrayObject $args, bool $fromPattern)
     {
         try {
-            $user = $this->processing($message);
-
-            return $message->say('Pinging...')->then(function ($msg) use ($user) {
-                return $msg->edit(
-                    "У пользователя: {$user} карма {$this->rank[$user]}"
-                );
-            });
+            $responseMessage = sprintf(
+                self::SUCCESS_MESSAGE,
+                $user = $this->processing($message),
+                $this->service()->getRank($user)
+            );
         } catch (\Exception $exception) {
-            return $message->say('Pinging...')->then(function ($msg) use ($exception) {
-                return $msg->edit($exception->getMessage());
-            });
+            $responseMessage = $exception->getMessage();
         }
+
+        return $this->say($message, $responseMessage);
+    }
+
+    /**
+     * @param $message
+     * @param $responseContent
+     * @return mixed
+     */
+    private function say($message, $responseContent)
+    {
+        return $message->say('Pinging...')->then(function ($msg) use ($responseContent) {
+            return $msg->edit($responseContent);
+        });
     }
 
     /**
      * @param CommandMessage $message
      * @return string
      */
-    public function processing(CommandMessage $message)
+    private function processing(CommandMessage $message)
+    {
+        $arguments = $this->arguments($message);
+
+        $this->service()->update($arguments['user'], $arguments['rank']);
+
+        return $arguments['user'];
+    }
+
+    /**
+     * @return RankService
+     */
+    private function service()
+    {
+        return new RankService();
+    }
+
+    /**
+     * @param $arguments
+     * @return array
+     */
+    private function parseArguments($arguments)
+    {
+        $spliteArguments = explode(' ', $arguments);
+
+        return [
+            'user' => $spliteArguments[1],
+            'rank' => (int) $spliteArguments[0],
+        ];
+    }
+
+    /**
+     * @param CommandMessage $message
+     * @return string|string[]
+     */
+    private function arguments(CommandMessage $message)
     {
         $arguments = $message->parseCommandArgs();
 
@@ -76,35 +127,6 @@ class Up extends Command
             throw new RuntimeException('Параметры отсутствуют');
         }
 
-        list($user, $rankAdd) = $this->parseArguments($arguments);
-
-        $this->updateRank($user, $rankAdd);
-
-        return $user;
-    }
-
-    /**
-     * @param $user
-     * @param $rankAdd
-     */
-    public function updateRank($user, $rankAdd)
-    {
-        $this->rank[$user] = key_exists($user, $this->rank)
-            ? $this->rank[$user] + $rankAdd
-            : $rankAdd;
-    }
-
-    /**
-     * @param $arguments
-     * @return array
-     */
-    public function parseArguments($arguments)
-    {
-        $spliteArguments = explode(' ', $arguments);
-
-        return [
-            $spliteArguments[1],
-            (int) $spliteArguments[0],
-        ];
+        return $this->parseArguments($arguments);
     }
 }

@@ -1,0 +1,8 @@
+users:
+  - username
+  - username
+key: auth-key
+command-prefix: $
+db-connection:
+  driver: 'sqlite'
+  database: ':memory:'
