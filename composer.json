@@ -1,7 +1,9 @@
 {
     "name": "sal/bot",
     "require": {
-        "charlottedunois/livia": "^0.3.1"
+        "charlottedunois/livia": "^0.3.1",
+        "illuminate/database": "^5.7",
+        "symfony/yaml": "^4.2"
     },
     "autoload": {
         "psr-4": {
@@ -15,7 +17,15 @@
             "email": "esergeev777@yandex.ru"
         }
     ],
+    "scripts": {
+        "post-install-cmd": [
+            "@php -r \"file_exists('config.yaml') || copy('config.example.yaml', 'config.yaml');\""
+        ],
+        "style-fix": "vendor\\bin\\php-cs-fixer fix",
+        "db-migrate": "php .\\database\\migrations.php"
+    },
     "require-dev": {
-        "phpunit/phpunit": "^7.5"
+        "phpunit/phpunit": "^7.5",
+        "friendsofphp/php-cs-fixer": "^2.13"
     }
 }

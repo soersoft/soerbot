@@ -8,3 +8,4 @@ vendor/*
 composer.lock
 index.php
 .idea
+config.yaml

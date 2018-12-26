@@ -1,0 +1,12 @@
+users:
+  - username
+  - username
+key: auth-key
+command-prefix: $
+db-connection:
+  driver: 'mysql'
+  username: dbuser
+  password: dbpassword
+  port: dbport
+  host: pdhost
+  database: dbname

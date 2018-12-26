@@ -3,18 +3,41 @@
 namespace SoerBot\Commands;
 
 use ArrayObject;
+use RuntimeException;
+use SoerBot\Services\RankService;
 use CharlotteDunois\Livia\CommandMessage;
-use CharlotteDunois\Livia\Commands\Command;
 use CharlotteDunois\Yasmin\Models\Message;
-use \RuntimeException;
+use CharlotteDunois\Livia\Commands\Command;
 use React\Promise\ExtendedPromiseInterface;
 
 /**
- * Class Up
+ * Class Up.
  * @package SoerBot\Commands\Up
  */
 class Up extends Command
 {
+    /**
+     * Message for success response.
+     *
+     * @var string
+     */
+    const SUCCESS_MESSAGE = 'У пользователя: %s карма %d';
+
+    /**
+     * Index argument for user.
+     *
+     * @var int
+     */
+    const USER_INDEX = 0;
+
+    /**
+     * Index argument for rank.
+     *
+     * @var int
+     */
+    const RANK_INDEX = 1;
+
+
     /**
      * Конфигурации команды.
      *
@@ -22,18 +45,16 @@ class Up extends Command
      */
     private $config = [
         'name' => 'up',
-        'aliases' => array(),
+        'aliases' => [],
         'group' => 'commands',
         'description' => 'Увеличивает рейтинг пользователя.',
         'guildOnly' => false,
-        'throttling' => array(
+        'throttling' => [
             'usages' => 5,
-            'duration' => 10
-        ),
-        'guarded' => true
+            'duration' => 10,
+        ],
+        'guarded' => true,
     ];
-
-    protected $rank = [];
 
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client, array $info)
     {
@@ -50,61 +71,77 @@ class Up extends Command
     public function run(CommandMessage $message, ArrayObject $args, bool $fromPattern)
     {
         try {
-            $user = $this->processing($message);
-
-            return $message->say('Pinging...')->then(function ($msg) use ($user) {
-                return $msg->edit(
-                    "У пользователя: {$user} карма {$this->rank[$user]}"
-                );
-            });
+            $responseMessage = sprintf(
+                self::SUCCESS_MESSAGE,
+                $user = $this->processing($message),
+                $this->service()->getRank($user)
+            );
         } catch (\Exception $exception) {
-            return $message->say('Pinging...')->then(function ($msg) use ($exception) {
-                return $msg->edit($exception->getMessage());
-            });
+            $responseMessage = $exception->getMessage();
         }
+
+        return $this->say($message, $responseMessage);
+    }
+
+    /**
+     * @param $message
+     * @param $responseContent
+     * @return mixed
+     */
+    private function say($message, $responseContent)
+    {
+        return $message->say('Pinging...')->then(function ($msg) use ($responseContent) {
+            return $msg->edit($responseContent);
+        });
     }
 
     /**
      * @param CommandMessage $message
      * @return string
      */
-    public function processing(CommandMessage $message)
+    private function processing(CommandMessage $message)
     {
-        $arguments = $message->parseCommandArgs();
+        $arguments = $this->arguments($message);
 
-        if (empty($arguments)) {
-            throw new RuntimeException("Параметры отсутствуют");
-        }
+        $this->service()->update($arguments['user'], $arguments['rank']);
 
-        list($user, $rankAdd) = $this->parseArguments($arguments);
-
-        $this->updateRank($user, $rankAdd);
-
-        return $user;
+        return $arguments['user'];
     }
 
     /**
-     * @param $user
-     * @param $rankAdd
+     * @return RankService
      */
-    public function updateRank($user, $rankAdd)
+    private function service()
     {
-        $this->rank[$user] = key_exists($user, $this->rank)
-            ? $this->rank[$user] + $rankAdd
-            : $rankAdd;
+        return new RankService();
     }
 
     /**
      * @param $arguments
      * @return array
      */
-    public function parseArguments($arguments)
+    private function parseArguments($arguments)
     {
         $spliteArguments = explode(' ', $arguments);
 
-        return array(
-            $spliteArguments[1],
-            (int) $spliteArguments[0]
-        );
+        return [
+            'user' => $spliteArguments[self::USER_INDEX],
+            'rank' => (int) $spliteArguments[self::RANK_INDEX],
+        ];
+    }
+
+    /**
+     * @param CommandMessage $message
+     * @return string|string[]
+     */
+    private function arguments(CommandMessage $message)
+    {
+        $arguments = $message->parseCommandArgs();
+
+        if (empty($arguments)) {
+            throw new RuntimeException('Параметры отсутствуют');
+        }
+
+        return $this->parseArguments($arguments);
     }
 }
