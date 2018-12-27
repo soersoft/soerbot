@@ -38,6 +38,8 @@ class Runner
         $this->settings();
         $this->logReadyState();
         $this->login();
+	$this->greeting();
+	$this->registerExitEvent();
         $this->runningLoop();
     }
 
@@ -87,6 +89,43 @@ class Runner
             ->done();
     }
 
+
+    /**
+     * @return void
+     */
+    private function registerExitEvent(): void
+    {
+	$this->client->once('stop', function() {
+		print('stop');
+		$this->loop->stop();
+	    });
+    }
+
+    /**
+     * @throws \Exception error
+     * @return void
+     */
+    public function greeting(): void
+    {
+
+	$this->client->once('ready', function () {
+	    try {
+        	$channel = $this->client->channels->first(function ($channel) {
+            	    return ($channel->name === 'основной');
+        	});
+        
+    		if($channel) {
+			print ("Send");
+        		$channel->send('SoerBot started in development mode.')
+                		->done(null, function ($error) {
+	                            echo $error.PHP_EOL;
+        		        });
+    		}
+	    } catch(\Exception $error) {
+	    }
+
+	});
+    }
     /**
      * @return void
      */
