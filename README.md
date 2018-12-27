@@ -11,7 +11,3 @@ composer install
 php run.php [USER_ID] [SECRET_KEY] 
 
 
-# Misc
-
-WebHooks added
-CI added
