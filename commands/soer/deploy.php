@@ -6,7 +6,7 @@ return function ($client) {
                 'name' => 'deploy',
                 'aliases' => array(),
                 'group' => 'utils',
-                'description' => '',
+                'description' => 'Deploy command',
                 'guildOnly' => false,
                 'throttling' => array(
                     'usages' => 5,
