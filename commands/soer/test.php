@@ -28,6 +28,7 @@ return function ($client) {
             return $message->say('Pinging...')->then(function ($msg) use ($message) {
                 $time = \CharlotteDunois\Yasmin\Utils\Snowflake::deconstruct($msg->id)->timestamp - \CharlotteDunois\Yasmin\Utils\Snowflake::deconstruct($message->id)->timestamp;
                 
+		$this->client->emit('stop');
                 $ping = $this->client->getPing();
                 if(!\is_int($ping)) {
                     $ping = 0;
