@@ -116,7 +116,7 @@ class Runner
         
     		if($channel) {
 			print ("Send");
-        		$channel->send('SoerBot started in development mode.')
+        		$channel->send('SoerBot started in development mode. Update from commit.')
                 		->done(null, function ($error) {
 	                            echo $error.PHP_EOL;
         		        });
