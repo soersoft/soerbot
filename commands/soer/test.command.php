@@ -1,4 +1,5 @@
 <?php
+
 return function ($client) {
     return (new class($client) extends \CharlotteDunois\Livia\Commands\Command
     {
@@ -28,7 +29,6 @@ return function ($client) {
 
         function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
         {
-            var_dump($args['memberr']->highestRole->name);
             return  $message->say('...');
         }
     });
