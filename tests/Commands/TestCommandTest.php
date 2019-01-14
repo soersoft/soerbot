@@ -23,6 +23,8 @@ class TestCommandTest extends TestCase
         $client->expects($this->exactly(2))->method('__get')->with('registry')->willReturn($registry);
 
         $this->command = $commandCreate($client);
+
+        parent::setUp();
     }
 
     public function testSimpleResponseToTheDiscord(): void
@@ -32,7 +34,7 @@ class TestCommandTest extends TestCase
         $promise = new Promise(function () { });
 
         $commandMessage->expects($this->once())->method('say')->with('...')->willReturn($promise);
-
+ 
         $this->command->run($commandMessage, new ArrayObject(), false);
     }
 }
