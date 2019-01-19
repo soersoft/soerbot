@@ -31,5 +31,11 @@ return function ($client) {
     {
       return  $message->say('help [rules|channel]');
     }
+
+    function serialize() {
+      
+      return [];
+  }
+  
   });
 };

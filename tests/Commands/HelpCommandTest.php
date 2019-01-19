@@ -62,4 +62,9 @@ class HelpCommandTest extends TestCase
         $this->assertEquals($this->command->args[0]['prompt'], 'Укажите топик: rules, channels');
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
+
+    // this hack used when test is faild and PHPUnit makes serialization of object properties
+    public function __sleep() {
+      $this->command = null;
+    }
 }
