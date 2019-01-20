@@ -35,6 +35,12 @@ class Runner
 
     public function execute()
     {
+
+        if ($this->config('debug', false)) 
+        {
+            $this->client->on('debug', function($message) {print($message."\n");});
+        }
+
         $this->settings();
         $this->logReadyState();
         $this->login();
@@ -64,7 +70,8 @@ class Runner
 
         // Register our commands (this is an example path)
         // TODO вынести регистрацию команд из файла в структуру.
-        $this->client->registry->registerCommandsIn(__DIR__ . '/../commands/');
+        $commandPaths = \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch(__DIR__.'/../commands', '*.command.php');
+        $this->client->registry->registerCommand(...$commandPaths);
     }
 
     /**
