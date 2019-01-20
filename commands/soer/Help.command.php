@@ -29,6 +29,17 @@ return function ($client) {
 
     function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
+      $basePath = dirname(__FILE__);
+      switch($args['topic']) {
+        case 'rules':
+          $helpTopic = \file_get_contents($basePath.'/help.topic/rules.md');
+          return $message->say($helpTopic);
+        break;
+        case 'channels':
+          $helpTopic = \file_get_contents($basePath.'/help.topic/channel.md');
+          return $message->say($helpTopic);
+        break;
+      }
       return  $message->say('help [rules|channel]');
     }
 

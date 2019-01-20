@@ -4,6 +4,7 @@ namespace Tests\Commands;
 
 use Tests\TestCase;
 use React\Promise\Promise;
+use CharlotteDunois\Livia\Types\StringArgumentType;
 use ArrayObject;
 
 class HelpCommandTest extends TestCase
@@ -42,25 +43,37 @@ class HelpCommandTest extends TestCase
        $this->assertArrayHasKey('label', $this->command->args[0]);
        $this->assertArrayHasKey('prompt', $this->command->args[0]);
        $this->assertArrayHasKey('type', $this->command->args[0]);
+
+       $this->assertEquals($this->command->args[0]['key'], 'topic');
+       $this->assertEquals($this->command->args[0]['label'], 'topic');
+       $this->assertEquals($this->command->args[0]['prompt'], 'Укажите топик: rules, channels');
+       $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
     public function testSimpleResponseToTheDiscord(): void
     {
-
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () { });
-
         $commandMessage->expects($this->once())->method('say')->with('help [rules|channel]')->willReturn($promise);
- 
         $this->command->run($commandMessage, new ArrayObject(), false);
     }
 
     public function testHelpRulesArgument(): void
     {
-        $this->assertEquals($this->command->args[0]['key'], 'topic');
-        $this->assertEquals($this->command->args[0]['label'], 'topic');
-        $this->assertEquals($this->command->args[0]['prompt'], 'Укажите топик: rules, channels');
-        $this->assertEquals($this->command->args[0]['type'], 'string');
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $promise = new Promise(function () { });
+        $rulesContent = \file_get_contents(dirname(__FILE__).'/../../commands/soer/help.topic/rules.md');
+        $commandMessage->expects($this->once())->method('say')->with($rulesContent)->willReturn($promise);
+        $this->command->run($commandMessage, new ArrayObject(['topic' => 'rules']), false);
+    }
+
+    public function testHelpChannelArgument(): void
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $promise = new Promise(function () { });
+        $channelContent = \file_get_contents(dirname(__FILE__).'/../../commands/soer/help.topic/channel.md');
+        $commandMessage->expects($this->once())->method('say')->with($channelContent)->willReturn($promise);
+        $this->command->run($commandMessage, new ArrayObject(['topic' => 'channels']), false);
     }
 
     // this hack used when test is faild and PHPUnit makes serialization of object properties
