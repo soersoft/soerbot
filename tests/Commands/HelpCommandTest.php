@@ -55,7 +55,7 @@ class HelpCommandTest extends TestCase
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () { });
         $commandMessage->expects($this->once())->method('say')->with('help [rules|channel]')->willReturn($promise);
-        $this->command->run($commandMessage, new ArrayObject(), false);
+        $this->command->run($commandMessage, new ArrayObject(['topic' => '']), false);
     }
 
     public function testHelpRulesArgument(): void
