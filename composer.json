@@ -8,6 +8,7 @@
     "autoload": {
         "psr-4": {
             "SoerBot\\": "src/",
+            "SoerBot\\Commands\\": "commands/",
             "Tests\\": "tests/"
         }
     },
@@ -21,7 +22,7 @@
         "post-install-cmd": [
             "@php -r \"file_exists('config.yaml') || copy('config.example.yaml', 'config.yaml');\""
         ],
-        "style-fix": "vendor\\bin\\php-cs-fixer fix",
+        "style-fix": "vendor/bin/php-cs-fixer fix",
         "db-migrate": "php .\\database\\migrations.php"
     },
     "require-dev": {

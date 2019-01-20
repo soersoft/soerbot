@@ -2,17 +2,17 @@
 
 namespace Tests\Commands;
 
+use ArrayObject;
 use Tests\TestCase;
 use React\Promise\Promise;
-use ArrayObject;
 
 class TestCommandTest extends TestCase
 {
-
     private $command;
 
-    protected function setUp() {
-        $commandCreate = require './commands/soer/test.command.php';
+    protected function setUp()
+    {
+        $commandCreate = require __DIR__ . '/../../commands/Soer/test.command.php';
 
         $client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
         $registry = $this->createMock('\CharlotteDunois\Livia\CommandRegistry');
@@ -29,12 +29,12 @@ class TestCommandTest extends TestCase
 
     public function testSimpleResponseToTheDiscord(): void
     {
-
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () { });
+        $promise = new Promise(function () {
+        });
 
         $commandMessage->expects($this->once())->method('say')->with('...')->willReturn($promise);
- 
+
         $this->command->run($commandMessage, new ArrayObject(), false);
     }
 }
