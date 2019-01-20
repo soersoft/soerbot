@@ -38,8 +38,8 @@ class Runner
         $this->settings();
         $this->logReadyState();
         $this->login();
-	$this->greeting();
-	$this->registerExitEvent();
+	    $this->greeting();
+	    $this->registerExitEvent();
         $this->runningLoop();
     }
 
@@ -56,9 +56,9 @@ class Runner
      */
     public function settings(): void
     {
-        // Registers default commands, command groups and argument types
-        $this->client->registry->registerDefaults();
-
+        // Не регистрируем дефолтные команды, поэтому не используем $this->client->registry->registerDefaults();
+        $this->client->registry->registerDefaultTypes();
+        $this->client->registry->registerDefaultGroups();
         // Register the command group for our example command
         $this->client->registry->registerGroup(['id' => 'moderation', 'name' => 'Moderation']);
 

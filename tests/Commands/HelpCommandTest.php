@@ -31,7 +31,7 @@ class HelpCommandTest extends TestCase
 
     public function testHelpBasics()
     {
-       $this->assertEquals($this->command->name, 'helps');
+       $this->assertEquals($this->command->name, 'help');
        $this->assertEquals($this->command->description, 'Description');
        $this->assertEquals($this->command->groupID, 'utils');
     }

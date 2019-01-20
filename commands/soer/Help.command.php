@@ -6,7 +6,7 @@ return function ($client) {
     function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
       parent::__construct($client, array(
-        'name' => 'helps', // Give command name
+        'name' => 'help', // Give command name
         'aliases' => array(),
         'group' => 'utils', // Group in ['command', 'util']
         'description' => 'Description', // Fill the description
