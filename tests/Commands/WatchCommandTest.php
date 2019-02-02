@@ -20,6 +20,7 @@ class WatchCommandTest extends TestCase
 
         $this->client->expects($this->once())->method('on')->with('message');
 
+
         $this->command = $commandCreate($this->client);
 
         parent::setUp();
@@ -45,6 +46,8 @@ class WatchCommandTest extends TestCase
 
     public function testWatchMethod(): void
     {
+      
+
       $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
       $author = $this->createMock('CharlotteDunois\Yasmin\Models\User');
       $embed = $this->createMock('CharlotteDunois\Yasmin\Models\MessageEmbed');
@@ -61,7 +64,8 @@ class WatchCommandTest extends TestCase
           ['value' => '`develop`]', name => 'Branch']
       ]);
 
-      $this->client->expects($this->once())->method('emit')->with('stop');
+      $this->client->expects($this->at(0))->method('emit')->with('stop');
+      $this->client->expects($this->at(1))->method('emit')->with('debug');
 
       $this->command->watch($message);
     }

@@ -18,7 +18,7 @@ return function ($client) {
         'guarded' => true,
         'args' => array()
       ));
-      $client->on('message', [$this, watch]);
+      $client->on('message', [$this, 'watch']);
     }
 
     function watch(CharlotteDunois\Yasmin\Models\Message $arg) {
@@ -29,7 +29,7 @@ return function ($client) {
           if ($field['name'] == 'Branch' && strpos($field['value'], 'develop') > 0)
           {
             $this->client->emit('stop');
-            print('it seems test is ok');
+            $this->client->emit('debug', 'it seems test is ok');
           }
         }
         
