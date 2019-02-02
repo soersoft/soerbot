@@ -45,8 +45,25 @@ class WatchCommandTest extends TestCase
 
     public function testWatchMethod(): void
     {
+      $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
+      $author = $this->createMock('CharlotteDunois\Yasmin\Models\User');
+      $embed = $this->createMock('CharlotteDunois\Yasmin\Models\MessageEmbed');
+
+      $message->expects($this->at(0))->method('__get')->with('author')->willReturn($author);
+      $author->expects($this->once())->method('__get')->with('username')->willReturn('Spidey Bot');
+
+      $message->expects($this->at(1))->method('__get')->with('embeds')->willReturn([$embed]);
+      $message->expects($this->at(2))->method('__get')->with('embeds')->willReturn([$embed]);
+
+      $embed->expects($this->at(0))->method('__get')->with('color')->willReturn(3066993);
+      $embed->expects($this->at(1))->method('__get')->with('fields')->willReturn([
+          ['value' => '[`6ca62d8`]', 'name' => 'Commit'],
+          ['value' => '`develop`]', name => 'Branch']
+      ]);
+
       $this->client->expects($this->once())->method('emit')->with('stop');
-      $this->command->watch([]);
+
+      $this->command->watch($message);
     }
 
     public function __sleep()

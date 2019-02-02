@@ -1,6 +1,7 @@
 object(CharlotteDunois\Yasmin\Models\Message)#432 (19) {
   ["id"]=>
   string(18) "541188602227589130"
+
   ["author"]=>
   object(CharlotteDunois\Yasmin\Models\User)#424 (11) {
     ["id"]=>
@@ -26,6 +27,8 @@ object(CharlotteDunois\Yasmin\Models\Message)#432 (19) {
     ["lastMessageID"]=>
     string(18) "541188602227589130"
   }
+
+
   ["channel"]=>
   object(CharlotteDunois\Yasmin\Models\TextChannel)#207 (15) {
     ["guild"]=>
@@ -824,6 +827,10 @@ object(CharlotteDunois\Yasmin\Models\Message)#432 (19) {
     ["lastMessageID"]=>
     string(18) "541186790288261139"
   }
+
+
+
+  
   ["content"]=>
   string(0) ""
   ["createdTimestamp"]=>
