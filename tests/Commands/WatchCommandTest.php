@@ -1,13 +1,13 @@
 <?php
+
 namespace Tests\Commands;
 
+use ArrayObject;
 use Tests\TestCase;
 use React\Promise\Promise;
-use ArrayObject;
 
 class WatchCommandTest extends TestCase
 {
-
     private $command;
 
     protected function setUp()
@@ -20,7 +20,6 @@ class WatchCommandTest extends TestCase
 
         $this->client->expects($this->once())->method('on')->with('message');
 
-
         $this->command = $commandCreate($this->client);
 
         parent::setUp();
@@ -28,46 +27,44 @@ class WatchCommandTest extends TestCase
 
     public function testWatchBasics()
     {
-       $this->assertEquals($this->command->name, 'watch');
-       $this->assertEquals($this->command->description, 'Check every message');
-       $this->assertEquals($this->command->groupID, 'utils');
+        $this->assertEquals($this->command->name, 'watch');
+        $this->assertEquals($this->command->description, 'Check every message');
+        $this->assertEquals($this->command->groupID, 'utils');
     }
 
     public function testSimpleResponseToTheDiscord(): void
     {
-
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () { });
+        $promise = new Promise(function () {
+        });
 
         $commandMessage->expects($this->once())->method('say')->with('...')->willReturn($promise);
- 
+
         $this->command->run($commandMessage, new ArrayObject(), false);
     }
 
     public function testWatchMethod(): void
     {
-      
+        $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
+        $author = $this->createMock('CharlotteDunois\Yasmin\Models\User');
+        $embed = $this->createMock('CharlotteDunois\Yasmin\Models\MessageEmbed');
 
-      $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
-      $author = $this->createMock('CharlotteDunois\Yasmin\Models\User');
-      $embed = $this->createMock('CharlotteDunois\Yasmin\Models\MessageEmbed');
+        $message->expects($this->at(0))->method('__get')->with('author')->willReturn($author);
+        $author->expects($this->once())->method('__get')->with('username')->willReturn('Spidey Bot');
 
-      $message->expects($this->at(0))->method('__get')->with('author')->willReturn($author);
-      $author->expects($this->once())->method('__get')->with('username')->willReturn('Spidey Bot');
+        $message->expects($this->at(1))->method('__get')->with('embeds')->willReturn([$embed]);
+        $message->expects($this->at(2))->method('__get')->with('embeds')->willReturn([$embed]);
 
-      $message->expects($this->at(1))->method('__get')->with('embeds')->willReturn([$embed]);
-      $message->expects($this->at(2))->method('__get')->with('embeds')->willReturn([$embed]);
-
-      $embed->expects($this->at(0))->method('__get')->with('color')->willReturn(3066993);
-      $embed->expects($this->at(1))->method('__get')->with('fields')->willReturn([
+        $embed->expects($this->at(0))->method('__get')->with('color')->willReturn(3066993);
+        $embed->expects($this->at(1))->method('__get')->with('fields')->willReturn([
           ['value' => '[`6ca62d8`]', 'name' => 'Commit'],
-          ['value' => '`develop`]', 'name' => 'Branch']
+          ['value' => '`develop`]', 'name' => 'Branch'],
       ]);
 
-      $this->client->expects($this->at(0))->method('emit')->with('stop');
-      $this->client->expects($this->at(1))->method('emit')->with('debug');
+        $this->client->expects($this->at(0))->method('emit')->with('stop');
+        $this->client->expects($this->at(1))->method('emit')->with('debug');
 
-      $this->command->watch($message);
+        $this->command->watch($message);
     }
 
     public function __sleep()
