@@ -18,7 +18,7 @@ return function ($client) {
         'guarded' => true,
         'args' => array()
       ));
-      $client->on('message', function($arg) {var_dump($arg);});
+      $client->on('message', function($arg) {var_dump($arg->serialize());});
     }
 
     function watch($arg) {
