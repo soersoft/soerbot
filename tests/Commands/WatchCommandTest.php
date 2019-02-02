@@ -61,7 +61,7 @@ class WatchCommandTest extends TestCase
       $embed->expects($this->at(0))->method('__get')->with('color')->willReturn(3066993);
       $embed->expects($this->at(1))->method('__get')->with('fields')->willReturn([
           ['value' => '[`6ca62d8`]', 'name' => 'Commit'],
-          ['value' => '`develop`]', name => 'Branch']
+          ['value' => '`develop`]', 'name' => 'Branch']
       ]);
 
       $this->client->expects($this->at(0))->method('emit')->with('stop');
