@@ -5,6 +5,7 @@ namespace Tests\Commands;
 use ArrayObject;
 use Tests\TestCase;
 use React\Promise\Promise;
+use SoerBot\Configurator;
 
 class WatchCommandTest extends TestCase
 {
@@ -45,6 +46,8 @@ class WatchCommandTest extends TestCase
 
     public function testWatchMethod(): void
     {
+        $pathToStubConfig = realpath(__DIR__ . '/Fixtures/config.stub.yaml');
+
         $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
         $author = $this->createMock('CharlotteDunois\Yasmin\Models\User');
         $embed = $this->createMock('CharlotteDunois\Yasmin\Models\MessageEmbed');
