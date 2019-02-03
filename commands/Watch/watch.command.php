@@ -20,6 +20,10 @@ return function ($client) {
             $client->on('message', [$this, 'watch']);
         }
 
+        /**
+         * Функция отслеживает появление новых сообщений и если они соответствуют условиям, выполняет 
+         * заданное действие
+         */
         public function watch(CharlotteDunois\Yasmin\Models\Message $arg)
         {
             if ($arg->author->username == 'Spidey Bot' && $arg->embeds[0]->color == 3066993) {
