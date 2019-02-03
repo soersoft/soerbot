@@ -1,8 +1,12 @@
 users:
   - username
   - username
+debug: false
 key: auth-key
 command-prefix: $
+SpideyBot:
+  branch: branch-name
+  color: test-result-color
 db-connection:
   driver: 'mysql'
   username: dbuser

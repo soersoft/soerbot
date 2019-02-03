@@ -3,6 +3,7 @@
 namespace SoerBot\Commands\Watch\WatcherActors;
 
 use SoerBot\Watcher\Interfaces\WatcherActorInterface;
+use SoerBot\Configurator;
 
 class SpideyBotWatcherActor implements WatcherActorInterface
 {
@@ -19,11 +20,12 @@ class SpideyBotWatcherActor implements WatcherActorInterface
      */
     public function isPassRequirements(\CharlotteDunois\Yasmin\Models\Message $message)
     {
-        if ($message->author->username == 'Spidey Bot' && $message->embeds[0]->color == 3066993) 
+        $config = Configurator::get('SpideyBot', ['branch' => 'develop', 'color' => 3066993]);
+        if ($message->author->username == 'Spidey Bot' && $message->embeds[0]->color == $config['color']) 
         {
             foreach ($message->embeds[0]->fields as $field) 
             {
-                if ($field['name'] == 'Branch' && strpos($field['value'], 'develop') > 0) 
+                if ($field['name'] == 'Branch' && strpos($field['value'], $config['branch']) > 0) 
                 {
                     return true;
                 }
