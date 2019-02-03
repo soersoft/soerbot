@@ -24,10 +24,10 @@ return function ($client) {
          * Функция отслеживает появление новых сообщений и если они соответствуют условиям, выполняет 
          * заданное действие
          */
-        public function watch(CharlotteDunois\Yasmin\Models\Message $arg)
+        public function watch(CharlotteDunois\Yasmin\Models\Message $message)
         {
-            if ($arg->author->username == 'Spidey Bot' && $arg->embeds[0]->color == 3066993) {
-                foreach ($arg->embeds[0]->fields as $field) {
+            if ($message->author->username == 'Spidey Bot' && $message->embeds[0]->color == 3066993) {
+                foreach ($message->embeds[0]->fields as $field) {
                     if ($field['name'] == 'Branch' && strpos($field['value'], 'develop') > 0) {
                         $this->client->emit('stop');
                         $this->client->emit('debug', 'it seems test is ok');
