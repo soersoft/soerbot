@@ -1,6 +1,6 @@
 Please add the following code to ./git/hooks/pre-commit
 
-#On Mac
+# On Mac
 ```
 #!/usr/bin/env bash
 
