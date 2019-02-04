@@ -4,8 +4,8 @@ namespace Tests\Commands;
 
 use ArrayObject;
 use Tests\TestCase;
-use React\Promise\Promise;
 use SoerBot\Configurator;
+use React\Promise\Promise;
 
 class WatchCommandTest extends TestCase
 {
@@ -44,8 +44,8 @@ class WatchCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(), false);
     }
 
-    public function testWatchMethod(): void {
-        
+    public function testWatchMethod(): void
+    {
         $pathToStubConfig = realpath(__DIR__ . '/../Fixtures/config.stub.yaml');
         Configurator::setConfigPath($pathToStubConfig);
 
