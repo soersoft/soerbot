@@ -45,6 +45,7 @@ class WatchCommandTest extends TestCase
     }
 
     public function testWatchMethod(): void {
+        
         $pathToStubConfig = realpath(__DIR__ . '/../Fixtures/config.stub.yaml');
         Configurator::setConfigPath($pathToStubConfig);
 
