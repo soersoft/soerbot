@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands;
+namespace SoerBot\Commands\Up;
 
 use ArrayObject;
 use RuntimeException;
@@ -14,7 +14,7 @@ use React\Promise\ExtendedPromiseInterface;
  * Class Up.
  * @package SoerBot\Commands\Up
  */
-class Up extends Command
+class UpCommand extends Command
 {
     /**
      * Message for success response.
@@ -37,7 +37,6 @@ class Up extends Command
      */
     const RANK_INDEX = 1;
 
-
     /**
      * Конфигурации команды.
      *
@@ -56,7 +55,7 @@ class Up extends Command
         'guarded' => true,
     ];
 
-    public function __construct(\CharlotteDunois\Livia\LiviaClient $client, array $info)
+    public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
         parent::__construct($client, $this->config);
     }

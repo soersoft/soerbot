@@ -35,11 +35,17 @@ class Runner
 
     public function execute()
     {
+        if ($this->config('debug', false)) {
+            $this->client->on('debug', function ($message) {
+                echo $message . "\n";
+            });
+        }
+
         $this->settings();
         $this->logReadyState();
         $this->login();
-	$this->greeting();
-	$this->registerExitEvent();
+        $this->greeting();
+        $this->registerExitEvent();
         $this->runningLoop();
     }
 
@@ -56,15 +62,15 @@ class Runner
      */
     public function settings(): void
     {
-        // Registers default commands, command groups and argument types
-        $this->client->registry->registerDefaults();
-
+        // Не регистрируем дефолтные команды, поэтому не используем $this->client->registry->registerDefaults();
+        $this->client->registry->registerDefaultTypes();
+        $this->client->registry->registerDefaultGroups();
         // Register the command group for our example command
         $this->client->registry->registerGroup(['id' => 'moderation', 'name' => 'Moderation']);
 
         // Register our commands (this is an example path)
         // TODO вынести регистрацию команд из файла в структуру.
-        $this->client->registry->registerCommandsIn(__DIR__ . '/../commands/');
+        $this->client->registry->registerCommand(...$this->loadCommands());
     }
 
     /**
@@ -89,16 +95,15 @@ class Runner
             ->done();
     }
 
-
     /**
      * @return void
      */
     private function registerExitEvent(): void
     {
-	$this->client->once('stop', function() {
-		print('stop');
-		$this->loop->stop();
-	    });
+        $this->client->once('stop', function () {
+            echo 'stop';
+            $this->loop->stop();
+        });
     }
 
     /**
@@ -107,25 +112,24 @@ class Runner
      */
     public function greeting(): void
     {
+        $this->client->once('ready', function () {
+            try {
+                $channel = $this->client->channels->first(function ($channel) {
+                    return $channel->name === 'основной';
+                });
 
-	$this->client->once('ready', function () {
-	    try {
-        	$channel = $this->client->channels->first(function ($channel) {
-            	    return ($channel->name === 'основной');
-        	});
-        
-    		if($channel) {
-			print ("Send");
-        		$channel->send('SoerBot started in development mode. Update from commit.')
-                		->done(null, function ($error) {
-	                            echo $error.PHP_EOL;
-        		        });
-    		}
-	    } catch(\Exception $error) {
-	    }
-
-	});
+                if ($channel) {
+                    echo 'Send';
+                    $channel->send('SoerBot started in development mode.')
+                        ->done(null, function ($error) {
+                            echo $error . PHP_EOL;
+                        });
+                }
+            } catch (\Exception $error) {
+            }
+        });
     }
+
     /**
      * @return void
      */
@@ -168,5 +172,13 @@ class Runner
     private function config($key, $default = null)
     {
         return Configurator::get($key, $default);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function loadCommands()
+    {
+        return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch(__DIR__ . '/../commands', '*.command.php');
     }
 }

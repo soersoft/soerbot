@@ -1,0 +1,941 @@
+object(CharlotteDunois\Yasmin\Models\Message)#432 (19) {
+  ["id"]=>
+  string(18) "541188602227589130"
+
+  ["author"]=>
+  object(CharlotteDunois\Yasmin\Models\User)#424 (11) {
+    ["id"]=>
+    string(18) "527851667610402816"
+    ["username"]=>
+    string(10) "Spidey Bot"
+    ["discriminator"]=>
+    string(4) "0000"
+    ["bot"]=>
+    bool(true)
+    ["avatar"]=>
+    string(32) "cf0fc7c1b02764cb980ce8536912c4e3"
+    ["email"]=>
+    string(0) ""
+    ["mfaEnabled"]=>
+    NULL
+    ["verified"]=>
+    NULL
+    ["webhook"]=>
+    bool(true)
+    ["createdTimestamp"]=>
+    int(1545920044)
+    ["lastMessageID"]=>
+    string(18) "541188602227589130"
+  }
+
+
+  ["channel"]=>
+  object(CharlotteDunois\Yasmin\Models\TextChannel)#207 (15) {
+    ["guild"]=>
+    object(CharlotteDunois\Yasmin\Models\Guild)#372 (30) {
+      ["channels"]=>
+      object(CharlotteDunois\Yasmin\Models\ChannelStorage)#371 (4) {
+        [525177926501662742]=>
+        object(CharlotteDunois\Yasmin\Models\CategoryChannel)#367 (7) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "525177926501662742"
+          ["type"]=>
+          string(8) "category"
+          ["name"]=>
+          string(31) "Текстовые каналы"
+          ["position"]=>
+          int(0)
+          ["permissionOverwrites"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#209 (0) {
+          }
+          ["createdTimestamp"]=>
+          int(1545282575)
+        }
+        [525177926501662743]=>
+        *RECURSION*
+        [525177926501662744]=>
+        object(CharlotteDunois\Yasmin\Models\CategoryChannel)#204 (7) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "525177926501662744"
+          ["type"]=>
+          string(8) "category"
+          ["name"]=>
+          string(31) "Голосовые каналы"
+          ["position"]=>
+          int(0)
+          ["permissionOverwrites"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#355 (0) {
+          }
+          ["createdTimestamp"]=>
+          int(1545282575)
+        }
+        [525177926501662745]=>
+        object(CharlotteDunois\Yasmin\Models\VoiceChannel)#353 (11) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "525177926501662745"
+          ["type"]=>
+          string(5) "voice"
+          ["createdTimestamp"]=>
+          int(1545282575)
+          ["name"]=>
+          string(16) "Основной"
+          ["bitrate"]=>
+          int(64000)
+          ["members"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#383 (0) {
+          }
+          ["parentID"]=>
+          string(18) "525177926501662744"
+          ["position"]=>
+          int(0)
+          ["permissionOverwrites"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#253 (0) {
+          }
+          ["userLimit"]=>
+          int(0)
+        }
+      }
+      ["emojis"]=>
+      object(CharlotteDunois\Yasmin\Models\EmojiStorage)#370 (0) {
+      }
+      ["members"]=>
+      object(CharlotteDunois\Yasmin\Models\GuildMemberStorage)#369 (5) {
+        [406740817487593472]=>
+        object(CharlotteDunois\Yasmin\Models\GuildMember)#252 (12) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "406740817487593472"
+          ["nickname"]=>
+          NULL
+          ["deaf"]=>
+          bool(false)
+          ["mute"]=>
+          bool(false)
+          ["selfDeaf"]=>
+          bool(false)
+          ["selfMute"]=>
+          bool(false)
+          ["suppress"]=>
+          bool(false)
+          ["voiceChannelID"]=>
+          NULL
+          ["voiceSessionID"]=>
+          NULL
+          ["joinedTimestamp"]=>
+          int(1545282575)
+          ["roles"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#270 (1) {
+            [525177926501662741]=>
+            object(CharlotteDunois\Yasmin\Models\Role)#374 (10) {
+              ["guild"]=>
+              *RECURSION*
+              ["id"]=>
+              string(18) "525177926501662741"
+              ["name"]=>
+              string(9) "@everyone"
+              ["color"]=>
+              int(0)
+              ["hoist"]=>
+              bool(false)
+              ["position"]=>
+              int(0)
+              ["permissions"]=>
+              object(CharlotteDunois\Yasmin\Models\Permissions)#373 (1) {
+                ["bitfield":protected]=>
+                int(104324161)
+              }
+              ["managed"]=>
+              bool(false)
+              ["mentionable"]=>
+              bool(false)
+              ["createdTimestamp"]=>
+              int(1545282575)
+            }
+          }
+        }
+        [416511641232867328]=>
+        object(CharlotteDunois\Yasmin\Models\GuildMember)#258 (12) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "416511641232867328"
+          ["nickname"]=>
+          NULL
+          ["deaf"]=>
+          bool(false)
+          ["mute"]=>
+          bool(false)
+          ["selfDeaf"]=>
+          bool(false)
+          ["selfMute"]=>
+          bool(false)
+          ["suppress"]=>
+          bool(false)
+          ["voiceChannelID"]=>
+          NULL
+          ["voiceSessionID"]=>
+          NULL
+          ["joinedTimestamp"]=>
+          int(1545302234)
+          ["roles"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#255 (1) {
+            [525177926501662741]=>
+            object(CharlotteDunois\Yasmin\Models\Role)#374 (10) {
+              ["guild"]=>
+              *RECURSION*
+              ["id"]=>
+              string(18) "525177926501662741"
+              ["name"]=>
+              string(9) "@everyone"
+              ["color"]=>
+              int(0)
+              ["hoist"]=>
+              bool(false)
+              ["position"]=>
+              int(0)
+              ["permissions"]=>
+              object(CharlotteDunois\Yasmin\Models\Permissions)#373 (1) {
+                ["bitfield":protected]=>
+                int(104324161)
+              }
+              ["managed"]=>
+              bool(false)
+              ["mentionable"]=>
+              bool(false)
+              ["createdTimestamp"]=>
+              int(1545282575)
+            }
+          }
+        }
+        [524976357646794752]=>
+        object(CharlotteDunois\Yasmin\Models\GuildMember)#261 (12) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "524976357646794752"
+          ["nickname"]=>
+          NULL
+          ["deaf"]=>
+          bool(false)
+          ["mute"]=>
+          bool(false)
+          ["selfDeaf"]=>
+          bool(false)
+          ["selfMute"]=>
+          bool(false)
+          ["suppress"]=>
+          bool(false)
+          ["voiceChannelID"]=>
+          NULL
+          ["voiceSessionID"]=>
+          NULL
+          ["joinedTimestamp"]=>
+          int(1545290512)
+          ["roles"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#318 (1) {
+            [525177926501662741]=>
+            object(CharlotteDunois\Yasmin\Models\Role)#374 (10) {
+              ["guild"]=>
+              *RECURSION*
+              ["id"]=>
+              string(18) "525177926501662741"
+              ["name"]=>
+              string(9) "@everyone"
+              ["color"]=>
+              int(0)
+              ["hoist"]=>
+              bool(false)
+              ["position"]=>
+              int(0)
+              ["permissions"]=>
+              object(CharlotteDunois\Yasmin\Models\Permissions)#373 (1) {
+                ["bitfield":protected]=>
+                int(104324161)
+              }
+              ["managed"]=>
+              bool(false)
+              ["mentionable"]=>
+              bool(false)
+              ["createdTimestamp"]=>
+              int(1545282575)
+            }
+          }
+        }
+        [525194109015818281]=>
+        object(CharlotteDunois\Yasmin\Models\GuildMember)#298 (12) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "525194109015818281"
+          ["nickname"]=>
+          NULL
+          ["deaf"]=>
+          bool(false)
+          ["mute"]=>
+          bool(false)
+          ["selfDeaf"]=>
+          bool(false)
+          ["selfMute"]=>
+          bool(false)
+          ["suppress"]=>
+          bool(false)
+          ["voiceChannelID"]=>
+          NULL
+          ["voiceSessionID"]=>
+          NULL
+          ["joinedTimestamp"]=>
+          int(1545286793)
+          ["roles"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#334 (2) {
+            [525177926501662741]=>
+            object(CharlotteDunois\Yasmin\Models\Role)#374 (10) {
+              ["guild"]=>
+              *RECURSION*
+              ["id"]=>
+              string(18) "525177926501662741"
+              ["name"]=>
+              string(9) "@everyone"
+              ["color"]=>
+              int(0)
+              ["hoist"]=>
+              bool(false)
+              ["position"]=>
+              int(0)
+              ["permissions"]=>
+              object(CharlotteDunois\Yasmin\Models\Permissions)#373 (1) {
+                ["bitfield":protected]=>
+                int(104324161)
+              }
+              ["managed"]=>
+              bool(false)
+              ["mentionable"]=>
+              bool(false)
+              ["createdTimestamp"]=>
+              int(1545282575)
+            }
+            [525198153629040650]=>
+            object(CharlotteDunois\Yasmin\Models\Role)#211 (10) {
+              ["guild"]=>
+              *RECURSION*
+              ["id"]=>
+              string(18) "525198153629040650"
+              ["name"]=>
+              string(7) "DevSoer"
+              ["color"]=>
+              int(0)
+              ["hoist"]=>
+              bool(false)
+              ["position"]=>
+              int(1)
+              ["permissions"]=>
+              object(CharlotteDunois\Yasmin\Models\Permissions)#348 (1) {
+                ["bitfield":protected]=>
+                int(262216)
+              }
+              ["managed"]=>
+              bool(true)
+              ["mentionable"]=>
+              bool(false)
+              ["createdTimestamp"]=>
+              int(1545287397)
+            }
+          }
+        }
+        [527757938639765504]=>
+        object(CharlotteDunois\Yasmin\Models\GuildMember)#333 (12) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "527757938639765504"
+          ["nickname"]=>
+          NULL
+          ["deaf"]=>
+          bool(false)
+          ["mute"]=>
+          bool(false)
+          ["selfDeaf"]=>
+          bool(false)
+          ["selfMute"]=>
+          bool(false)
+          ["suppress"]=>
+          bool(false)
+          ["voiceChannelID"]=>
+          NULL
+          ["voiceSessionID"]=>
+          NULL
+          ["joinedTimestamp"]=>
+          int(1545898366)
+          ["roles"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#332 (2) {
+            [525177926501662741]=>
+            object(CharlotteDunois\Yasmin\Models\Role)#374 (10) {
+              ["guild"]=>
+              *RECURSION*
+              ["id"]=>
+              string(18) "525177926501662741"
+              ["name"]=>
+              string(9) "@everyone"
+              ["color"]=>
+              int(0)
+              ["hoist"]=>
+              bool(false)
+              ["position"]=>
+              int(0)
+              ["permissions"]=>
+              object(CharlotteDunois\Yasmin\Models\Permissions)#373 (1) {
+                ["bitfield":protected]=>
+                int(104324161)
+              }
+              ["managed"]=>
+              bool(false)
+              ["mentionable"]=>
+              bool(false)
+              ["createdTimestamp"]=>
+              int(1545282575)
+            }
+            [527760741818826752]=>
+            object(CharlotteDunois\Yasmin\Models\Role)#212 (10) {
+              ["guild"]=>
+              *RECURSION*
+              ["id"]=>
+              string(18) "527760741818826752"
+              ["name"]=>
+              string(6) "CISoer"
+              ["color"]=>
+              int(0)
+              ["hoist"]=>
+              bool(false)
+              ["position"]=>
+              int(1)
+              ["permissions"]=>
+              object(CharlotteDunois\Yasmin\Models\Permissions)#358 (1) {
+                ["bitfield":protected]=>
+                int(262216)
+              }
+              ["managed"]=>
+              bool(true)
+              ["mentionable"]=>
+              bool(false)
+              ["createdTimestamp"]=>
+              int(1545898366)
+            }
+          }
+        }
+      }
+      ["presences"]=>
+      object(CharlotteDunois\Yasmin\Models\PresenceStorage)#362 (2) {
+        [406740817487593472]=>
+        object(CharlotteDunois\Yasmin\Models\Presence)#331 (3) {
+          ["userID"]=>
+          string(18) "406740817487593472"
+          ["activity"]=>
+          NULL
+          ["status"]=>
+          string(6) "online"
+        }
+        [527757938639765504]=>
+        object(CharlotteDunois\Yasmin\Models\Presence)#325 (3) {
+          ["userID"]=>
+          string(18) "527757938639765504"
+          ["activity"]=>
+          NULL
+          ["status"]=>
+          string(6) "online"
+        }
+      }
+      ["roles"]=>
+      object(CharlotteDunois\Yasmin\Models\RoleStorage)#308 (3) {
+        [525177926501662741]=>
+        object(CharlotteDunois\Yasmin\Models\Role)#374 (10) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "525177926501662741"
+          ["name"]=>
+          string(9) "@everyone"
+          ["color"]=>
+          int(0)
+          ["hoist"]=>
+          bool(false)
+          ["position"]=>
+          int(0)
+          ["permissions"]=>
+          object(CharlotteDunois\Yasmin\Models\Permissions)#373 (1) {
+            ["bitfield":protected]=>
+            int(104324161)
+          }
+          ["managed"]=>
+          bool(false)
+          ["mentionable"]=>
+          bool(false)
+          ["createdTimestamp"]=>
+          int(1545282575)
+        }
+        [525198153629040650]=>
+        object(CharlotteDunois\Yasmin\Models\Role)#211 (10) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "525198153629040650"
+          ["name"]=>
+          string(7) "DevSoer"
+          ["color"]=>
+          int(0)
+          ["hoist"]=>
+          bool(false)
+          ["position"]=>
+          int(1)
+          ["permissions"]=>
+          object(CharlotteDunois\Yasmin\Models\Permissions)#348 (1) {
+            ["bitfield":protected]=>
+            int(262216)
+          }
+          ["managed"]=>
+          bool(true)
+          ["mentionable"]=>
+          bool(false)
+          ["createdTimestamp"]=>
+          int(1545287397)
+        }
+        [527760741818826752]=>
+        object(CharlotteDunois\Yasmin\Models\Role)#212 (10) {
+          ["guild"]=>
+          *RECURSION*
+          ["id"]=>
+          string(18) "527760741818826752"
+          ["name"]=>
+          string(6) "CISoer"
+          ["color"]=>
+          int(0)
+          ["hoist"]=>
+          bool(false)
+          ["position"]=>
+          int(1)
+          ["permissions"]=>
+          object(CharlotteDunois\Yasmin\Models\Permissions)#358 (1) {
+            ["bitfield":protected]=>
+            int(262216)
+          }
+          ["managed"]=>
+          bool(true)
+          ["mentionable"]=>
+          bool(false)
+          ["createdTimestamp"]=>
+          int(1545898366)
+        }
+      }
+      ["id"]=>
+      string(18) "525177926501662741"
+      ["shardID"]=>
+      int(0)
+      ["available"]=>
+      bool(true)
+      ["name"]=>
+      string(4) "Devs"
+      ["icon"]=>
+      NULL
+      ["splash"]=>
+      NULL
+      ["ownerID"]=>
+      string(18) "406740817487593472"
+      ["large"]=>
+      bool(false)
+      ["lazy"]=>
+      bool(true)
+      ["memberCount"]=>
+      int(5)
+      ["defaultMessageNotifications"]=>
+      string(10) "EVERYTHING"
+      ["explicitContentFilter"]=>
+      string(8) "DISABLED"
+      ["region"]=>
+      string(6) "russia"
+      ["verificationLevel"]=>
+      string(4) "NONE"
+      ["systemChannelID"]=>
+      string(18) "525177926501662743"
+      ["afkChannelID"]=>
+      NULL
+      ["afkTimeout"]=>
+      int(300)
+      ["features"]=>
+      array(0) {
+      }
+      ["mfaLevel"]=>
+      string(4) "NONE"
+      ["applicationID"]=>
+      NULL
+      ["embedEnabled"]=>
+      bool(false)
+      ["embedChannelID"]=>
+      NULL
+      ["widgetEnabled"]=>
+      bool(false)
+      ["widgetChannelID"]=>
+      NULL
+      ["createdTimestamp"]=>
+      int(1545282575)
+    }
+    ["messages"]=>
+    object(CharlotteDunois\Yasmin\Models\MessageStorage)#206 (3) {
+      [541187898586955786]=>
+      object(CharlotteDunois\Yasmin\Models\Message)#349 (19) {
+        ["id"]=>
+        string(18) "541187898586955786"
+        ["author"]=>
+        object(CharlotteDunois\Yasmin\Models\ClientUser)#313 (11) {
+          ["id"]=>
+          string(18) "527757938639765504"
+          ["username"]=>
+          string(6) "CISoer"
+          ["discriminator"]=>
+          string(4) "1500"
+          ["bot"]=>
+          bool(true)
+          ["avatar"]=>
+          NULL
+          ["email"]=>
+          string(0) ""
+          ["mfaEnabled"]=>
+          bool(false)
+          ["verified"]=>
+          bool(true)
+          ["webhook"]=>
+          bool(false)
+          ["createdTimestamp"]=>
+          int(1545897697)
+          ["lastMessageID"]=>
+          string(18) "541187898586955786"
+        }
+        ["channel"]=>
+        *RECURSION*
+        ["content"]=>
+        string(36) "SoerBot started in development mode."
+        ["createdTimestamp"]=>
+        int(1549099649)
+        ["editedTimestamp"]=>
+        NULL
+        ["tts"]=>
+        bool(false)
+        ["nonce"]=>
+        NULL
+        ["pinned"]=>
+        bool(false)
+        ["system"]=>
+        bool(false)
+        ["type"]=>
+        string(7) "DEFAULT"
+        ["webhookID"]=>
+        NULL
+        ["activity"]=>
+        NULL
+        ["application"]=>
+        NULL
+        ["attachments"]=>
+        object(CharlotteDunois\Yasmin\Utils\Collection)#458 (0) {
+        }
+        ["cleanContent"]=>
+        string(36) "SoerBot started in development mode."
+        ["embeds"]=>
+        array(0) {
+        }
+        ["mentions"]=>
+        object(CharlotteDunois\Yasmin\Models\MessageMentions)#456 (6) {
+          ["message"]=>
+          *RECURSION*
+          ["channels"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#455 (0) {
+          }
+          ["everyone"]=>
+          bool(false)
+          ["members"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#324 (0) {
+          }
+          ["roles"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#301 (0) {
+          }
+          ["users"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#356 (0) {
+          }
+        }
+        ["reactions"]=>
+        object(CharlotteDunois\Yasmin\Utils\Collection)#457 (0) {
+        }
+      }
+      [541188054954803221]=>
+      object(CharlotteDunois\Yasmin\Models\Message)#429 (19) {
+        ["id"]=>
+        string(18) "541188054954803221"
+        ["author"]=>
+        object(CharlotteDunois\Yasmin\Models\User)#448 (11) {
+          ["id"]=>
+          string(18) "527851667610402816"
+          ["username"]=>
+          string(6) "GitHub"
+          ["discriminator"]=>
+          string(4) "0000"
+          ["bot"]=>
+          bool(true)
+          ["avatar"]=>
+          NULL
+          ["email"]=>
+          string(0) ""
+          ["mfaEnabled"]=>
+          NULL
+          ["verified"]=>
+          NULL
+          ["webhook"]=>
+          bool(true)
+          ["createdTimestamp"]=>
+          int(1545920044)
+          ["lastMessageID"]=>
+          string(18) "541188054954803221"
+        }
+        ["channel"]=>
+        *RECURSION*
+        ["content"]=>
+        string(0) ""
+        ["createdTimestamp"]=>
+        int(1549099687)
+        ["editedTimestamp"]=>
+        NULL
+        ["tts"]=>
+        bool(false)
+        ["nonce"]=>
+        NULL
+        ["pinned"]=>
+        bool(false)
+        ["system"]=>
+        bool(false)
+        ["type"]=>
+        string(7) "DEFAULT"
+        ["webhookID"]=>
+        string(18) "527851667610402816"
+        ["activity"]=>
+        NULL
+        ["application"]=>
+        NULL
+        ["attachments"]=>
+        object(CharlotteDunois\Yasmin\Utils\Collection)#423 (0) {
+        }
+        ["cleanContent"]=>
+        string(0) ""
+        ["embeds"]=>
+        array(1) {
+          [0]=>
+          object(CharlotteDunois\Yasmin\Models\MessageEmbed)#431 (13) {
+            ["type":protected]=>
+            string(4) "rich"
+            ["title":protected]=>
+            string(30) "[soerbot:develop] 1 new commit"
+            ["author":protected]=>
+            array(3) {
+              ["name"]=>
+              string(8) "esergeev"
+              ["icon"]=>
+              string(52) "https://avatars3.githubusercontent.com/u/1811444?v=4"
+              ["url"]=>
+              string(27) "https://github.com/esergeev"
+            }
+            ["description":protected]=>
+            string(134) "[`6ca62d8`](https://github.com/esergeev/soerbot/commit/6ca62d8d5b54f1a0e966c46182ad5104a2992fa5) create watch command for CI - delokit"
+            ["url":protected]=>
+            string(83) "https://github.com/esergeev/soerbot/commit/6ca62d8d5b54f1a0e966c46182ad5104a2992fa5"
+            ["timestamp":protected]=>
+            NULL
+            ["color":protected]=>
+            int(7506394)
+            ["footer":protected]=>
+            NULL
+            ["image":protected]=>
+            NULL
+            ["thumbnail":protected]=>
+            NULL
+            ["video":protected]=>
+            NULL
+            ["provider":protected]=>
+            NULL
+            ["fields":protected]=>
+            array(0) {
+            }
+          }
+        }
+        ["mentions"]=>
+        object(CharlotteDunois\Yasmin\Models\MessageMentions)#414 (6) {
+          ["message"]=>
+          *RECURSION*
+          ["channels"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#295 (0) {
+          }
+          ["everyone"]=>
+          bool(false)
+          ["members"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#273 (0) {
+          }
+          ["roles"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#296 (0) {
+          }
+          ["users"]=>
+          object(CharlotteDunois\Yasmin\Utils\Collection)#284 (0) {
+          }
+        }
+        ["reactions"]=>
+        object(CharlotteDunois\Yasmin\Utils\Collection)#428 (0) {
+        }
+      }
+      [541188602227589130]=>
+      *RECURSION*
+    }
+    ["id"]=>
+    string(18) "525177926501662743"
+    ["type"]=>
+    string(4) "text"
+    ["parentID"]=>
+    string(18) "525177926501662742"
+    ["name"]=>
+    string(16) "основной"
+    ["topic"]=>
+    string(0) ""
+    ["nsfw"]=>
+    bool(false)
+    ["position"]=>
+    int(0)
+    ["slowmode"]=>
+    int(0)
+    ["permissionOverwrites"]=>
+    object(CharlotteDunois\Yasmin\Utils\Collection)#360 (0) {
+    }
+    ["createdTimestamp"]=>
+    int(1545282575)
+    ["typings"]=>
+    object(CharlotteDunois\Yasmin\Utils\Collection)#203 (0) {
+    }
+    ["typingTriggered"]=>
+    array(2) {
+      ["count"]=>
+      int(0)
+      ["timer"]=>
+      NULL
+    }
+    ["lastMessageID"]=>
+    string(18) "541186790288261139"
+  }
+
+
+
+  
+  ["content"]=>
+  string(0) ""
+  ["createdTimestamp"]=>
+  int(1549099817)
+  ["editedTimestamp"]=>
+  NULL
+  ["tts"]=>
+  bool(false)
+  ["nonce"]=>
+  NULL
+  ["pinned"]=>
+  bool(false)
+  ["system"]=>
+  bool(false)
+  ["type"]=>
+  string(7) "DEFAULT"
+  ["webhookID"]=>
+  string(18) "527851667610402816"
+  ["activity"]=>
+  NULL
+  ["application"]=>
+  NULL
+  ["attachments"]=>
+  object(CharlotteDunois\Yasmin\Utils\Collection)#433 (0) {
+  }
+  ["cleanContent"]=>
+  string(0) ""
+  ["embeds"]=>
+  array(1) {
+    [0]=>
+    object(CharlotteDunois\Yasmin\Models\MessageEmbed)#449 (13) {
+      ["type":protected]=>
+      string(4) "rich"
+      ["title":protected]=>
+      string(27) "create watch command for CI"
+      ["author":protected]=>
+      array(3) {
+        ["name"]=>
+        string(47) "Job #55.1 (Build #55) Passed - esergeev/soerbot"
+        ["icon"]=>
+        string(59) "https://travis-ci.org/images/logos/TravisCI-Mascot-blue.png"
+        ["url"]=>
+        string(55) "https://travis-ci.org/esergeev/soerbot/builds/487802641"
+      }
+      ["description":protected]=>
+      string(36) "Evgeniy Sergeev authored & committed"
+      ["url":protected]=>
+      NULL
+      ["timestamp":protected]=>
+      int(1549099817)
+      ["color":protected]=>
+      int(3066993)
+      ["footer":protected]=>
+      NULL
+      ["image":protected]=>
+      NULL
+      ["thumbnail":protected]=>
+      NULL
+      ["video":protected]=>
+      NULL
+      ["provider":protected]=>
+      NULL
+      ["fields":protected]=>
+      array(2) {
+        [0]=>
+        array(3) {
+          ["value"]=>
+          string(96) "[`6ca62d8`](https://github.com/esergeev/soerbot/commit/6ca62d8d5b54f1a0e966c46182ad5104a2992fa5)"
+          ["name"]=>
+          string(6) "Commit"
+          ["inline"]=>
+          bool(true)
+        }
+        [1]=>
+        array(3) {
+          ["value"]=>
+          string(61) "[`develop`](https://github.com/esergeev/soerbot/tree/develop)"
+          ["name"]=>
+          string(6) "Branch"
+          ["inline"]=>
+          bool(true)
+        }
+      }
+    }
+  }
+  ["mentions"]=>
+  object(CharlotteDunois\Yasmin\Models\MessageMentions)#413 (6) {
+    ["message"]=>
+    *RECURSION*
+    ["channels"]=>
+    object(CharlotteDunois\Yasmin\Utils\Collection)#425 (0) {
+    }
+    ["everyone"]=>
+    bool(false)
+    ["members"]=>
+    object(CharlotteDunois\Yasmin\Utils\Collection)#283 (0) {
+    }
+    ["roles"]=>
+    object(CharlotteDunois\Yasmin\Utils\Collection)#440 (0) {
+    }
+    ["users"]=>
+    object(CharlotteDunois\Yasmin\Utils\Collection)#311 (0) {
+    }
+  }
+  ["reactions"]=>
+  object(CharlotteDunois\Yasmin\Utils\Collection)#434 (0) {
+  }
+}
