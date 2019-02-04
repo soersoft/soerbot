@@ -10,6 +10,7 @@ return function ($client) {
                 'group' => 'utils',
                 'description' => 'Deploy command',
                 'guildOnly' => false,
+                'ownerOnly' => true,
                 'throttling' => [
                     'usages' => 5,
                     'duration' => 10,

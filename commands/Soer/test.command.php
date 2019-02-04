@@ -10,6 +10,7 @@ return function ($client) {
                 'group' => 'utils',
                 'description' => 'Test features command',
                 'guildOnly' => false,
+                'ownerOnly' => true,
                 'throttling' => [
                     'usages' => 5,
                     'duration' => 10,
