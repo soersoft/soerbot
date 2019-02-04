@@ -59,9 +59,9 @@ class ConfiguratorTest extends TestCase
     }
 
     /**
-     * Test nested keys
+     * Test nested keys.
      */
-    public function testGetNestedKeys() 
+    public function testGetNestedKeys()
     {
         $pathToStubConfig = realpath(__DIR__ . '/Fixtures/config.stub.yaml');
         Configurator::setConfigPath($pathToStubConfig);
