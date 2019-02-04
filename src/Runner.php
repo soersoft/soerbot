@@ -118,8 +118,7 @@ class Runner
                     return $channel->name === 'основной';
                 });
 
-                if ($channel) {
-                    echo 'Send';
+                if ($channel && Configurator::get('development', false)) {
                     $channel->send('SoerBot started in development mode.')
                         ->done(null, function ($error) {
                             echo $error . PHP_EOL;
