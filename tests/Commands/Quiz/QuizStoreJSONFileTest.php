@@ -3,7 +3,7 @@
 namespace Tests\Commands\Quiz;
 
 use Tests\TestCase;
-use SoerBot\Commands\Quiz\QuizStoreJSONFile;
+use SoerBot\Commands\Quiz\Services\QuizStoreJSONFile;
 
 class QuizStoreTest extends TestCase
 {

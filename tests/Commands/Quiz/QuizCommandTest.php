@@ -12,7 +12,7 @@ class QuizCommandTest extends TestCase
 
     protected function setUp()
     {
-        $commandCreate = require __DIR__ . '/../../../commands/Quiz/Quiz.command.php';
+        $commandCreate = require __DIR__ . '/../../../commands/Quiz/quiz.command.php';
 
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
         $registry = $this->createMock('\CharlotteDunois\Livia\CommandRegistry');
