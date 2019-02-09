@@ -65,6 +65,10 @@ class Runner
         // Не регистрируем дефолтные команды, поэтому не используем $this->client->registry->registerDefaults();
         $this->client->registry->registerDefaultTypes();
         $this->client->registry->registerDefaultGroups();
+
+        $this->client->registry->registerGroup(
+            (new \CharlotteDunois\Livia\Commands\CommandGroup($this->client, 'games', 'Games', true))
+        );
         // Register the command group for our example command
         $this->client->registry->registerGroup(['id' => 'moderation', 'name' => 'Moderation']);
 
