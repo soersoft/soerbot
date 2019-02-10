@@ -48,12 +48,13 @@ class QuizAddCommandTest extends TestCase
     public function testSimpleResponseToTheDiscord(): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $questionStore = $this->getMockBuilder('QuizStore')->setMethods(['add', 'save'])->getMock();
+        $questionStore = $this->getMockBuilder('QuizStore')->setMethods(['add', 'save', 'load'])->getMock();
 
         $promise = new Promise(function () {
         });
 
         $commandMessage->expects($this->once())->method('say')->with('Вопрос добавлен')->willReturn($promise);
+        $questionStore->expects($this->once())->method('load');
         $questionStore->expects($this->once())->method('add')->with(['Вопрос', 'Ответ', 'Теги'])->willReturn(true);
         $questionStore->method('save')->willReturn(true);
 
