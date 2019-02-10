@@ -4,11 +4,12 @@ namespace Tests\Commands;
 
 use ArrayObject;
 use Tests\TestCase;
-use React\Promise\Promise;
 
 class QuizCommandTest extends TestCase
 {
     private $command;
+    private $client;
+    private $store;
 
     protected function setUp()
     {
@@ -18,7 +19,16 @@ class QuizCommandTest extends TestCase
         $registry = $this->createMock('\CharlotteDunois\Livia\CommandRegistry');
         $types = $this->createMock('\CharlotteDunois\Yasmin\Utils\Collection');
 
+        $this->client->expects($this->exactly(3))->method('on');
         $this->command = $commandCreate($this->client);
+
+        // Подменяем store через reflection
+        $this->store = $this->getMockBuilder('QuizStore')->setMethods(['add', 'get', 'save', 'load'])->getMock();
+
+        $reflection = new \ReflectionClass($this->command);
+        $storeProperty = $reflection->getProperty('store');
+        $storeProperty->setAccessible(true);
+        $storeProperty->setValue($this->command, $this->store);
 
         parent::setUp();
     }
@@ -31,29 +41,51 @@ class QuizCommandTest extends TestCase
 
     public function testSimpleResponseToTheDiscord(): void
     {
-        $result = ['question' => 'Вопрос', 'answer' => 'Ответ', 'tags' => 'Теги'];
-        $expectedResult = 'Вопрос';
-
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () {
-        });
-
-        $commandMessage->expects($this->once())->method('say')->with($expectedResult)->willReturn($promise);
-
-        $questionStore = $this->getMockBuilder('QuizStore')->setMethods(['get', 'load'])->getMock();
-        $questionStore->expects($this->once())->method('get')->willReturn($result);
-
-        // Подменяем store через reflection
-        $reflection = new \ReflectionClass($this->command);
-        $storeProperty = $reflection->getProperty('store');
-        $storeProperty->setAccessible(true);
-        $storeProperty->setValue($this->command, $questionStore);
-
+        $this->client->expects($this->once())->method('emit')->with('QuizStart');
         $this->command->run($commandMessage, new ArrayObject(), false);
+    }
+
+    public function testQuizStartAction()
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $reflection = new \ReflectionClass($this->command);
+        $quizStartMethod = $reflection->getMethod('quizStartAction');
+        $quizStartMethod->setAccessible(true);
+
+        $this->store->expects($this->once())->method('load');
+        $this->store->expects($this->once())->method('get');
+        $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
+        $quizStartMethod->invoke($this->command, $commandMessage, 1);
+    }
+
+    public function testQuizNextAction()
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $reflection = new \ReflectionClass($this->command);
+        $quizNextMethod = $reflection->getMethod('quizNextAction');
+        $quizNextMethod->setAccessible(true);
+
+        $this->store->expects($this->once())->method('load');
+        $this->store->expects($this->once())->method('get');
+        $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
+        $quizNextMethod->invoke($this->command, $commandMessage, 1);
+    }
+
+    public function testQuizEndAction()
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $reflection = new \ReflectionClass($this->command);
+        $quizEndMethod = $reflection->getMethod('quizEndAction');
+        $quizEndMethod->setAccessible(true);
+
+        $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
+        $quizEndMethod->invoke($this->command, $commandMessage, 0);
     }
 
     public function __sleep()
     {
         $this->command = null;
+        $this->client = null;
     }
 }

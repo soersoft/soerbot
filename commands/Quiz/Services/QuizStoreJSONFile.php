@@ -27,7 +27,7 @@ class QuizStoreJSONFile implements QuizStoreInterface
     public function __construct()
     {
         $this->data = [];
-        $this->file = __DIR__ . '/Store/questions.json';
+        $this->file = __DIR__ . '/../Store/questions.json';
     }
 
     /**
