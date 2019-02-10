@@ -1,25 +1,46 @@
 <?php
 
-namespace SoerBot\Commands\Quiz;
+namespace SoerBot\Commands\Quiz\Services;
 
 use SoerBot\Commands\Quiz\Interfaces\QuizStoreInterface;
 
+/**
+ * Class QuizStoreJSONFile.
+ *
+ * @package SoerBot\Commands\Quiz\Services
+ */
 class QuizStoreJSONFile implements QuizStoreInterface
 {
+    /**
+     * @var array
+     */
     private $data;
+
+    /**
+     * @var string
+     */
     private $file;
 
+    /**
+     * QuizStoreJSONFile constructor.
+     */
     public function __construct()
     {
         $this->data = [];
         $this->file = __DIR__ . '/Store/questions.json';
     }
 
+    /**
+     * @return bool|int
+     */
     public function save()
     {
-        \file_put_contents($this->file, json_encode($this->data));
+        return file_put_contents($this->file, json_encode($this->data));
     }
 
+    /**
+     * Load stored data.
+     */
     public function load()
     {
         if (file_exists($this->file)) {
@@ -27,13 +48,17 @@ class QuizStoreJSONFile implements QuizStoreInterface
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function get()
     {
         return $this->data[array_rand($this->data)];
     }
 
     /**
-     * Добавляет
+     * @param array $args
+     * @return bool
      */
     public function add(array $args)
     {

@@ -12,7 +12,7 @@ class QuizAddCommandTest extends TestCase
 
     protected function setUp()
     {
-        $commandCreate = require __DIR__ . '/../../../commands/Quiz/QuizAdd.command.php';
+        $commandCreate = require __DIR__ . '/../../../commands/Quiz/add.command.php';
 
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
         $registry = $this->createMock('\CharlotteDunois\Livia\CommandRegistry');
@@ -55,6 +55,7 @@ class QuizAddCommandTest extends TestCase
 
         $commandMessage->expects($this->once())->method('say')->with('Вопрос добавлен')->willReturn($promise);
         $questionStore->expects($this->once())->method('add')->with(['Вопрос', 'Ответ', 'Теги'])->willReturn(true);
+        $questionStore->method('save')->willReturn(true);
 
         // Подменяем store через reflection
         $reflection = new \ReflectionClass($this->command);
