@@ -91,6 +91,8 @@ class QuizAddCommand extends Command
      */
     private function addQuestion(ArrayObject $args): bool
     {
+        $this->store->load();
+
         return $this->store->add([$args['question'], $args['answer'], $args['tags']]);
     }
 
