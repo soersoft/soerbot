@@ -20,7 +20,7 @@ class QuizStoreTest extends TestCase
     {
         $this->setPrivateVariableValue($this->store, 'data', []);
         $this->store->add(['Вопрос', 'Ответ', 'Теги']);
-        $result = $storeProperty->getValue($this->store);
+        $result = $this->getPrivateVariableValue($this->store, 'data');
         $this->assertEquals($result, [['question' => 'Вопрос', 'answer' => 'Ответ', 'tags' => 'Теги']]);
     }
 
