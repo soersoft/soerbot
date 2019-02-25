@@ -1,6 +1,5 @@
 users:
   - username
-  - username
 debug: false
 development: false
 key: auth-key
