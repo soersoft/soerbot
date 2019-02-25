@@ -119,7 +119,15 @@ class Runner
         $this->client->once('ready', function () {
             try {
                 $channel = $this->client->channels->first(function ($channel) {
-                    return $channel->name === 'основной';
+                    $config = Configurator::get(
+                        'SpideyBot',
+                        [
+                        'branch' => 'develop',
+                        'color' => 3066993,
+                        'channel' => 'discord-bot-php', ]
+                    );
+
+                    return $channel->name === $config['channel'];
                 });
 
                 if ($channel && Configurator::get('development', false)) {

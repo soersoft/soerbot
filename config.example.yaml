@@ -8,6 +8,7 @@ command-prefix: $
 SpideyBot:
   branch: branch-name
   color: test-result-color
+  channel: 'channel'
 db-connection:
   driver: 'mysql'
   username: dbuser
