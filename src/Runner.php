@@ -122,9 +122,10 @@ class Runner
                     $config = Configurator::get(
                         'SpideyBot',
                         [
-                        'branch' => 'develop',
-                        'color' => 3066993,
-                        'channel' => 'discord-bot-php', ]
+                            'branch' => 'develop',
+                            'color' => 3066993,
+                            'channel' => 'discord-bot-php',
+                        ]
                     );
 
                     return $channel->name === $config['channel'];
