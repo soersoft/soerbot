@@ -83,8 +83,8 @@ class Runner
     public function logReadyState(): void
     {
         $this->client->on('ready', function () {
-            echo 'Logged in as ' . $this->client->user->tag . ' created on ' .
-                $this->client->user->createdAt->format('d.m.Y H:i:s') . PHP_EOL;
+            echo 'Logged in as ' . $this->client->user->tag . ' started at ' .
+            date('d.m.Y H:i:s') . PHP_EOL;
         });
     }
 
@@ -105,7 +105,6 @@ class Runner
     private function registerExitEvent(): void
     {
         $this->client->once('stop', function () {
-            echo 'stop';
             $this->loop->stop();
         });
     }
