@@ -21,7 +21,8 @@ return function ($client) {
 
         function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
         {
-            return $message->say('@' . $message->author->username . ', салют!');
+            $name = $message->author->username;
+            return $message->say('@' . $name . ', салют!');
         }
     });
 };
