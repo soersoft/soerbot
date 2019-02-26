@@ -2,6 +2,7 @@
 
 namespace SoerBot;
 
+use PHPUnit\Runner\Exception;
 use Symfony\Component\Yaml\Yaml;
 use SoerBot\Exceptions\ConfigurationFileNotFound;
 
@@ -48,7 +49,11 @@ class Configurator
     {
         // Если данные отсутствют, пробуем их загрузить.
         if (empty(self::$configurations)) {
-            self::load();
+            try {
+                self::load();
+            } catch (ConfigurationFileNotFound $error) {
+                exit($error->getMessage());
+            }
         }
 
         return key_exists($key, self::$configurations) ? self::$configurations[$key] : $default;
@@ -60,7 +65,8 @@ class Configurator
     public static function load()
     {
         if (!file_exists(self::$path)) {
-            throw new ConfigurationFileNotFound();
+            throw new ConfigurationFileNotFound("To start the SoerBot, configuration file " . self::$path
+                . " is require. Please create config.yaml, use config.example.yaml as example.\n");
         }
 
         self::$configurations = Yaml::parseFile(self::$path);
