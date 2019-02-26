@@ -48,7 +48,11 @@ class Configurator
     {
         // Если данные отсутствют, пробуем их загрузить.
         if (empty(self::$configurations)) {
-            self::load();
+            try {
+                self::load();
+            } catch (ConfigurationFileNotFound $e) {
+                echo $e->getMessage();
+            }
         }
 
         return key_exists($key, self::$configurations) ? self::$configurations[$key] : $default;
