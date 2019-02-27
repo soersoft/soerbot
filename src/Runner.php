@@ -182,6 +182,6 @@ class Runner
      */
     private function loadCommands()
     {
-        return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch(__DIR__ . './commands', '*.command.php');
+        return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch('./commands', '*.command.php');
     }
 }
