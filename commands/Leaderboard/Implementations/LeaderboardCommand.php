@@ -5,9 +5,12 @@ namespace SoerBot\Commands\Leaderboard\Implementations;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
+use SoerBot\Commands\Leaderboard\Store\DummyUserStore;
 
 class LeaderboardCommand extends Command
 {
+    private $users;
+
     public function __construct(LiviaClient $client)
     {
         parent::__construct($client, [
@@ -23,6 +26,8 @@ class LeaderboardCommand extends Command
           'guarded' => true,
           'args' => [],
         ]);
+
+        $this->users = new DummyUserStore();
     }
 
     /**
@@ -33,9 +38,6 @@ class LeaderboardCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $filePath = realpath(__DIR__ . '/../../../tests/Fixtures/leaderboard.tmp.txt');
-        $leaderboardStaticMessage = file_get_contents($filePath);
-
-        return $message->say($leaderboardStaticMessage);
+        return $message->say($this->users->getLeaderBoardAsString());
     }
 }
