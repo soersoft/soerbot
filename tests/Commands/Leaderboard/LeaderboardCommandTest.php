@@ -4,12 +4,12 @@ namespace Tests\Commands;
 
 use ArrayObject;
 use Tests\TestCase;
-use React\Promise\Promise;
 
 class LeaderboardCommandTest extends TestCase
 {
     private $command;
     private $client;
+    private $users;
 
     protected function setUp()
     {
@@ -17,6 +17,9 @@ class LeaderboardCommandTest extends TestCase
 
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
         $this->command = $commandCreate($this->client);
+
+        $this->users = $this->getMockBuilder('UsersStore')->setMethods(['getLeaderBoardAsString'])->getMock();
+        $this->setPrivateVariableValue($this->command, 'users', $this->users);
 
         parent::setUp();
     }
@@ -26,22 +29,14 @@ class LeaderboardCommandTest extends TestCase
         $this->assertEquals($this->command->name, 'leaderboard');
         $this->assertEquals($this->command->description, 'Выводит таблицу участников и набранные очки');
         $this->assertEquals($this->command->groupID, 'utils');
-
     }
 
-    public function testSimpleResponseToTheDiscord(): void
+    public function testThatWeCanGetActualLeaderBoard(): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () {
-        });
 
-        $filePath = __DIR__ . '/../../Fixtures/leaderboard.tmp.txt';
-        $leaderboardStaticMessage = file_get_contents($filePath);
-
-        $commandMessage->expects($this->once())
-          ->method('say')
-          ->with($leaderboardStaticMessage)
-          ->willReturn($promise);
+        $this->users->expects($this->once())->method('getLeaderBoardAsString')->will($this->returnValue('string'));
+        $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
 
         $this->command->run($commandMessage, new ArrayObject(), false);
     }
