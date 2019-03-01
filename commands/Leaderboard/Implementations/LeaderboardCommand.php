@@ -9,6 +9,9 @@ use SoerBot\Commands\Leaderboard\Store\DummyUserStore;
 
 class LeaderboardCommand extends Command
 {
+    /**
+     * @var SoerBot\Commands\Leaderboard\Interfaces\UserModelInferface
+     */
     private $users;
 
     public function __construct(LiviaClient $client)
