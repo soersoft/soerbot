@@ -9,3 +9,5 @@ composer.lock
 index.php
 .idea
 config.yaml
+commands/Watch/WatcherActors/Karma/store/*.json
+tests/Fixtures/karma.tmp.json
