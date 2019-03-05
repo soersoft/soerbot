@@ -1,0 +1,15 @@
+[
+  {
+    "username":"Alex",
+    "rewards":[
+      {
+        "emoji":":star:",
+        "count":5
+      },
+      {
+        "emoji":":thumbsup:",
+        "count":3
+      }
+    ]
+  }
+]
