@@ -2,7 +2,7 @@
 
 namespace SoerBot\Commands\Leaderboard\Interfaces;
 
-interface UserModelInferface
+interface UserModelInterface
 {
-    public function getLeaderBoardAsString();
+    public function getLeaderBoardAsSting();
 }
