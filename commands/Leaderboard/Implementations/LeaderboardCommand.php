@@ -5,13 +5,10 @@ namespace SoerBot\Commands\Leaderboard\Implementations;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
-use SoerBot\Commands\Leaderboard\Store\DummyUserStore;
+use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
 class LeaderboardCommand extends Command
 {
-    /**
-     * @var SoerBot\Commands\Leaderboard\Interfaces\UserModelInferface
-     */
     private $users;
 
     public function __construct(LiviaClient $client)
@@ -30,7 +27,7 @@ class LeaderboardCommand extends Command
           'args' => [],
         ]);
 
-        $this->users = new DummyUserStore();
+        $this->users = new UserModel(new LeaderBoardStoreJSONFile('/../Store/leaderboard.json'));
     }
 
     /**
@@ -41,6 +38,6 @@ class LeaderboardCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $message->say($this->users->getLeaderBoardAsString());
+        return $message->say($this->users->getLeaderBoardAsSting());
     }
 }
