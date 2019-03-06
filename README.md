@@ -9,7 +9,7 @@ composer install
 
 # Run
 
-php run.php [USER_ID]
+php run.php
 
 # Contributors
 
