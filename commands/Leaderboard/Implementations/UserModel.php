@@ -14,7 +14,7 @@ class UserModel implements UserModelInterface
         $store->load();
     }
 
-    public function getLeaderBoardAsSting()
+    public function getLeaderBoardAsString()
     {
         return true;
     }

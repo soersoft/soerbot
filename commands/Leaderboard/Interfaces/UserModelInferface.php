@@ -4,5 +4,5 @@ namespace SoerBot\Commands\Leaderboard\Interfaces;
 
 interface UserModelInterface
 {
-    public function getLeaderBoardAsSting();
+    public function getLeaderBoardAsString();
 }

@@ -38,6 +38,6 @@ class LeaderboardCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $message->say($this->users->getLeaderBoardAsSting());
+        return $message->say($this->users->getLeaderBoardAsString());
     }
 }
