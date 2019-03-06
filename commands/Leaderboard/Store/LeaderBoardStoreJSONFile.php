@@ -9,7 +9,14 @@ use SoerBot\Commands\Leaderboard\Exceptions\TooFewArgumentsForUserAdding;
 
 class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 {
+    /**
+     * @var array
+     */
     private $data;
+
+    /**
+     * @var bool|string
+     */
     private $file;
 
     use LeaderBoardStoreServiceMethods;

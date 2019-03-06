@@ -7,8 +7,15 @@ use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 
 class UserModel implements UserModelInterface
 {
+    /**
+     * @var SoerBot\Commands\Leaderboard\Implementations\User[]
+     */
     public $users;
 
+    /**
+     * UserModel constructor.
+     * @param LeaderBoardStoreInterface $store
+     */
     public function __construct(LeaderBoardStoreInterface $store)
     {
         try {
@@ -19,8 +26,11 @@ class UserModel implements UserModelInterface
         }
     }
 
+    /**
+     * @return string
+     */
     public function getLeaderBoardAsString()
     {
-        return true;
+        return '';
     }
 }

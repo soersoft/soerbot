@@ -9,6 +9,9 @@ use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
 class LeaderboardCommand extends Command
 {
+    /**
+     * @var UserModel
+     */
     private $users;
 
     public function __construct(LiviaClient $client)
