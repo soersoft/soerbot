@@ -28,7 +28,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     public function load()
     {
         if (!file_exists($this->file)) {
-            throw new StoreFileNotFoundException();
+            throw new StoreFileNotFoundException('Could not find the json file for loading');
         }
 
         $this->data = json_decode(file_get_contents($this->file), true);

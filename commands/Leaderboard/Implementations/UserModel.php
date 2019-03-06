@@ -11,7 +11,12 @@ class UserModel implements UserModelInterface
 
     public function __construct(LeaderBoardStoreInterface $store)
     {
-        $store->load();
+        try {
+            $store->load();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            die();
+        }
     }
 
     public function getLeaderBoardAsString()
