@@ -39,21 +39,10 @@ class KarmaWatcherActor implements WatcherActorInterface
      */
     public function run(Message $message)
     {
-        $this->action($message->author->username);
-    }
-
-    public function addKarma(string $userName): bool
-    {
-        return $this->user->setUserKarma($userName);
-    }
-
-    public function validateUserName(string $userName)
-    {
-        return isset($userName) && is_string($userName);
-    }
-
-    public function action(string $userName)
-    {
-        return $this->validateUserName($userName) && $this->addKarma($userName) && $this->user->save();
+        try {
+            $this->user->incrementUserKarma($message->author->username);
+        } catch (InvalidUserNameException $error) {
+            $this->client->emit('debug', $error->getMessage());
+        }
     }
 }

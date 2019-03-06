@@ -3,6 +3,7 @@
 namespace SoerBot\Commands\Watch\WatcherActors\Karma\Implementations;
 
 use SoerBot\Commands\Watch\WatcherActors\Karma\Interfaces\KarmaStoreInterface;
+use SoerBot\Commands\Watch\WatcherActors\Karma\Exceptions\StoreFileNotFoundException;
 
 /**
  * Class KarmeStoreJSONFile.
@@ -45,6 +46,8 @@ class KarmaStoreJSONFile implements KarmaStoreInterface
     {
         if (file_exists($this->file)) {
             $this->data = json_decode(file_get_contents($this->file), true);
+        } else {
+            throw new StoreFileNotFoundException('Karma store file not exist');
         }
     }
 
@@ -64,9 +67,8 @@ class KarmaStoreJSONFile implements KarmaStoreInterface
 
     /**
      * @param array $data
-     * @return bool
      */
-    public function add(array $data): bool
+    public function add(array $data)
     {
         if (empty($this->get($data['name']))) {
             array_push($this->data, $data);
@@ -74,7 +76,5 @@ class KarmaStoreJSONFile implements KarmaStoreInterface
             $key = array_search($data['name'], array_column($this->data, 'name'));
             $this->data[$key] = $data;
         }
-
-        return true;
     }
 }
