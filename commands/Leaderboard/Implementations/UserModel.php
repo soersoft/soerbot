@@ -8,21 +8,33 @@ use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 class UserModel implements UserModelInterface
 {
     /**
-     * @var SoerBot\Commands\Leaderboard\Implementations\User[]
+     * @var User[]
      */
-    public $users;
+    protected $users;
+
+    /**
+     * @var string
+     */
+    protected $linesDelimiter;
 
     /**
      * UserModel constructor.
      * @param LeaderBoardStoreInterface $store
+     * @param string
      */
-    public function __construct(LeaderBoardStoreInterface $store)
+    public function __construct(LeaderBoardStoreInterface $store, $linesDelimiter = PHP_EOL)
     {
         try {
             $store->load();
         } catch (\Exception $e) {
             echo $e->getMessage();
             die();
+        }
+
+        $this->linesDelimiter = $linesDelimiter;
+
+        foreach ($store->toArray() as $user) {
+            $this->users[] = new User($user['username'], $user['rewards']);
         }
     }
 
@@ -31,6 +43,12 @@ class UserModel implements UserModelInterface
      */
     public function getLeaderBoardAsString()
     {
-        return '';
+        $str = '';
+
+        foreach ($this->users as $user) {
+            $str .= $user . $this->linesDelimiter;
+        }
+
+        return $str;
     }
 }
