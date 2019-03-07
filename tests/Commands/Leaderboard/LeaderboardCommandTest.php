@@ -18,7 +18,8 @@ class LeaderboardCommandTest extends TestCase
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
         $this->command = $commandCreate($this->client);
 
-        $this->users = $this->getMockBuilder('UsersStore')->setMethods(['getLeaderBoardAsString'])->getMock();
+        $this->users = $this->createMock('SoerBot\Commands\Leaderboard\Implementations\UserModel');
+
         $this->setPrivateVariableValue($this->command, 'users', $this->users);
 
         parent::setUp();
