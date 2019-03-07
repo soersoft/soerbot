@@ -13,4 +13,6 @@ interface LeaderBoardStoreInterface
     public function add(array $args);
 
     public function remove($username);
+
+    public function toArray();
 }

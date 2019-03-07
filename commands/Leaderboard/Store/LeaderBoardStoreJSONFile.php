@@ -72,6 +72,11 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
         return null;
     }
 
+    public function toArray()
+    {
+        return $this->data;
+    }
+
     protected function userExists($username)
     {
         return $this->exists($this->data, 'username', $username);
