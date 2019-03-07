@@ -1,0 +1,90 @@
+{
+  "0": {
+    "username": "ucorp  (Аслан)",
+    "rewards": [
+      {
+        "emoji": ":star:",
+        "count": 8
+      },
+      {
+        "emoji": ":medal:",
+        "count": 4
+      }
+    ]
+  },
+  "1": {
+    "username": "Hеisenberg (Александр)",
+    "rewards": [
+      {
+        "emoji": ":star:",
+        "count": 6
+      },
+      {
+        "emoji": ":medal:",
+        "count": 3
+      }
+    ]
+  },
+  "2": {
+    "username": "IvanK (Иван)",
+    "rewards": [
+      {
+        "emoji": ":star:",
+        "count": 5
+      },
+      {
+        "emoji": ":medal:",
+        "count": 3
+      }
+    ]
+  },
+  "3": {
+    "username": "MikesoWeb",
+    "rewards": [
+      {
+        "emoji": ":star:",
+        "count": 5
+      },
+      {
+        "emoji": ":medal:",
+        "count": 3
+      }
+    ]
+  },
+  "4": {
+    "username": "iaptekar (Иван)",
+    "rewards": [
+      {
+        "emoji": ":star:",
+        "count": 4
+      }
+    ]
+  },
+  "5": {
+    "username": "melfis5 ",
+    "rewards": [
+      {
+        "emoji": ":star:",
+        "count": 1
+      }
+    ]
+  },
+  "6": {
+    "username": "Chelovechek",
+    "rewards": [
+      {
+        "emoji": ":star:",
+        "count": 1
+      }
+    ]
+  },
+  "7": {
+    "username": "revolmax",
+    "rewards": [
+      {
+        "emoji": ":star:",
+        "count": 1
+      }
+    ]
+  }
+}
