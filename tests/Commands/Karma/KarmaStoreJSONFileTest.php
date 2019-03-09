@@ -69,4 +69,13 @@ class KarmaStoreTest extends TestCase
         $result = json_decode(file_get_contents($filePath), true);
         $this->assertEquals($result, $expectedResult);
     }
+
+    public function testCreateStoreFilFunction()
+    {
+        $filePath = __DIR__ . '/../../Fixtures/karma.create-store.tmp.json';
+        $this->setPrivateVariableValue($this->store, 'file', $filePath);
+
+        $this->store->createStoreFile();
+        $this->assertEquals(file_exists($filePath), true);
+    }
 }

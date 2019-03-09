@@ -28,13 +28,13 @@ class UserModel extends AbstractUserModel
         try {
             $this->store->load();
         } catch (StoreFileNotFoundException $error) {
-            echo $error->getMessage() . "\n";
+            exit($error->getMessage());
         }
     }
 
     protected function save()
     {
-        return $this->store->save();
+        $this->store->save();
     }
 
     private function getUserKarma(string $userName): int
@@ -57,7 +57,8 @@ class UserModel extends AbstractUserModel
         $karma = $this->getUserKarma($userName);
         $karma += self::KARMA_ONE_STEP;
 
-        return $this->store->add(['name' => $userName, 'karma' => $karma]);
+        $this->store->add(['name' => $userName, 'karma' => $karma]);
+        $this->save();
     }
 
     private function validateUserName(string $userName)

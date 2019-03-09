@@ -47,7 +47,7 @@ class KarmaStoreJSONFile implements KarmaStoreInterface
         if (file_exists($this->file)) {
             $this->data = json_decode(file_get_contents($this->file), true);
         } else {
-            throw new StoreFileNotFoundException('Karma store file not exist');
+            $this->createStoreFile();
         }
     }
 
@@ -75,6 +75,20 @@ class KarmaStoreJSONFile implements KarmaStoreInterface
         } else {
             $key = array_search($data['name'], array_column($this->data, 'name'));
             $this->data[$key] = $data;
+        }
+    }
+
+    /**
+     * Create store file.
+     */
+    public function createStoreFile()
+    {
+        try {
+            $storeFile = fopen($this->file, 'w');
+            fwrite($storeFile, '[]');
+            fclose($storeFile);
+        } catch (StoreFileNotFoundException $error) {
+            throw new StoreFileNotFoundException('Karma store file not exist. The file must be created manually');
         }
     }
 }
