@@ -4,7 +4,6 @@ namespace Tests\Commands;
 
 use ArrayObject;
 use Tests\TestCase;
-use SoerBot\Configurator;
 use React\Promise\Promise;
 
 class WatchCommandTest extends TestCase
@@ -46,29 +45,17 @@ class WatchCommandTest extends TestCase
 
     public function testWatchMethod(): void
     {
-        $pathToStubConfig = realpath(__DIR__ . '/../Fixtures/config.stub.yaml');
-        Configurator::setConfigPath($pathToStubConfig);
+        $successActor = $this->store = $this->getMockBuilder('WatcherActorInterface')->setMethods(['isPassRequirements', 'run'])->getMock();
+        $successActor->expects($this->once())->method('isPassRequirements')->willReturn(true);
+        $successActor->expects($this->once())->method('run');
+
+        $faildActor = $this->store = $this->getMockBuilder('WatcherActorInterface')->setMethods(['isPassRequirements', 'run'])->getMock();
+        $faildActor->expects($this->once())->method('isPassRequirements')->willReturn(false);
+        $faildActor->expects($this->never())->method('run');
 
         $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
-        $author = $this->createMock('CharlotteDunois\Yasmin\Models\User');
-        $embed = $this->createMock('CharlotteDunois\Yasmin\Models\MessageEmbed');
 
-        $message->expects($this->at(0))->method('__get')->with('author')->willReturn($author);
-        $author->expects($this->once())->method('__get')->with('username')->willReturn('Spidey Bot');
-        $author->expects($this->once())->method('__get')->with('bot')->willReturn(true);
-
-        $message->expects($this->at(1))->method('__get')->with('embeds')->willReturn([$embed]);
-        $message->expects($this->at(2))->method('__get')->with('embeds')->willReturn([$embed]);
-
-        $embed->expects($this->at(0))->method('__get')->with('color')->willReturn(3066993);
-        $embed->expects($this->at(1))->method('__get')->with('fields')->willReturn([
-            ['value' => '[`6ca62d8`]', 'name' => 'Commit'],
-            ['value' => '`develop`]', 'name' => 'Branch'],
-        ]);
-
-        $this->client->expects($this->at(0))->method('emit')->with('stop');
-        $this->client->expects($this->at(1))->method('emit')->with('debug');
-
+        $this->setPrivateVariableValue($this->command, 'watcherActors', [$successActor, $faildActor]);
         $this->command->watch($message);
     }
 
