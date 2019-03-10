@@ -55,15 +55,16 @@ class WatchCommandTest extends TestCase
 
         $message->expects($this->at(0))->method('__get')->with('author')->willReturn($author);
         $author->expects($this->once())->method('__get')->with('username')->willReturn('Spidey Bot');
+        $author->expects($this->once())->method('__get')->with('bot')->willReturn(true);
 
         $message->expects($this->at(1))->method('__get')->with('embeds')->willReturn([$embed]);
         $message->expects($this->at(2))->method('__get')->with('embeds')->willReturn([$embed]);
 
         $embed->expects($this->at(0))->method('__get')->with('color')->willReturn(3066993);
         $embed->expects($this->at(1))->method('__get')->with('fields')->willReturn([
-          ['value' => '[`6ca62d8`]', 'name' => 'Commit'],
-          ['value' => '`develop`]', 'name' => 'Branch'],
-      ]);
+            ['value' => '[`6ca62d8`]', 'name' => 'Commit'],
+            ['value' => '`develop`]', 'name' => 'Branch'],
+        ]);
 
         $this->client->expects($this->at(0))->method('emit')->with('stop');
         $this->client->expects($this->at(1))->method('emit')->with('debug');

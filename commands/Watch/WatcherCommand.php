@@ -8,6 +8,7 @@ use CharlotteDunois\Yasmin\Models\Message;
 use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Watcher\Interfaces\WatcherActorInterface;
 use SoerBot\Commands\Watch\WatcherActors\SpideyBotWatcherActor;
+use SoerBot\Commands\Watch\WatcherActors\Karma\KarmaWatcherActor;
 
 class WatcherCommand extends Command
 {
@@ -37,6 +38,7 @@ class WatcherCommand extends Command
         //TODO: продумать автоматическую загрузку наблюдателей
         $this->watcherActors = [
             new SpideyBotWatcherActor($client),
+            new KarmaWatcherActor($client),
         ];
     }
 
