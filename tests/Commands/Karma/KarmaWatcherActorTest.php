@@ -4,6 +4,7 @@ namespace Tests\Commands;
 
 use Tests\TestCase;
 use SoerBot\Commands\Watch\WatcherActors\Karma\KarmaWatcherActor;
+use SoerBot\Commands\Watch\WatcherActors\Karma\Exceptions\InvalidUserNameException;
 
 class KarmaWatcherTest extends TestCase
 {
@@ -39,12 +40,41 @@ class KarmaWatcherTest extends TestCase
 
     public function testSuccessRun(): void
     {
-        // TODO: реализовать проверку работы метода Run
+        $commandMessage = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
+        $user = $this->createMock('CharlotteDunois\Yasmin\Models\User');
+        $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
+        $user->expects($this->once())->method('__get')->with('username')->willReturn('username');
+
+        $userModel = $this->getMockBuilder('UserModel')->setMethods(['incrementUserKarma'])->getMock();
+        $userModel
+            ->expects($this->once())
+            ->method('incrementUserKarma')
+            ->with('username')
+            ->will($this->returnValue('username'));
+
+        $this->setPrivateVariableValue($this->watcher, 'user', $userModel);
+
+        $this->watcher->run($commandMessage);
     }
 
     public function testExcpetionRun(): void
     {
-        // TODO: реализовать проверку выброса исключения
+        $incorrectUserName = 0;
+        $commandMessage = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
+        $user = $this->createMock('CharlotteDunois\Yasmin\Models\User');
+        $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
+        $user->expects($this->once())->method('__get')->with('username')->willReturn($incorrectUserName);
+
+        $userModel = $this->getMockBuilder('UserModel')->setMethods(['incrementUserKarma'])->getMock();
+        $userModel
+            ->expects($this->once())
+            ->method('incrementUserKarma')
+            ->with($incorrectUserName)
+            ->will($this->throwException(new InvalidUserNameException()));
+
+        $this->expectException(InvalidUserNameException::class);
+        $this->setPrivateVariableValue($this->watcher, 'user', $userModel);
+        $this->watcher->run($commandMessage);
     }
 
     public function __sleep()
