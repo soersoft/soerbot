@@ -63,6 +63,6 @@ class UserModel extends AbstractUserModel
 
     private function validateUserName(string $userName)
     {
-        return isset($userName) && is_string($userName);
+        return isset($userName) && !empty($userName) && is_string($userName);
     }
 }
