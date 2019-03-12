@@ -29,7 +29,8 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 
     public function save()
     {
-        return file_put_contents($this->file, json_encode($this->data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        return file_put_contents($this->file, json_encode(array_values($this->data), JSON_UNESCAPED_UNICODE |
+          JSON_PRETTY_PRINT));
     }
 
     public function load()
