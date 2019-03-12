@@ -11,6 +11,11 @@ trait ArrayServiceMethods
         }));
     }
 
+    protected function findKey($array, $column, $value)
+    {
+        return array_search($value, array_column($array, $column));
+    }
+
     protected function where(array $array, callable $callback)
     {
         return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
