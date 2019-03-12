@@ -10,60 +10,50 @@ use SoerBot\Commands\Leaderboard\Exceptions\TooFewArgumentsForUserAdding;
 
 class LeaderBoardStoreJSONFileTest extends TestCase
 {
+    /**
+     * @var LeaderBoardStoreInterface
+     */
     protected $store;
 
-    public function testThatWeGetExceptionWhenCouldNotFindFile()
+    public function setUp(): void
+    {
+        $this->store = new LeaderBoardStoreJSONFile(__DIR__ . '/../../Fixtures/leaderboard.tmp.json');
+        $this->store->load();
+    }
+
+    public function testLoad()
+    {
+        $this->assertTrue($this->store->load());
+    }
+
+    public function testLoadFileNotFoundException()
     {
         $this->expectException(StoreFileNotFoundException::class);
         (new LeaderBoardStoreJSONFile('filename.json'))->load();
     }
 
-    public function testThatWeCanLoadStoreFile()
+    public function testToArray()
     {
-        try {
-            $store = new LeaderBoardStoreJSONFile(__DIR__ . '/../../Fixtures/leaderboard.tmp.json');
-            $this->assertTrue($store->load());
-
-            return $store;
-        } catch (\Exception $e) {
-            $this->fail($e->getMessage());
-
-            return null;
-        }
-    }
-
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanGetAllTheData(LeaderBoardStoreInterface $store)
-    {
-        $users = $store->toArray();
-
-        $this->assertIsArray($users);
+        $users = $this->store->toArray();
         $this->assertNotEmpty($users);
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanLoadStoreFileInRightWay(LeaderBoardStoreInterface $store)
+    public function testToArrayTheSameData()
     {
         $array = [
-            [
-                'username' => 'Username1',
-                'rewards' => [
-                    [
-                        'emoji' => ':star:',
-                        'count' => 8,
-                    ],
-                    [
-                        'emoji' => ':medal:',
-                        'count' => 4,
-                    ],
-                ],
+          [
+            'username' => 'Username1',
+            'rewards' => [
+              [
+                'emoji' => ':star:',
+                'count' => 8,
+              ],
+              [
+                'emoji' => ':medal:',
+                'count' => 4,
+              ],
             ],
+          ],
           [
             'username' => 'Username2',
             'rewards' => [
@@ -75,26 +65,17 @@ class LeaderBoardStoreJSONFileTest extends TestCase
           ],
         ];
 
-        $this->assertEquals($array, $store->toArray());
+        $this->assertSame($array, $this->store->toArray());
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanSaveStoreFile(LeaderBoardStoreInterface $store)
+    public function testSave()
     {
-        $this->assertNotFalse($store->save());
+        $this->assertNotFalse($this->store->save());
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanGetUser(LeaderBoardStoreInterface $store)
+    public function testGet()
     {
-        $user = $store->get('Username1');
-        $this->assertIsArray($user);
+        $user = $this->store->get('Username1');
 
         $this->assertArrayHasKey('username', $user);
         $this->assertArrayHasKey('rewards', $user);
@@ -104,77 +85,51 @@ class LeaderBoardStoreJSONFileTest extends TestCase
         $this->assertIsArray($user['rewards']);
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanNotGetNonExistingUser(LeaderBoardStoreInterface $store)
+    public function testGetNonExistingUser()
     {
-        $this->assertNull($store->get('Username10'));
+        $this->assertNull($this->store->get('Username10'));
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeGetExceptionWhenPassedTooFewArgs(LeaderBoardStoreInterface $store)
+    public function testGetTooFewArgumentsForUserAddingException()
     {
         $this->expectException(TooFewArgumentsForUserAdding::class);
-        $store->add(['Username']);
+        $this->store->add(['Username']);
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanAddUser(LeaderBoardStoreInterface $store)
+    public function testAdd()
     {
         $rewards = [
           ['emoji' => ':star:'],
           ['count' => 3],
         ];
 
-        $store->add(['Username3', $rewards]);
-
-        $store->save();
-        $store->load();
-
-        $this->assertSame('Username3', $store->get('Username3')['username']);
+        $this->store->add(['Username3', $rewards]);
+        $this->assertSame('Username3', $this->store->get('Username3')['username']);
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @depends testThatWeCanAddUser
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanRemoveUser(LeaderBoardStoreInterface $store)
+    public function testRemove()
     {
-        $store->remove('Username3');
+        $rewards = [
+          ['emoji' => ':star:'],
+          ['count' => 3],
+        ];
 
-        $store->save();
-        $store->load();
+        $this->store->add(['Username3', $rewards]);
+        $this->store->remove('Username3');
 
-        $this->assertNull($store->get('Username3'));
+        $this->assertNull($this->store->get('Username3'));
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanNotRemoveNonExistingUser(LeaderBoardStoreInterface $store)
+    public function testRemoveNonExistingUser()
     {
-        $this->assertNull($store->remove('Username10'));
+        $this->assertNull($this->store->remove('Username10'));
     }
 
-    /**
-     * @depends testThatWeCanLoadStoreFile
-     * @param LeaderBoardStoreInterface $store
-     */
-    public function testThatWeCanCheckExistingOfUser(LeaderBoardStoreInterface $store)
+    public function testExists()
     {
         $userExists = $this->getPrivateMethod(LeaderBoardStoreJSONFile::class, 'userExists');
 
-        $this->assertTrue($userExists->invokeArgs($store, ['Username1']));
-        $this->assertFalse($userExists->invokeArgs($store, ['Username10']));
+        $this->assertTrue($userExists->invokeArgs($this->store, ['Username1']));
+        $this->assertFalse($userExists->invokeArgs($this->store, ['Username10']));
     }
 }
