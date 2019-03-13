@@ -2,9 +2,9 @@
 
 namespace SoerBot\Commands\Leaderboard\Store;
 
+use SoerBot\Commands\Leaderboard\Traits\ArrayServiceMethods;
 use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 use SoerBot\Commands\Leaderboard\Exceptions\StoreFileNotFoundException;
-use SoerBot\Commands\Leaderboard\Traits\LeaderBoardStoreServiceMethods;
 use SoerBot\Commands\Leaderboard\Exceptions\TooFewArgumentsForUserAdding;
 
 class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
@@ -15,30 +15,31 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     private $data;
 
     /**
-     * @var bool|string
+     * @var string
      */
     private $file;
 
-    use LeaderBoardStoreServiceMethods;
+    use ArrayServiceMethods;
 
     public function __construct($filename)
     {
         $this->data = [];
-        $this->file = realpath($filename);
+        $this->file = $filename;
     }
 
     public function save()
     {
-        return file_put_contents($this->file, json_encode($this->data));
+        return file_put_contents($this->file, json_encode(array_values($this->data), JSON_UNESCAPED_UNICODE |
+          JSON_PRETTY_PRINT));
     }
 
     public function load()
     {
         if (!file_exists($this->file)) {
-            throw new StoreFileNotFoundException('Could not find the json file for loading');
+            throw new StoreFileNotFoundException('File ' . $this->file . ' have not found');
         }
 
-        $this->data = json_decode(file_get_contents($this->file), true);
+        return (($this->data = json_decode(file_get_contents($this->file), true)) == true) ?? false;
     }
 
     public function add(array $args)
@@ -47,8 +48,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
             throw new TooFewArgumentsForUserAdding();
         }
 
-        $username = $args[0];
-        $rewards = $args[1];
+        list($username, $rewards) = $args;
 
         $this->remove($username);
         array_push($this->data, ['username' => $username, 'rewards' => $rewards]);
@@ -57,7 +57,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     public function get($username)
     {
         return $this->first($this->data, function ($user) use ($username) {
-            return $user['username'] === $username;
+            return strtolower($user['username']) === strtolower($username);
         });
     }
 
@@ -65,7 +65,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     {
         if ($this->userExists($username)) {
             $this->data = $this->where($this->data, function ($user) use ($username) {
-                return $user['username'] !== $username;
+                return strtolower($user['username']) !== strtolower($username);
             });
         }
 

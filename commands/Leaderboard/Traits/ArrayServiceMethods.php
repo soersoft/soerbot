@@ -2,13 +2,18 @@
 
 namespace SoerBot\Commands\Leaderboard\Traits;
 
-trait LeaderBoardStoreServiceMethods
+trait ArrayServiceMethods
 {
     protected function exists(array $array, $key, $value)
     {
         return !empty($this->where($array, function ($item) use ($key, $value) {
             return $item[$key] === $value;
         }));
+    }
+
+    protected function findKey($array, $column, $value)
+    {
+        return array_search($value, array_column($array, $column));
     }
 
     protected function where(array $array, callable $callback)

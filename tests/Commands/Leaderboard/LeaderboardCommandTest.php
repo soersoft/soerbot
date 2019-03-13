@@ -32,7 +32,7 @@ class LeaderboardCommandTest extends TestCase
         $this->assertEquals($this->command->groupID, 'utils');
     }
 
-    public function testThatWeCanGetActualLeaderBoard(): void
+    public function testResponseToTheDiscord(): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
 
