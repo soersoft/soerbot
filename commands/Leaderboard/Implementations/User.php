@@ -98,7 +98,7 @@ class User
 
     public function __toString()
     {
-        return ($this->prefix ?? '') . '@' . $this->name . $this->linesDelimiter . $this->makeRewardsAsString();
+        return ($this->prefix ?? '') . $this->name . $this->linesDelimiter . $this->makeRewardsAsString();
     }
 
     public function toString()
