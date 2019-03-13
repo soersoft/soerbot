@@ -9,8 +9,8 @@ composer install
 
 # Run
 
-php run.php [USER_ID] [SECRET_KEY] 
-
+php run.php
 
 # Contributors
 
+test
