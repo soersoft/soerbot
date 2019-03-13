@@ -12,5 +12,3 @@ composer install
 php run.php
 
 # Contributors
-
-test
