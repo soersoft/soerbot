@@ -39,6 +39,8 @@ class UserModel implements UserModelInterface
 
         $this->store->add([$user->getName(), $user->getRewards()]);
         $this->store->save();
+
+        return true;
     }
 
     public function getLeaderBoardAsString()
