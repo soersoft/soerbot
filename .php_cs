@@ -1,6 +1,6 @@
 <?php
 
-$directories = ['src', 'tests', 'commands'];
+$directories = [__DIR__ . '/src', __DIR__ . '/tests', __DIR__ . '/commands'];
 
 $rules = [
     '@PSR1' => true,
