@@ -15,10 +15,9 @@ class WatchCommandTest extends TestCase
         $commandCreate = require __DIR__ . '/../../commands/Watch/watch.command.php';
 
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
-        $registry = $this->createMock('\CharlotteDunois\Livia\CommandRegistry');
-        $types = $this->createMock('\CharlotteDunois\Yasmin\Utils\Collection');
 
-        $this->client->expects($this->once())->method('on')->with('message');
+        $this->client->expects($this->at(0))->method('on')->with('message');
+        $this->client->expects($this->at(1))->method('on')->with('RegisterWatcher');
 
         $this->command = $commandCreate($this->client);
 
