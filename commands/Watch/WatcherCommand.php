@@ -7,8 +7,6 @@ use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Yasmin\Models\Message;
 use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Watcher\Interfaces\WatcherActorInterface;
-use SoerBot\Commands\Watch\WatcherActors\SpideyBotWatcherActor;
-use SoerBot\Commands\Watch\WatcherActors\Karma\KarmaWatcherActor;
 
 class WatcherCommand extends Command
 {
@@ -16,7 +14,7 @@ class WatcherCommand extends Command
      * Список наблюдателей, кото.
      * @var WatcherActorInterface
      */
-    private $watcherActors;
+    private $watcherActors = [];
 
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
@@ -35,11 +33,9 @@ class WatcherCommand extends Command
         ]);
         $client->on('message', [$this, 'watch']);
 
-        //TODO: продумать автоматическую загрузку наблюдателей
-        $this->watcherActors = [
-            new SpideyBotWatcherActor($client),
-            new KarmaWatcherActor($client),
-        ];
+        $client->on('RegisterWatcher', function ($watcher) {
+            $this->watcherActors[] = $watcher;
+        });
     }
 
     /**

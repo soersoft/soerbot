@@ -3,7 +3,7 @@
 namespace Tests\Commands\Karma;
 
 use Tests\TestCase;
-use SoerBot\Commands\Watch\WatcherActors\Karma\Implementations\KarmaStoreJSONFile;
+use SoerBot\Commands\Karma\WatcherActor\Implementations\KarmaStoreJSONFile;
 
 class KarmaStoreTest extends TestCase
 {
