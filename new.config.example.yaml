@@ -1,62 +1,9 @@
-# Если что-то не используешь то тут его быть не должно
-# Delete Users block
+# Discord bot block settings
+bot:
+  token: ''
+  command-prefix: '$'
 
-# Не жалей времени на комментариии в таких файлах
-# пока у тебя не появииться документации
-
-# Debug Mode (true/false)
-debug: false
-
-# Development mode (true/false)
-development: false
-
-
-# Вот тут следуем правилу именования переменных
-# меняем  имя переменной key на:
-# bot_token (пока оставлю этот вариант)
-# access_token и так далее...
-# главное чтобы было понятно что мы тут настраиваем
-
-# Если нет значения по умолчанию значит оставляем пустым
-# или ставим ковычки которыми обозначаем строку, если это необходимо
-
-# Bot Access Token
-# Url to info: https://github.com/Chikachi/DiscordIntegration/wiki/How-to-get-a-token-and-channel-ID-for-Discord
-# Url to get: https://discordapp.com/developers
-bot-token: ''
-
-# Chat command prefix (string/...)
-# Example: $hello (display hello message)
-chat-command-prefix: $
-
-# Технические штуки вроде этой, которые используються только тобой
-# тоже нужно убирать из общего доступа, когда будет использоваться
-# вернуть обратно. А пока лучше все значения в код перенести.
-
-# Delete SpideyBot block
-
-# Тут как мы и обсуждали нужны дефолтные переменные
-# host: localhost
-# port: 3306
-
-# Первый вариант избавиться от секции для сохранения общего стиля,
-# ну на самом деле мне нравиться такой стиль так как он близок к стилю
-# .env у Laravel
-
-
-db-driver: 'mysql'    # Database driver (mysql, psql, etc.)
-db-username: ''       # Database username
-db-password: ''       # Database user password
-db-port: 3306         # Database port (Default: 3306)
-db-host: 'localhost'  # Database host (Default: localhost)
-db-name: ''           # Database name
-
-# Опять же правила именования
-# Блок переименую в db-setting потому что у нас тут настройки
-# Тут по сути самое просто изменение, просто правильно именуем
-# блок.
-
-# Database settings block
+# Database block settings
 db-settings:
   driver: 'mysql'       # Database driver (mysql, psql, etc.)
   username: ''          # Database username
@@ -64,4 +11,21 @@ db-settings:
   port: 3306            # Database port (Default: 3306)
   host: 'localhost'     # Database host (Default: localhost)
   database: ''          # Database name
+
+# Debug Mode (true/false)
+debug: false
+
+# Development mode (true/false)
+development: false
+
+# Optional block
+users:
+  - username
+
+# Optional block
+SpideyBot:
+  branch: branch-name
+  color: test-result-color
+  channel: 'channel'
+
 
