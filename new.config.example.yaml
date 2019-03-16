@@ -3,6 +3,8 @@ discord:
   token: ''             # Get bot token at https://discordapp.com/developers/
   channel: ''           # Discord channel for information messages
   command-prefix: '$'
+  admin-users:
+    - ''                # nickname from discord
 
 # Optional. Settings for commands
 db-settings:
@@ -21,9 +23,8 @@ development: false
 
 # Optional. Privileged user
 users:
-  discord:
-    admin-users:
-      - ''              # nickname from discord
+  - ''
+
 
 # Optional. Settings for travis-ci web-hooks
 SpideyBot:
