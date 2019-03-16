@@ -64,11 +64,7 @@ class User
             $value += $reward['count'];
         }
 
-        if ($value > 0) {
-            return $this->addReward($rewardName, $value);
-        } else {
-            return $this->removeReward($rewardName);
-        }
+        return ($value > 0) ? $this->addReward($rewardName, $value) : $this->removeReward($rewardName);
     }
 
     public function incrementReward($rewardName)
