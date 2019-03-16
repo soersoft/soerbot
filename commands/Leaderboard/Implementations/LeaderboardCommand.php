@@ -29,6 +29,8 @@ class LeaderboardCommand extends Command
           'guarded' => true,
           'args' => [],
         ]);
+
+        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
     }
 
     /**
@@ -39,8 +41,6 @@ class LeaderboardCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $this->users = new UserModel(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
-
         return $message->say($this->users->getLeaderBoardAsString());
     }
 }
