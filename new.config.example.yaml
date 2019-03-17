@@ -21,11 +21,6 @@ debug: false
 # Switch on development mode (true/false)
 development: false
 
-# Optional. Privileged user
-users:
-  - ''
-
-
 # Optional. Settings for travis-ci web-hooks
 SpideyBot:
   branch: ''            # Branch name for inspection
