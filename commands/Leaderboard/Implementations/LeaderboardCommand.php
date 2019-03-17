@@ -30,7 +30,7 @@ class LeaderboardCommand extends Command
           'args' => [],
         ]);
 
-        $this->users = new UserModel(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
+        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
     }
 
     /**
