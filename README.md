@@ -5,10 +5,10 @@
 
 ```
 composer install
+composer run post-install-cmd
 ```
 
 # Run
-
 php run.php
 
 # Contributors
