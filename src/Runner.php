@@ -94,8 +94,10 @@ class Runner
      */
     public function login(): void
     {
+        $config = $this->config('discord');
+
         $this->client
-            ->login($this->config('key'))
+            ->login($config['token'])
             ->done();
     }
 
@@ -118,15 +120,7 @@ class Runner
         $this->client->once('ready', function () {
             try {
                 $channel = $this->client->channels->first(function ($channel) {
-                    $config = Configurator::get(
-                        'SpideyBot',
-                        [
-                            'branch' => 'develop',
-                            'color' => 3066993,
-                            'channel' => 'discord-bot-php',
-                        ]
-                    );
-
+                    $config = $this->config('discord');
                     return $channel->name === $config['channel'];
                 });
 
@@ -167,10 +161,11 @@ class Runner
      */
     private function configurationForClient()
     {
+        $config = $this->config('discord');
         return [
-            'owners' => $this->config('users'),
+            'owners' => $config['admin-users'],
             'unknownCommandResponse' => false,
-            'commandPrefix' => $this->config('command-prefix'),
+            'commandPrefix' => $config['command-prefix'],
         ];
     }
 
