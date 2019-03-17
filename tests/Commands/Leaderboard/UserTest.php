@@ -77,19 +77,21 @@ class UserTest extends TestCase
 
     public function testToString()
     {
-        $string = '@Username' . PHP_EOL . ':star::star::star::star::star:' . PHP_EOL . ':smile::smile::smile:' . PHP_EOL;
+        $string = 'Username' . PHP_EOL . ':star::star::star::star::star:' . PHP_EOL . ':smile::smile::smile:' .
+          PHP_EOL;
         $this->assertEquals($string, (string)$this->user);
     }
 
     public function testToStringAsNonMagicMethod()
     {
-        $string = '@Username' . PHP_EOL . ':star::star::star::star::star:' . PHP_EOL . ':smile::smile::smile:' . PHP_EOL;
+        $string = 'Username' . PHP_EOL . ':star::star::star::star::star:' . PHP_EOL . ':smile::smile::smile:' .
+          PHP_EOL;
         $this->assertEquals($string, $this->user->toString());
     }
 
     public function testToStringWithPrefix()
     {
-        $string = ':one: @Username' . PHP_EOL . ':star::star::star::star::star:' . PHP_EOL . ':smile::smile::smile:'
+        $string = ':one: Username' . PHP_EOL . ':star::star::star::star::star:' . PHP_EOL . ':smile::smile::smile:'
           . PHP_EOL;
 
         $this->user->addPrefix(':one: ');

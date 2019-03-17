@@ -9,6 +9,10 @@ use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 class UserModel implements UserModelInterface
 {
     /**
+     * @var UserModel
+     */
+    protected static $instance;
+    /**
      * @var User[]
      */
     protected $users;
@@ -17,7 +21,7 @@ class UserModel implements UserModelInterface
 
     use ArrayServiceMethods;
 
-    public function __construct(LeaderBoardStoreInterface $store, $linesDelimiter = PHP_EOL)
+    private function __construct(LeaderBoardStoreInterface $store, $linesDelimiter)
     {
         $this->linesDelimiter = $linesDelimiter;
         $this->store = $store;
@@ -27,6 +31,15 @@ class UserModel implements UserModelInterface
         foreach ($this->store->toArray() as $user) {
             $this->users[] = new User($user['username'], $user['rewards']);
         }
+    }
+
+    public static function getInstance(LeaderBoardStoreInterface $store, $linesDelimiter = PHP_EOL)
+    {
+        if (self::$instance === null) {
+            self::$instance = new UserModel($store, $linesDelimiter);
+        }
+
+        return self::$instance;
     }
 
     public function incrementReward($username, $rewardName)
@@ -39,6 +52,8 @@ class UserModel implements UserModelInterface
 
         $this->store->add([$user->getName(), $user->getRewards()]);
         $this->store->save();
+
+        return true;
     }
 
     public function getLeaderBoardAsString()
@@ -54,6 +69,10 @@ class UserModel implements UserModelInterface
         }
 
         return $str;
+    }
+
+    protected function __clone()
+    {
     }
 
     /**
