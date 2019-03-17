@@ -24,7 +24,7 @@ class CapsuleSetup
      */
     private static function makeConnectionConfig(): array
     {
-        return Configurator::get('db-connection', []);
+        return Configurator::get('db-settings', []);
     }
 
     /**
