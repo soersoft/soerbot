@@ -1,17 +1,29 @@
-users:
-  - username
+# Discord bot settings
+discord:
+  token: ''             # Get bot token at https://discordapp.com/developers/
+  channel: ''           # Discord channel for information messages
+  command-prefix: '$'
+  admin-users:
+    - ''                # nickname from discord
+
+# Optional. Settings for commands
+db-settings:
+  driver: 'mysql'       # Database driver (mysql, psql, etc.)
+  username: ''          # Database username
+  password: ''          # Database user password
+  port: 3306            # Database port (Default: 3306)
+  host: 'localhost'     # Database host (Default: localhost)
+  database: ''          # Database name
+
+# Switch on debug mode (true/false)
 debug: false
+
+# Switch on development mode (true/false)
 development: false
-key: auth-key
-command-prefix: $
+
+# Optional. Settings for travis-ci web-hooks
 SpideyBot:
-  branch: branch-name
-  color: test-result-color
-  channel: 'channel'
-db-connection:
-  driver: 'mysql'
-  username: dbuser
-  password: dbpassword
-  port: dbport
-  host: pdhost
-  database: dbname
+  branch: ''            # Branch name for inspection
+  color: ''             # Color for test: green
+
+
