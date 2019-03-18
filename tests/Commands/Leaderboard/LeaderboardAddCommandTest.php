@@ -62,6 +62,9 @@ class LeaderboardAddCommandTest extends TestCase
 
         $this->setPrivateVariableValue($this->command, 'users', $this->users);
 
-        $this->command->run($commandMessage, new ArrayObject(['name' => 'username', 'emoji' => '🏅']), false);
+        $user = $this->createMock('\CharlotteDunois\Yasmin\Models\User');
+        $user->expects($this->once())->method('__get')->with('username')->willReturn('username');
+
+        $this->command->run($commandMessage, new ArrayObject(['name' => $user, 'emoji' => '🏅']), false);
     }
 }
