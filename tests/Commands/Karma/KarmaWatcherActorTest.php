@@ -3,8 +3,8 @@
 namespace Tests\Commands;
 
 use Tests\TestCase;
-use SoerBot\Commands\Watch\WatcherActors\Karma\KarmaWatcherActor;
-use SoerBot\Commands\Watch\WatcherActors\Karma\Exceptions\InvalidUserNameException;
+use SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor;
+use SoerBot\Commands\Karma\WatcherActor\Exceptions\InvalidUserNameException;
 
 class KarmaWatcherTest extends TestCase
 {

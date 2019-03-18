@@ -1,13 +1,16 @@
 <?php
 
-namespace SoerBot\Commands\Watch\WatcherActors\Karma;
+namespace SoerBot\Commands\Karma\WatcherActor;
 
 use CharlotteDunois\Yasmin\Models\Message;
 use SoerBot\Watcher\Interfaces\WatcherActorInterface;
-use SoerBot\Commands\Watch\WatcherActors\Karma\Implementations\UserModel;
+use SoerBot\Commands\Karma\WatcherActor\Implementations\UserModel;
 
 class KarmaWatcherActor implements WatcherActorInterface
 {
+    /**
+     * @var UserModel
+     */
     private $user;
 
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)

@@ -3,8 +3,8 @@
 namespace Tests\Commands;
 
 use Tests\TestCase;
-use SoerBot\Commands\Watch\WatcherActors\Karma\Implementations\UserModel;
-use SoerBot\Commands\Watch\WatcherActors\Karma\Exceptions\InvalidUserNameException;
+use SoerBot\Commands\Karma\WatcherActor\Implementations\UserModel;
+use SoerBot\Commands\Karma\WatcherActor\Exceptions\InvalidUserNameException;
 
 class UserModelTest extends TestCase
 {
@@ -19,7 +19,7 @@ class UserModelTest extends TestCase
     {
         $testUserName = 'username';
 
-        $store = $this->createMock('SoerBot\Commands\Watch\WatcherActors\Karma\Implementations\KarmaStoreJSONFile');
+        $store = $this->createMock('SoerBot\Commands\Karma\WatcherActor\Implementations\KarmaStoreJSONFile');
         $store
             ->expects(($this->once()))
             ->method('get')
