@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Watch;
+namespace SoerBot\Commands\AWatch;
 
 use ArrayObject;
 use CharlotteDunois\Livia\CommandMessage;

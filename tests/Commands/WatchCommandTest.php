@@ -12,7 +12,7 @@ class WatchCommandTest extends TestCase
 
     protected function setUp()
     {
-        $commandCreate = require __DIR__ . '/../../commands/Watch/watch.command.php';
+        $commandCreate = require __DIR__ . '/../../commands/AWatch/watch.command.php';
 
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
 
