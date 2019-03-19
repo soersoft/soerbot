@@ -72,6 +72,9 @@ class Runner
         // Register the command group for our example command
         $this->client->registry->registerGroup(['id' => 'moderation', 'name' => 'Moderation']);
 
+        //Register our types
+        $this->client->registry->registerTypesIn(__DIR__ . '/Types');
+
         // Register our commands (this is an example path)
         // TODO вынести регистрацию команд из файла в структуру.
         $this->client->registry->registerCommand(...$this->loadCommands());
@@ -84,7 +87,7 @@ class Runner
     {
         $this->client->on('ready', function () {
             echo 'Logged in as ' . $this->client->user->tag . ' started at ' .
-            date('d.m.Y H:i:s') . PHP_EOL;
+              date('d.m.Y H:i:s') . PHP_EOL;
         });
     }
 
@@ -95,8 +98,8 @@ class Runner
     public function login(): void
     {
         $this->client
-            ->login($this->config('key'))
-            ->done();
+          ->login($this->config('key'))
+          ->done();
     }
 
     /**
@@ -121,10 +124,10 @@ class Runner
                     $config = Configurator::get(
                         'SpideyBot',
                         [
-                            'branch' => 'develop',
-                            'color' => 3066993,
-                            'channel' => 'discord-bot-php',
-                        ]
+                        'branch' => 'develop',
+                        'color' => 3066993,
+                        'channel' => 'discord-bot-php',
+                      ]
                     );
 
                     return $channel->name === $config['channel'];
@@ -132,9 +135,9 @@ class Runner
 
                 if ($channel && Configurator::get('development', false)) {
                     $channel->send('SoerBot started in development mode.')
-                        ->done(null, function ($error) {
-                            echo $error . PHP_EOL;
-                        });
+                      ->done(null, function ($error) {
+                          echo $error . PHP_EOL;
+                      });
                 }
             } catch (\Exception $error) {
             }
@@ -168,9 +171,9 @@ class Runner
     private function configurationForClient()
     {
         return [
-            'owners' => $this->config('users'),
-            'unknownCommandResponse' => false,
-            'commandPrefix' => $this->config('command-prefix'),
+          'owners' => $this->config('users'),
+          'unknownCommandResponse' => false,
+          'commandPrefix' => $this->config('command-prefix'),
         ];
     }
 
