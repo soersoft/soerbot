@@ -124,6 +124,7 @@ class Runner
             try {
                 $channel = $this->client->channels->first(function ($channel) {
                     $config = $this->config('discord');
+
                     return $channel->name === $config['channel'];
                 });
 
@@ -165,6 +166,7 @@ class Runner
     private function configurationForClient()
     {
         $config = $this->config('discord');
+
         return [
             'owners' => $config['admin-users'],
             'unknownCommandResponse' => false,
