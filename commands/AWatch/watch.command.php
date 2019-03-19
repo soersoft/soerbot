@@ -1,6 +1,6 @@
 <?php
 
-use SoerBot\Commands\Watch\WatcherCommand;
+use SoerBot\Commands\AWatch\WatcherCommand;
 
 return function ($client) {
     return new WatcherCommand($client);

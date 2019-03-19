@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Watch\WatcherActors;
+namespace SoerBot\Commands\AWatch\WatcherActors;
 
 use SoerBot\Configurator;
 use SoerBot\Watcher\Interfaces\WatcherActorInterface;

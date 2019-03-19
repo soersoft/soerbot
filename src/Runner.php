@@ -87,7 +87,7 @@ class Runner
     {
         $this->client->on('ready', function () {
             echo 'Logged in as ' . $this->client->user->tag . ' started at ' .
-              date('d.m.Y H:i:s') . PHP_EOL;
+            date('d.m.Y H:i:s') . PHP_EOL;
         });
     }
 
@@ -97,9 +97,11 @@ class Runner
      */
     public function login(): void
     {
+        $config = $this->config('discord');
+
         $this->client
-          ->login($this->config('key'))
-          ->done();
+            ->login($config['token'])
+            ->done();
     }
 
     /**
@@ -121,23 +123,15 @@ class Runner
         $this->client->once('ready', function () {
             try {
                 $channel = $this->client->channels->first(function ($channel) {
-                    $config = Configurator::get(
-                        'SpideyBot',
-                        [
-                        'branch' => 'develop',
-                        'color' => 3066993,
-                        'channel' => 'discord-bot-php',
-                      ]
-                    );
-
+                    $config = $this->config('discord');
                     return $channel->name === $config['channel'];
                 });
 
                 if ($channel && Configurator::get('development', false)) {
                     $channel->send('SoerBot started in development mode.')
-                      ->done(null, function ($error) {
-                          echo $error . PHP_EOL;
-                      });
+                        ->done(null, function ($error) {
+                            echo $error . PHP_EOL;
+                        });
                 }
             } catch (\Exception $error) {
             }
@@ -170,10 +164,11 @@ class Runner
      */
     private function configurationForClient()
     {
+        $config = $this->config('discord');
         return [
-          'owners' => $this->config('users'),
-          'unknownCommandResponse' => false,
-          'commandPrefix' => $this->config('command-prefix'),
+            'owners' => $config['admin-users'],
+            'unknownCommandResponse' => false,
+            'commandPrefix' => $config['command-prefix'],
         ];
     }
 

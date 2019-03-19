@@ -1,10 +1,10 @@
 <?php
 
-namespace SoerBot\Commands\Watch\WatcherActors\Karma\Implementations;
+namespace SoerBot\Commands\Karma\WatcherActor\Implementations;
 
-use SoerBot\Commands\Watch\WatcherActors\Karma\AbstractClasses\AbstractUserModel;
-use SoerBot\Commands\Watch\WatcherActors\Karma\Exceptions\InvalidUserNameException;
-use SoerBot\Commands\Watch\WatcherActors\Karma\Exceptions\StoreFileNotFoundException;
+use SoerBot\Commands\Karma\WatcherActor\AbstractClasses\AbstractUserModel;
+use SoerBot\Commands\Karma\WatcherActor\Exceptions\InvalidUserNameException;
+use SoerBot\Commands\Karma\WatcherActor\Exceptions\StoreFileNotFoundException;
 
 class UserModel extends AbstractUserModel
 {
