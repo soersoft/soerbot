@@ -43,7 +43,7 @@ class LeaderboardAddCommand extends Command
               'key' => 'emoji',
               'label' => 'emoji',
               'prompt' => 'Какую награду добавить?',
-              'type' => 'string',
+              'type' => 'reward',
             ],
           ],
         ]);

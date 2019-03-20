@@ -72,6 +72,9 @@ class Runner
         // Register the command group for our example command
         $this->client->registry->registerGroup(['id' => 'moderation', 'name' => 'Moderation']);
 
+        //Register our types
+        $this->client->registry->registerTypesIn(__DIR__ . '/Types');
+
         // Register our commands (this is an example path)
         // TODO вынести регистрацию команд из файла в структуру.
         $this->client->registry->registerCommand(...$this->loadCommands());
@@ -121,6 +124,7 @@ class Runner
             try {
                 $channel = $this->client->channels->first(function ($channel) {
                     $config = $this->config('discord');
+
                     return $channel->name === $config['channel'];
                 });
 
@@ -162,6 +166,7 @@ class Runner
     private function configurationForClient()
     {
         $config = $this->config('discord');
+
         return [
             'owners' => $config['admin-users'],
             'unknownCommandResponse' => false,
