@@ -1,0 +1,27 @@
+# Discord bot settings
+discord:
+  token: 'NTI1MTk0MTA5MDE1ODE4Mjgx.DvzFKQ.h3R4Fyoc2R_K6qxTogOTp82s5Rk'             # Get bot token at https://discordapp.com/developers/
+  channel: '525177926501662743'           # Discord channel for information messages
+  command-prefix: '~'
+  admin-users:
+    - 'DenisGeek'                # nickname from discord
+
+# Optional. Settings for commands
+db-settings:
+  driver: 'mysql'       # Database driver (mysql, psql, etc.)
+  username: 'admin'          # Database username
+  password: 'ZAQ!2wsx'          # Database user password
+  port: 3306            # Database port (Default: 3306)
+  host: 'localhost'     # Database host (Default: localhost)
+  database: 'Soer.Bot'          # Database name
+
+# Switch on debug mode (true/false)
+debug: false
+
+# Switch on development mode (true/false)
+development: false
+
+# Optional. Settings for travis-ci web-hooks
+SpideyBot:
+  branch: 'develop'            # Branch name for inspection
+  color: 'green'             # Color for test: green
