@@ -21,7 +21,7 @@ class GreetingCommand extends \CharlotteDunois\Livia\Commands\Command
                 [
                     'key' => 'topic',
                     'label' => 'topic',
-                    'prompt' => 'HelloWorld ))))',
+                    'prompt' => 'type command: say',
                     'type' => 'string',
                 ],
             ],
@@ -32,21 +32,14 @@ class GreetingCommand extends \CharlotteDunois\Livia\Commands\Command
     {
         $basePath = dirname(__FILE__);
         switch ($args['topic']) {
-            case 'rules':
-                $helpTopic = \file_get_contents($basePath . '/help.topic/rules.md');
-
-                return $message->say($helpTopic);
-
-                break;
-            case 'channels':
-                $helpTopic = \file_get_contents($basePath . '/help.topic/channel.md');
-
-                return $message->say($helpTopic);
+            case 'say':
+                
+                return $message->say($message->author . ', салют!');
 
                 break;
         }
 
-        return  $message->say('help [rules|channel]');
+        return  $message->say('Unknown directive, use [say]');
     }
 
     public function serialize()
