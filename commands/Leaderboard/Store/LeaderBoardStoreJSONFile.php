@@ -52,6 +52,8 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 
         $this->remove($username);
         array_push($this->data, ['username' => $username, 'rewards' => $rewards]);
+
+        return true;
     }
 
     public function get($username)
