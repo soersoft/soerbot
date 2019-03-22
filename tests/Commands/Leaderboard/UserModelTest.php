@@ -3,8 +3,8 @@
 namespace Tests\Commands\Leaderboard;
 
 use Tests\TestCase;
-use SoerBot\Commands\Leaderboard\Implementations\UserModel;
 use SoerBot\Commands\Leaderboard\Implementations\User;
+use SoerBot\Commands\Leaderboard\Implementations\UserModel;
 use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
 class UserModelTest extends TestCase
@@ -27,8 +27,8 @@ class UserModelTest extends TestCase
         $rewards = [
           [
             'emoji' => '🏅',
-            'count' => 1
-          ]
+            'count' => 1,
+          ],
         ];
 
         $store = $this->getMockBuilder('LeaderboardStore')->setMethods(['add', 'save'])->getMock();
@@ -66,7 +66,5 @@ EOT;
         $this->setPrivateVariableValue($this->users, 'users', $usersData);
 
         $this->assertSame($string, $this->users->getLeaderBoardAsString());
-
     }
-
 }
