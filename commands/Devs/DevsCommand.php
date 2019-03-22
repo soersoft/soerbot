@@ -52,14 +52,17 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
 
                 break;
 
-                default: $message->reply('Чтобы узнать о команде $devs наберите $devs help');
-        }
+            
 
-        return  $message->reply('Введите команду $devs и через пробел имя топика, к которому хотите обратиться  [how-to-start|beginner]');
+               }
+
+        return  $message->reply('Чтобы узнать о команде $devs наберите $devs help');
     }
 
     public function serialize()
     {
         return [];
     }
+
+    
 }
