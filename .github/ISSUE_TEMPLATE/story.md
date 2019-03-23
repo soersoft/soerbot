@@ -2,7 +2,7 @@
 name: User Story
 about: Пользовательская история
 title: ''
-labels: ''
+labels: 'story'
 assignees: ''
 
 ---

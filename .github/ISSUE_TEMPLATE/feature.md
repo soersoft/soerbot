@@ -2,7 +2,7 @@
 name: Feature
 about: Выделить фичу из Story
 title: ''
-labels: ''
+labels: 'feature'
 assignees: ''
 
 ---
