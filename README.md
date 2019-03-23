@@ -9,7 +9,7 @@
 
 ```
 composer install
-composer run post-install-cmd
+composer run post-update-cmd
 ```
 
 # Run
