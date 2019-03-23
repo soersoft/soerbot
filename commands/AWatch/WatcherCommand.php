@@ -53,6 +53,6 @@ class WatcherCommand extends Command
 
     public function run(CommandMessage $message, ArrayObject $args, bool $fromPattern)
     {
-        return  $message->say('...');
+        return  $message->say('Пиривет, начальника!');
     }
 }
