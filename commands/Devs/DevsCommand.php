@@ -34,7 +34,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
                 [
                     'key' => 'topic',
                     'label' => 'topic',
-                    'prompt' => 'Укажите топик: ' . $this->topics->getNames() . '.',
+                    'prompt' => 'Укажите топик: ' . $this->topics->getTopicsNames() . '.',
                     'type' => 'string',
                 ],
             ],
@@ -47,7 +47,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
             return $message->say($this->topics->getContent($args['topic']));
         }
 
-        return $message->say('Укажите топик: ' . $this->topics->getNames() . '.');
+        return $message->say('Укажите топик: ' . $this->topics->getTopicsNames() . '.');
     }
 
     public function serialize()

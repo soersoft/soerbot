@@ -45,7 +45,7 @@ class TopicCollection
     /**
      * @return string
      */
-    public function getNames(): string
+    public function getTopicsNames(): string
     {
         return $this->stringifyTopics();
     }
@@ -88,6 +88,19 @@ class TopicCollection
     protected function stringifyTopics(): string
     {
         ksort($this->topics);
+
+        if (array_key_exists('list', $this->topics)) {
+            $output = '';
+            foreach (array_keys($this->topics) as $key) {
+                if ($key === 'list') {
+                    continue;
+                }
+                $output .= $key . ', ';
+            }
+            $output .= 'list - to list all command descriptions';
+
+            return $output;
+        }
 
         return implode(', ', array_keys($this->topics));
     }

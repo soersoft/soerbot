@@ -47,9 +47,18 @@ class TopicCollectionTest extends TestCase
         $this->assertTrue($this->collection->hasTopic($firstIndex));
     }
 
-    public function testGetNamesShowReturnExpected()
+    public function testGetTopicsNamesShowReturnExpected()
     {
-        $this->assertSame('first, second', $this->collection->getNames());
+        $this->assertSame('first, second', $this->collection->getTopicsNames());
+    }
+
+    public function testGetTopicsNamesShowWithList()
+    {
+        $topics = $this->getPrivateVariableValue($this->collection, 'topics');
+        $topics += ['list' => ''];
+        $this->setPrivateVariableValue($this->collection, 'topics', $topics);
+
+        $this->assertSame('first, second, list - to list all command descriptions', $this->collection->getTopicsNames());
     }
 
     public function testGetTopicsMakeRightObjects()

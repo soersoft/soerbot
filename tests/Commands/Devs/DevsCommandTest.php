@@ -41,6 +41,8 @@ class DevsCommandTest extends TestCase
 
     public function testConstructorMakeObjectWithRightArguments()
     {
+        $testTopics = new TopicCollection();
+
         $this->assertEquals(count($this->command->args), 1);
         $this->assertArrayHasKey('key', $this->command->args[0]);
         $this->assertArrayHasKey('label', $this->command->args[0]);
@@ -49,7 +51,7 @@ class DevsCommandTest extends TestCase
 
         $this->assertEquals($this->command->args[0]['key'], 'topic');
         $this->assertEquals($this->command->args[0]['label'], 'topic');
-        $this->assertEquals($this->command->args[0]['prompt'], 'Укажите топик: how-to-start.');
+        $this->assertEquals($this->command->args[0]['prompt'], 'Укажите топик: ' . $testTopics->getTopicsNames() . '.');
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
@@ -65,12 +67,14 @@ class DevsCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['topic' => '']), false);
     }
 
-    public function testDevsSayRightTextOnNonExistTopic(): void
+    public function testDevsSayDefaultTextOnNonExistTopic(): void
     {
+        $testTopics = new TopicCollection();
+
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () {
         });
-        $commandMessage->expects($this->once())->method('say')->with('Укажите топик: how-to-start.')->willReturn($promise);
+        $commandMessage->expects($this->once())->method('say')->with('Укажите топик: ' . $testTopics->getTopicsNames() . '.')->willReturn($promise);
         $this->command->run($commandMessage, new ArrayObject(['topic' => 'not_exist']), false);
     }
 
