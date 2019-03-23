@@ -13,21 +13,26 @@ class TopicModel
 
     /**
      * TopicModel constructor.
-     * @param string $filePath
+     * @param string $file
      *
      * @throws \Exception
      */
-    public function __construct(string $filePath)
+    protected function __construct(string $file)
     {
-        if (!file_exists($filePath)) {
-            throw new \Exception('DevsCommand error. You must provide valid file path.');
+        $this->filePath = $file;
+    }
+
+    public static function create(string $file)
+    {
+        if (!file_exists($file)) {
+            throw new \Exception('DevsCommand error: file ' . $file . ' does not exists.');
         }
 
-        if (!self::isTopic($filePath)) {
-            throw new \Exception('DevsCommand error. You must provide valid topic file.');
+        if (!self::isTopic($file)) {
+            throw new \InvalidArgumentException('DevsCommand error: file ' . $file . ' has wrong extension and is not valid topic file.');
         }
 
-        $this->filePath = $filePath;
+        return new self($file);
     }
 
     /**

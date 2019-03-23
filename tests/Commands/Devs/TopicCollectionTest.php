@@ -21,32 +21,30 @@ class TopicCollectionTest extends TestCase
     /*------------Exception block------------*/
     public function testConstructorThrowExceptionWhenDirectoryNotExist()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('DevsCommand error. You must provide valid directory.');
+        $path = __DIR__ . 'not_exist/';
 
-        new TopicCollection(__DIR__ . 'not_exist/');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('DevsCommand error: ' . $path . ' is not a valid directory.');
+
+        new TopicCollection($path);
     }
 
     public function testConstructorThrowExceptionWhenDirectoryIsEmpty()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('DevsCommand error. You must provide directory with right files.');
+        $path = __DIR__ . '/empty';
 
-        new TopicCollection(__DIR__ . '/empty');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('DevsCommand error: directory ' . $path . ' does not contain topic files.');
+
+        new TopicCollection($path);
     }
 
     /*------------Functional block------------*/
-    public function testGetTopicsMakeRightObjects()
+    public function testHasCollectionReturnExpected()
     {
         $firstIndex = 'first';
 
-        $this->assertInstanceOf(TopicModel::class, $this->collection->getTopics()[$firstIndex]);
-    }
-    
-    public function testGetTopicsCanGetFiles()
-    {
-        $this->assertIsArray($this->collection->getTopics());
-        $this->assertCount(2, $this->collection->getTopics());
+        $this->assertTrue($this->collection->hasTopic($firstIndex));
     }
 
     public function testGetNamesShowReturnExpected()
@@ -54,16 +52,33 @@ class TopicCollectionTest extends TestCase
         $this->assertSame('first, second', $this->collection->getNames());
     }
 
+    public function testGetTopicsMakeRightObjects()
+    {
+        $firstIndex = 'first';
+
+        $method = $this->getPrivateMethod($this->collection, 'getTopics');
+
+        $this->assertInstanceOf(TopicModel::class, $method->invoke($this->collection)[$firstIndex]);
+    }
+
+    public function testGetTopicsCanGetFiles()
+    {
+        $this->assertIsArray($this->collection->getTopics());
+        $this->assertCount(2, $this->collection->getTopics());
+    }
+
     public function testGetTopicReturnNullOnFalseKey()
     {
-        $this->assertNull($this->collection->getTopic('not_exist'));
+        $method = $this->getPrivateMethod($this->collection, 'getTopic');
+        $this->assertNull($method->invokeArgs($this->collection, ['not_exist']));
     }
 
     public function testGetTopicReturnExistedTopicObjectByKey()
     {
         $existKey = 'first';
 
-        $this->assertInstanceOf(TopicModel::class, $this->collection->getTopic($existKey));
+        $method = $this->getPrivateMethod($this->collection, 'getTopic');
+        $this->assertInstanceOf(TopicModel::class, $method->invokeArgs($this->collection, [$existKey]));
     }
 
     public function testGetContentReturnNullOnFalseKey()

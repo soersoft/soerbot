@@ -27,11 +27,11 @@ class TopicCollection
 
     /**
      * @param string $key
-     * @return TopicModel
+     * @return bool
      */
-    public function getTopic(string $key): ?TopicModel
+    public function hasTopic(string $key): bool
     {
-        return $this->topics[$key] ?? null;
+        return isset($this->topics[$key]);
     }
 
     /**
@@ -40,14 +40,6 @@ class TopicCollection
     public function getContent(string $key): ?string
     {
         return isset($this->topics[$key]) ? $this->topics[$key]->getContent() : null;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTopics(): array
-    {
-        return $this->topics;
     }
 
     /**
@@ -67,20 +59,27 @@ class TopicCollection
     protected function setupTopics(string $path): array
     {
         if (!is_dir($path)) {
-            throw new \Exception('DevsCommand error. You must provide valid directory.');
+            throw new \Exception('DevsCommand error: ' . $path . ' is not a valid directory.');
         }
 
         $topics = [];
 
         foreach (new \DirectoryIterator($path) as $file) {
-            if ($file->isFile() && TopicModel::isTopic($file->getBasename())) {
+            if ($file->isFile()) {
+                try {
+                    $topic = TopicModel::create($file->getRealPath());
+                } catch (\InvalidArgumentException $e) {
+                    continue;
+                }
+
+                // @see вот тут вот тоже есть сомнения по поводу TopicModel::getCleanName (хотя это явно ответственность Модели выдавать чистый ключ)
                 $key = TopicModel::getCleanName($file->getBasename());
-                $topics[$key] = new TopicModel($file->getRealPath());
+                $topics[$key] = $topic;
             }
         }
 
         if (empty($topics)) {
-            throw new \Exception('DevsCommand error. You must provide directory with right files.');
+            throw new \Exception('DevsCommand error: directory ' . $path . ' does not contain topic files.');
         }
 
         return $topics;
@@ -93,5 +92,22 @@ class TopicCollection
     {
         ksort($this->topics);
         return implode(', ', array_keys($this->topics));
+    }
+
+    /**
+     * @return array
+     */
+    public function getTopics(): array
+    {
+        return $this->topics;
+    }
+
+    /**
+     * @param string $key
+     * @return TopicModel
+     */
+    protected function getTopic(string $key): ?TopicModel
+    {
+        return $this->topics[$key] ?? null;
     }
 }

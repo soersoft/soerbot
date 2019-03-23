@@ -43,7 +43,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        if (!empty($args) && array_key_exists($args['topic'], $this->topics->getTopics())) {
+        if (!empty($args) && $this->topics->hasTopic($args['topic'])) {
             return $message->say($this->topics->getContent($args['topic']));
         }
 
