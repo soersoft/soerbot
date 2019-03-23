@@ -71,10 +71,7 @@ class TopicCollection
                 } catch (\InvalidArgumentException $e) {
                     continue;
                 }
-
-                // @see вот тут вот тоже есть сомнения по поводу TopicModel::getCleanName (хотя это явно ответственность Модели выдавать чистый ключ)
-                $key = TopicModel::getCleanName($file->getBasename());
-                $topics[$key] = $topic;
+                $topics += $topic;
             }
         }
 
@@ -91,6 +88,7 @@ class TopicCollection
     protected function stringifyTopics(): string
     {
         ksort($this->topics);
+
         return implode(', ', array_keys($this->topics));
     }
 

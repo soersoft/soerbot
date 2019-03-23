@@ -42,19 +42,22 @@ class TopicModelTest extends TestCase
         $path = __DIR__ . '/testfiles/first.topic.md';
         $topic = TopicModel::create($path);
 
-        $this->assertSame($path, $topic->getPath());
+        $this->assertSame($path, reset($topic)->getPath());
     }
 
     public function testGetContentReturnExpected()
     {
         $topic = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');
 
-        $this->assertSame("test file 2", $topic->getContent());
+        $this->assertSame("test file 2", reset($topic)->getContent());
     }
 
     public function testIsTopicReturnTrue()
     {
-        $this->assertTrue(TopicModel::isTopic(__DIR__ . '/testfiles/second.topic.md'));
+        $object = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');
+        $method = $this->getPrivateMethod(reset($object), 'isTopic');
+
+        $this->assertTrue($method->invokeArgs(null, [__DIR__ . '/testfiles/second.topic.md']));
     }
 
     /**
@@ -62,7 +65,10 @@ class TopicModelTest extends TestCase
      */
     public function testGetCleanNameReturnExpected($path, $expected)
     {
-        $this->assertSame($expected, TopicModel::getCleanName($path));
+        $object = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');
+        $method = $this->getPrivateMethod(reset($object), 'getKey');
+
+        $this->assertSame($expected, $method->invokeArgs(null, [$path]));
     }
 
     public function pathsProvider()

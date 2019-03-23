@@ -22,7 +22,13 @@ class TopicModel
         $this->filePath = $file;
     }
 
-    public static function create(string $file)
+    /**
+     * @param string $file
+     * @return TopicModel
+     *
+     * @throws \Exception
+     */
+    public static function create(string $file): array
     {
         if (!file_exists($file)) {
             throw new \Exception('DevsCommand error: file ' . $file . ' does not exists.');
@@ -32,7 +38,7 @@ class TopicModel
             throw new \InvalidArgumentException('DevsCommand error: file ' . $file . ' has wrong extension and is not valid topic file.');
         }
 
-        return new self($file);
+        return [self::getKey($file) => new self($file)];
     }
 
     /**
@@ -56,7 +62,7 @@ class TopicModel
      *
      * @return bool
      */
-    public static function isTopic(string $filePath): bool
+    protected static function isTopic(string $filePath): bool
     {
         $length = mb_strlen(self::EXTENSION);
 
@@ -69,7 +75,7 @@ class TopicModel
      * @param string $filePath
      * @return string
      */
-    public static function getCleanName(string $filePath): string
+    protected static function getKey(string $filePath): string
     {
         return str_replace(self::EXTENSION, '', pathinfo($filePath, PATHINFO_BASENAME));
     }
