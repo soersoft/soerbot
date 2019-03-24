@@ -44,7 +44,17 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
         if (!empty($args) && $this->topics->hasTopic($args['topic'])) {
-            return $message->say($this->topics->getContent($args['topic']));
+            return $message->direct($this->topics->getContent($args['topic']), array('split' => true))->then(function ($msg) use ($message, $args) {
+                if($message->message->channel->type !== 'dm') {
+                    return $message->reply('Sent you a DM (Direct Message) with ' . $args['topic'] . ' information.');
+                }
+
+                return $msg;
+            }, function () use ($message) {
+                if($message->message->channel->type !== 'dm') {
+                    return $message->reply('Unable to send you the DM (Direct Message). You probably have DMs disabled.');
+                }
+            });
         }
 
         return $message->say('Укажите топик: ' . $this->topics->getTopicsNames() . '.');
