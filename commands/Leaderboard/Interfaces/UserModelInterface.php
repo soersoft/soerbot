@@ -8,5 +8,5 @@ interface UserModelInterface
      * Makes a string from the all user's data.
      * @return string
      */
-    public function getLeaderBoardAsString(): string;
+    public function getLeaderBoardAsString();
 }
