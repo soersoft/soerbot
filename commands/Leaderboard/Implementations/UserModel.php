@@ -12,11 +12,21 @@ class UserModel implements UserModelInterface
      * @var UserModel
      */
     protected static $instance;
+
     /**
      * @var User[]
      */
     protected $users;
+
+    /**
+     * @var LeaderBoardStoreInterface
+     */
     protected $store;
+
+    /**
+     * Line delimiter for separating users in stringify functions.
+     * @var string
+     */
     protected $linesDelimiter;
 
     use ArrayServiceMethods;
@@ -33,6 +43,12 @@ class UserModel implements UserModelInterface
         }
     }
 
+    /**
+     * Returns singleton instance.
+     * @param LeaderBoardStoreInterface $store
+     * @param string $linesDelimiter
+     * @return UserModel
+     */
     public static function getInstance(LeaderBoardStoreInterface $store, $linesDelimiter = PHP_EOL)
     {
         if (self::$instance === null) {
@@ -42,6 +58,12 @@ class UserModel implements UserModelInterface
         return self::$instance;
     }
 
+    /**
+     * Increments chosen reward and saves the result in the store.
+     * @param string $username
+     * @param string $rewardName
+     * @return bool
+     */
     public function incrementReward($username, $rewardName)
     {
         if (!$user = $this->get($username)) {
@@ -56,6 +78,10 @@ class UserModel implements UserModelInterface
         return true;
     }
 
+    /**
+     * Makes a string from the all user's data.
+     * @return string
+     */
     public function getLeaderBoardAsString()
     {
         $str = '';
@@ -71,11 +97,15 @@ class UserModel implements UserModelInterface
         return $str;
     }
 
+    /**
+     * Singleton cloning is forbidden.
+     */
     protected function __clone()
     {
     }
 
     /**
+     * Returns user instance for chosen username.
      * @param $username
      * @return User
      */
