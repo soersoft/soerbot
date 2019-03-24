@@ -86,7 +86,7 @@ class DevsCommandTest extends TestCase
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () {
         });
-        $commandMessage->expects($this->once())->method('say')->with('test file 1' . PHP_EOL)->willReturn($promise);
+        $commandMessage->expects($this->once())->method('direct')->with('test file 1' . PHP_EOL)->willReturn($promise);
         $this->command->run($commandMessage, new ArrayObject(['topic' => 'first']), false);
     }
 

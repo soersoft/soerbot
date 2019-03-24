@@ -1,23 +1,18 @@
 <?php
-/**
- *
- */
 
 namespace SoerBot\Commands\Devs;
-
 
 class TopicCollection
 {
     /**
      * @var array
      */
-    protected $topics;
+    protected $topics = [];
 
     /**
      * TopicCollection constructor.
      *
      * @param string $path
-     *
      * @throws \Exception
      */
     public function __construct(string $path = __DIR__ . '/store/')
@@ -52,9 +47,8 @@ class TopicCollection
 
     /**
      * @param string $path
-     * @return array
-     *
      * @throws \Exception
+     * @return array
      */
     protected function setupTopics(string $path): array
     {
@@ -108,7 +102,7 @@ class TopicCollection
     /**
      * @return array
      */
-    public function getTopics(): array
+    protected function getTopics(): array
     {
         return $this->topics;
     }

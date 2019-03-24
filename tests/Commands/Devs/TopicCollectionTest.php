@@ -72,8 +72,10 @@ class TopicCollectionTest extends TestCase
 
     public function testGetTopicsCanGetFiles()
     {
-        $this->assertIsArray($this->collection->getTopics());
-        $this->assertCount(2, $this->collection->getTopics());
+        $method = $this->getPrivateMethod($this->collection, 'getTopics');
+
+        $this->assertIsArray($method->invoke($this->collection));
+        $this->assertCount(2, $method->invoke($this->collection));
     }
 
     public function testGetTopicReturnNullOnFalseKey()

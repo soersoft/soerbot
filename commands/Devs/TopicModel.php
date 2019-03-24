@@ -14,7 +14,6 @@ class TopicModel
     /**
      * TopicModel constructor.
      * @param string $file
-     *
      * @throws \Exception
      */
     protected function __construct(string $file)
@@ -24,9 +23,8 @@ class TopicModel
 
     /**
      * @param string $file
-     * @return TopicModel
-     *
      * @throws \Exception
+     * @return array
      */
     public static function create(string $file): array
     {
@@ -58,7 +56,18 @@ class TopicModel
     }
 
     /**
-     * Check if file has right topic extension
+     * Returns cleaned topic name from file path.
+     *
+     * @param string $filePath
+     * @return string
+     */
+    protected static function getKey(string $filePath): string
+    {
+        return str_replace(self::EXTENSION, '', pathinfo($filePath, PATHINFO_BASENAME));
+    }
+
+    /**
+     * Check if file has right topic extension.
      *
      * @return bool
      */
@@ -67,16 +76,5 @@ class TopicModel
         $length = mb_strlen(self::EXTENSION);
 
         return substr($filePath, -$length) === self::EXTENSION;
-    }
-
-    /**
-     * Returns cleaned topic name from file path
-     *
-     * @param string $filePath
-     * @return string
-     */
-    protected static function getKey(string $filePath): string
-    {
-        return str_replace(self::EXTENSION, '', pathinfo($filePath, PATHINFO_BASENAME));
     }
 }
