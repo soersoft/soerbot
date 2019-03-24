@@ -44,63 +44,49 @@ class TopicCollectionTest extends TestCase
     {
         $firstIndex = 'first';
 
-        $this->assertTrue($this->collection->hasTopic($firstIndex));
+        $this->assertTrue($this->collection->has($firstIndex));
     }
 
-    public function testGetTopicsNamesShowReturnExpected()
+    public function testGetListNamesShowReturnExpected()
     {
-        $this->assertSame('first, second', $this->collection->getTopicsNames());
+        $this->assertSame('first, second', $this->collection->listNames());
     }
 
-    public function testGetTopicsNamesShowWithList()
+    public function testGetListNamesShowWithList()
     {
         $topics = $this->getPrivateVariableValue($this->collection, 'topics');
         $topics += ['list' => ''];
         $this->setPrivateVariableValue($this->collection, 'topics', $topics);
 
-        $this->assertSame('first, second, list - to list all command descriptions', $this->collection->getTopicsNames());
+        $this->assertSame('first, second, list - to list all command descriptions', $this->collection->listNames());
     }
 
-    public function testGetTopicsMakeRightObjects()
+    public function testGetOneReturnExistedTopicObjectByKey()
+    {
+        $existKey = 'first';
+
+        $this->assertInstanceOf(TopicModel::class, $this->collection->getOne($existKey));
+    }
+
+    public function testGetOneReturnNullOnFalseKey()
+    {
+        $this->assertNull($this->collection->getOne('not_exist'));
+    }
+
+    public function testGetAllMakeRightObjects()
     {
         $firstIndex = 'first';
 
-        $method = $this->getPrivateMethod($this->collection, 'getTopics');
+        $method = $this->getPrivateMethod($this->collection, 'getAll');
 
         $this->assertInstanceOf(TopicModel::class, $method->invoke($this->collection)[$firstIndex]);
     }
 
-    public function testGetTopicsCanGetFiles()
+    public function testGetAllCanGetFiles()
     {
-        $method = $this->getPrivateMethod($this->collection, 'getTopics');
+        $method = $this->getPrivateMethod($this->collection, 'getAll');
 
         $this->assertIsArray($method->invoke($this->collection));
         $this->assertCount(2, $method->invoke($this->collection));
-    }
-
-    public function testGetTopicReturnNullOnFalseKey()
-    {
-        $method = $this->getPrivateMethod($this->collection, 'getTopic');
-        $this->assertNull($method->invokeArgs($this->collection, ['not_exist']));
-    }
-
-    public function testGetTopicReturnExistedTopicObjectByKey()
-    {
-        $existKey = 'first';
-
-        $method = $this->getPrivateMethod($this->collection, 'getTopic');
-        $this->assertInstanceOf(TopicModel::class, $method->invokeArgs($this->collection, [$existKey]));
-    }
-
-    public function testGetContentReturnNullOnFalseKey()
-    {
-        $this->assertNull($this->collection->getContent('not_exist'));
-    }
-
-    public function testGetContentReturnReturnExpected()
-    {
-        $existKey = 'first';
-
-        $this->assertSame('test file 1' . PHP_EOL, $this->collection->getContent($existKey));
     }
 }

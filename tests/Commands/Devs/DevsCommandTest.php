@@ -32,6 +32,9 @@ class DevsCommandTest extends TestCase
         parent::setUp();
     }
 
+    /*------------Exception block------------*/
+
+    /*------------Functional block------------*/
     public function testConstructorMakeRightObject()
     {
         $this->assertEquals($this->command->name, 'devs');
@@ -51,7 +54,7 @@ class DevsCommandTest extends TestCase
 
         $this->assertEquals($this->command->args[0]['key'], 'topic');
         $this->assertEquals($this->command->args[0]['label'], 'topic');
-        $this->assertEquals($this->command->args[0]['prompt'], 'Укажите топик: ' . $testTopics->getTopicsNames() . '.');
+        $this->assertEquals($this->command->args[0]['prompt'], 'Укажите топик: ' . $testTopics->listNames() . '.');
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
@@ -67,20 +70,9 @@ class DevsCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['topic' => '']), false);
     }
 
-    public function testDevsSayDefaultTextOnNonExistTopic(): void
+    public function testDevsSayRightTextWhenExistedTopic()
     {
-        $testTopics = new TopicCollection();
-
-        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () {
-        });
-        $commandMessage->expects($this->once())->method('say')->with('Укажите топик: ' . $testTopics->getTopicsNames() . '.')->willReturn($promise);
-        $this->command->run($commandMessage, new ArrayObject(['topic' => 'not_exist']), false);
-    }
-
-    public function testDevsSayRightTextOnExistedTopic()
-    {
-        $testTopics = (new TopicCollection(__DIR__ . '/testfiles/'));
+        $testTopics = new TopicCollection(__DIR__ . '/testfiles/');
         $this->setPrivateVariableValue($this->command, 'topics', $testTopics);
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
@@ -88,6 +80,33 @@ class DevsCommandTest extends TestCase
         });
         $commandMessage->expects($this->once())->method('direct')->with('test file 1' . PHP_EOL)->willReturn($promise);
         $this->command->run($commandMessage, new ArrayObject(['topic' => 'first']), false);
+    }
+
+    public function testDevsSayDefaultTextWhenNonExistTopic(): void
+    {
+        $testTopics = new TopicCollection();
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $promise = new Promise(function () {
+        });
+        $commandMessage->expects($this->once())->method('say')->with('Укажите топик: ' . $testTopics->listNames() . '.')->willReturn($promise);
+        $this->command->run($commandMessage, new ArrayObject(['topic' => 'not_exist']), false);
+    }
+
+    public function testDevsSayRightTextWhenNonExistFile()
+    {
+        $existKey = 'first';
+
+        $testTopics = new TopicCollection(__DIR__ . '/testfiles/');
+        $this->setPrivateVariableValue($this->command, 'topics', $testTopics);
+        $object = $testTopics->getOne($existKey);
+        $this->setPrivateVariableValue($object, 'filePath', 'not_exist');
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $promise = new Promise(function () {
+        });
+        $commandMessage->expects($this->once())->method('say')->with('Команда devs не работает. Мы делаем все возможное, чтобы она снова заработала.')->willReturn($promise);
+        $this->command->run($commandMessage, new ArrayObject(['topic' => $existKey]), false);
     }
 
     // this hack used when test is faild and PHPUnit makes serialization of object properties

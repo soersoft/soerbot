@@ -18,6 +18,8 @@ class TopicModel
      */
     protected function __construct(string $file)
     {
+
+
         $this->filePath = $file;
     }
 
@@ -50,9 +52,11 @@ class TopicModel
     /**
      * @return string
      */
-    public function getContent(): string
+    public function getContent(): ?string
     {
-        return file_get_contents($this->filePath);
+        $content = @file_get_contents($this->filePath);
+
+        return $content ? $content : null;
     }
 
     /**

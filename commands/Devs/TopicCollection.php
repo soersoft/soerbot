@@ -24,23 +24,24 @@ class TopicCollection
      * @param string $key
      * @return bool
      */
-    public function hasTopic(string $key): bool
+    public function has(string $key): bool
     {
         return isset($this->topics[$key]);
     }
 
     /**
-     * @return string
+     * @param string $key
+     * @return TopicModel
      */
-    public function getContent(string $key): ?string
+    public function getOne(string $key): ?TopicModel
     {
-        return isset($this->topics[$key]) ? $this->topics[$key]->getContent() : null;
+        return $this->topics[$key] ?? null;
     }
 
     /**
      * @return string
      */
-    public function getTopicsNames(): string
+    public function listNames(): string
     {
         return $this->stringifyTopics();
     }
@@ -102,17 +103,8 @@ class TopicCollection
     /**
      * @return array
      */
-    protected function getTopics(): array
+    protected function getAll(): array
     {
         return $this->topics;
-    }
-
-    /**
-     * @param string $key
-     * @return TopicModel
-     */
-    protected function getTopic(string $key): ?TopicModel
-    {
-        return $this->topics[$key] ?? null;
     }
 }

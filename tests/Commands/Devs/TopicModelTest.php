@@ -52,6 +52,15 @@ class TopicModelTest extends TestCase
         $this->assertSame("test file 2", reset($topic)->getContent());
     }
 
+    public function testGetContentReturnNullWhenWrongFile()
+    {
+        $topic = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');
+        $object = reset($topic);
+        $this->setPrivateVariableValue($object, 'filePath', 'not_exist');
+
+        $this->assertNull($object->getContent());
+    }
+
     public function testIsTopicReturnTrue()
     {
         $object = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');

@@ -15,7 +15,12 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
      */
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
-        $this->topics = new TopicCollection();
+        try {
+            $this->topics = new TopicCollection();
+        } catch (\Throwable $e) {
+            //log error or notify admin
+            throw new \Exception('Something wrong with devs command. Got error ' . $e->getMessage() . '.');
+        }
 
         parent::__construct($client, [
             'name' => 'devs', // Give command name
@@ -32,7 +37,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
                 [
                     'key' => 'topic',
                     'label' => 'topic',
-                    'prompt' => 'Укажите топик: ' . $this->topics->getTopicsNames() . '.',
+                    'prompt' => 'Укажите топик: ' . $this->topics->listNames() . '.',
                     'type' => 'string',
                 ],
             ],
@@ -41,8 +46,13 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        if (!empty($args) && $this->topics->hasTopic($args['topic'])) {
-            return $message->direct($this->topics->getContent($args['topic']), ['split' => true])->then(function ($msg) use ($message, $args) {
+        if (!empty($args) && $this->topics->has($args['topic'])) {
+            if (!($content = $this->topics->getOne($args['topic'])->getContent())) {
+                //log error or notify admin
+                return $message->say('Команда devs не работает. Мы делаем все возможное, чтобы она снова заработала.');
+            }
+
+            return $message->direct($content, ['split' => true])->then(function ($msg) use ($message, $args) {
                 if ($message->message->channel->type !== 'dm') {
                     return $message->reply('Sent you a DM (Direct Message) with ' . $args['topic'] . ' information.');
                 }
@@ -55,7 +65,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
             });
         }
 
-        return $message->say('Укажите топик: ' . $this->topics->getTopicsNames() . '.');
+        return $message->say('Укажите топик: ' . $this->topics->listNames() . '.');
     }
 
     public function serialize()
