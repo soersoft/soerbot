@@ -30,6 +30,15 @@ class User
      */
     protected $prefix;
 
+    /**
+     * Determines how many points gives each reward
+     * @var array
+     */
+    protected static $rewardsPoints = [
+      '⭐' => 1,
+      '🏅' => 5,
+    ];
+
     use ArrayServiceMethods;
 
     public function __construct($name, array $rewards, $linesDelimiter = PHP_EOL)
@@ -159,6 +168,20 @@ class User
     public function toString()
     {
         return (string)$this;
+    }
+
+    /**
+     * Returns user's total rewards points. If points for current reward don't define function adds 0 for this reward
+     * @return int
+     */
+    public function getPointsAmount()
+    {
+        return (function ($rewardsPoints) {
+            return array_reduce($this->rewards, function ($amount, $reward) use ($rewardsPoints) {
+                $points = array_key_exists($reward['emoji'], $rewardsPoints) ? $rewardsPoints[$reward['emoji']] : 0;
+                return $amount += $reward['count'] * $points;
+            });
+        })(self::$rewardsPoints);
     }
 
     /**
