@@ -79,6 +79,26 @@ class UserModel implements UserModelInterface
     }
 
     /**
+     * Sorts user by their rewards' points.
+     * @param string (desc|asc)
+     * @return $this
+     */
+    public function sort($direction = 'desc')
+    {
+        usort($this->users, function ($a, $b) use ($direction) {
+            if ($a->getPointsAmount() == $b->getPointsAmount()) {
+                return 0;
+            }
+
+            $result = ($a->getPointsAmount() > $b->getPointsAmount()) ? -1 : 1;
+
+            return ($direction == 'desc') ? $result : $result * -1;
+        });
+
+        return $this;
+    }
+
+    /**
      * Makes a string from the all user's data.
      * @return string
      */
