@@ -1,12 +1,11 @@
 <?php
-/**
- *
- */
 
 namespace SoerBot\Commands\PhpFact\Implementations;
 
+use SoerBot\Commands\PhpFact\Exceptions\StorageException;
+use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 
-class Storage
+class FileStorage implements StorageInterface
 {
     /**
      * @var array
@@ -14,20 +13,20 @@ class Storage
     private $data;
 
     /**
-     * Storage constructor
+     * Storage constructor.
      * @param string $file
      * @throws \Exception
      */
     public function __construct(string $file = __DIR__ . '/../store/phpfact.txt')
     {
         if (!file_exists($file)) {
-            throw new \Exception('File ' . $file . ' does not exits.');
+            throw new StorageException('File ' . $file . ' does not exits.');
         }
 
         $this->data = @file($file, FILE_IGNORE_NEW_LINES);
 
         if (empty($this->data)) {
-            throw new \Exception('File ' . $file . ' was empty.');
+            throw new StorageException('File ' . $file . ' was empty.');
         }
     }
 

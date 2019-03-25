@@ -3,7 +3,9 @@
 namespace Tests\Commands;
 
 use ArrayObject;
-use function foo\func;
+use CharlotteDunois\Livia\CommandMessage;
+use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
+use SoerBot\Commands\PhpFact\Implementations\FileStorage;
 use SoerBot\Commands\PhpFact\Implementations\PhpFact;
 use SoerBot\Commands\PhpFact\PhpFactCommand;
 use Tests\TestCase;
@@ -28,6 +30,11 @@ class PhpFactCommandTest extends TestCase
         parent::setUp();
     }
 
+    /*------------Exception block------------*/
+
+    /*------------Corner case block------------*/
+
+    /*------------Functional block------------*/
     public function testPhpFactBasics()
     {
         $this->assertEquals($this->command->name, 'phpfact');
@@ -35,12 +42,13 @@ class PhpFactCommandTest extends TestCase
         $this->assertEquals($this->command->groupID, 'utils');
     }
 
-    public function testSimpleResponseToTheDiscordContainsFact(): void
+    public function testSimpleResponseToTheDiscordContainsFact()
     {
         try {
-            $factObject = new PhpFact();
+            $storage = new FileStorage();
+            $factObject = new PhpFact($storage);
         } catch (\Throwable $e) {
-            $this->fail('Exception with ' . $e->getMessage() . 'was thrown is test method!');
+            $this->fail('Exception with ' . $e->getMessage() . ' was thrown is test method!');
         }
 
         $facts = $this->getPrivateVariableValue($factObject, 'facts');

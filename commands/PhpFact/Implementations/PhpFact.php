@@ -2,7 +2,8 @@
 
 namespace SoerBot\Commands\PhpFact\Implementations;
 
-use SoerBot\Commands\PhpFact\Exceptions\PhpFactStorageException;
+use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
+use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 
 class PhpFact
 {
@@ -12,24 +13,21 @@ class PhpFact
     private $facts = [];
 
     /**
-     * PhpFact constructor
+     * PhpFact constructor.
      *
-     * @param array $facts
-     * @throws PhpFactStorageException
+     * @param StorageInterface $storage
      */
-    public function __construct()
+    public function __construct(StorageInterface $storage)
     {
-        try {
-            $storage = new Storage();
-        } catch (\Throwable $e) {
-            throw new PhpFactStorageException();
-        }
-
         $this->facts = $storage->fetch();
+
+        if (empty($this->facts)) {
+            throw new PhpFactException('Facts array was empty.');
+        }
     }
 
     /**
-     * Returns random fact
+     * Returns random fact.
      *
      * @return string
      */

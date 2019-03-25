@@ -2,19 +2,20 @@
 
 namespace Tests\Commands;
 
-use SoerBot\Commands\PhpFact\Implementations\Storage;
+use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
+use SoerBot\Commands\PhpFact\Implementations\FileStorage;
 use Tests\TestCase;
 
-class StorageTest extends TestCase
+class FileStorageTest extends TestCase
 {
     protected $storage;
 
     protected function setUp()
     {
         try {
-            $this->storage = new Storage();
+            $this->storage = new FileStorage();
         } catch (\Exception $e) {
-            $this->fail('Exception with ' . $e->getMessage() . 'was thrown is setUp method!');
+            $this->fail('Exception with ' . $e->getMessage() . ' was thrown is setUp method!');
         }
 
         parent::setUp();
@@ -27,7 +28,7 @@ class StorageTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('File ' . $file . ' does not exits.');
 
-        new Storage($file);
+        new FileStorage($file);
     }
 
     public function testConstructorThrowExceptionWhenEmptyFile()
@@ -36,20 +37,28 @@ class StorageTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('File ' . $file . ' was empty.');
 
-        new Storage($file);
+        new FileStorage($file);
     }
 
     /*------------Corner case block------------*/
 
     /*------------Functional block------------*/
-    public function testConstructorMadeAnStorageArray()
+    public function testConstructorMakeInstanceWhichImplementRightInterface()
+    {
+        $this->assertInstanceOf(StorageInterface::class, $this->storage);
+    }
+
+    public function testConstructorMakeAnStorageArray()
     {
         $data = $this->getPrivateVariableValue($this->storage, 'data');
         $this->assertIsArray($data);
     }
 
-    public function testFetchReturnsAnArray()
+    public function testFetchReturnsAnNonEmptyArray()
     {
-        $this->assertIsArray($this->storage->fetch());
+        $facts = $this->storage->fetch();
+
+        $this->assertIsArray($facts);
+        $this->assertNotEmpty($facts);
     }
 }

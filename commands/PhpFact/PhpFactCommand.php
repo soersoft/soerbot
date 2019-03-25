@@ -3,6 +3,9 @@
 namespace SoerBot\Commands\PhpFact;
 
 use SoerBot\Commands\PhpFact\Implementations\PhpFact;
+use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
+use SoerBot\Commands\PhpFact\Exceptions\StorageException;
+use SoerBot\Commands\PhpFact\Implementations\FileStorage;
 
 class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
 {
@@ -25,13 +28,25 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
         try {
-            $fact = new PhpFact();
-        } catch (\Exception $e) {
-            // log exception or notify admin with $e->getMessage()
-            return $message->say('Something went wrong. Today without interesting PHP facts. Sorry!');
+            $storage = new FileStorage();
+            $fact = new PhpFact($storage);
+        } catch (StorageException $e) {
+            // Exception on storage level: log exception or notify admin with $e->getMessage()
+            return $this->error($message);
+        } catch (PhpFactException $e) {
+            // Exception on class level: log exception or notify admin with $e->getMessage()
+            return $this->error($message);
+        } catch (\Throwable $e) {
+            // Exception with emergency level: log exception or notify admin with $e->getMessage()
+            return $this->error($message);
         }
 
         return $message->say($fact->get());
+    }
+
+    protected function error(\CharlotteDunois\Livia\CommandMessage $message)
+    {
+        return $message->say('Something went wrong. Today without interesting PHP facts. Sorry!');
     }
 
     public function serialize()
