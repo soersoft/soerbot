@@ -79,6 +79,27 @@ class UserModel implements UserModelInterface
     }
 
     /**
+     * Remove chosen rewards.
+     * @param string $username
+     * @param string $rewardName
+     * @return bool
+     */
+    public function removeRewardsByType($username, $rewardName)
+    {
+        if (!$user = $this->get($username)) {
+            return false;
+        }
+
+        if (empty($user->getReward($rewardName))) {
+            return false;
+        }
+
+        $user->removeReward($rewardName);
+
+        return true;
+    }
+
+    /**
      * Makes a string from the all user's data.
      * @return string
      */
