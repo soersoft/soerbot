@@ -4,7 +4,17 @@
         "charlottedunois/livia": "^0.3.1",
         "illuminate/database": "^5.7",
         "symfony/yaml": "^4.2",
-        "jonathanmaron/increment-version": "^2.0"
+        "jonathanmaron/increment-version": "^2.0",
+        "react/cache": "^0.5",
+        "react/child-process": "^0.6",
+        "react/dns": "^0.4",
+        "react/event-loop": "^1.0",
+        "react/http": "^0.8.1",
+        "react/http-client": "^0.5",
+        "react/promise": "^2.1 || ^1.2",
+        "react/promise-stream": "^1.1.1",
+        "react/socket": "^1.0",
+        "react/stream": "^1.0"
     },
     "autoload": {
         "psr-4": {
