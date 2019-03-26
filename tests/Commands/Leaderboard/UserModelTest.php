@@ -109,4 +109,17 @@ EOT;
         $this->assertSame($stringDesc, $this->users->sort()->getLeaderBoardAsString());
         $this->assertSame($stringAsc, $this->users->sort('asc')->getLeaderBoardAsString());
     }
+
+    public function testRemoveRewardsByType()
+    {
+        $usersData = [
+            new User('Username1', [['emoji' => '⭐', 'count' => '1']]),
+            new User('Username3', [['emoji' => '⭐', 'count' => '1'], ['emoji' => '🏅', 'count' => '1']]),
+        ];
+
+        $this->setPrivateVariableValue($this->users, 'users', $usersData);
+
+        $this->assertTrue($this->users->removeRewardsByType('Username1', '⭐'));
+        $this->assertTrue($this->users->removeRewardsByType('Username3', '🏅'));
+    }
 }
