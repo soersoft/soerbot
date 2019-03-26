@@ -29,7 +29,14 @@ class UserModel implements UserModelInterface
         $this->store->load();
 
         foreach ($this->store->toArray() as $user) {
+           // if ($user['rewards'] !== null ) {
+            
             $this->users[] = new User($user['username'], $user['rewards']);
+            //fatal khren'
+           if (($user->getRewards($user['username']))===null)
+           {
+                $this->store->remove($user['username']);
+           }
         }
     }
 
@@ -85,4 +92,15 @@ class UserModel implements UserModelInterface
             return $user->getName() === $username;
         });
     }
+
+    /**
+     * @return bool
+     */
+    public function cleanRewards()
+    {
+        
+        $user->cleanReward();
+        return true;
+    }
+
 }

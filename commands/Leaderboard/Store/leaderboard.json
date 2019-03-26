@@ -1,28 +1,35 @@
 [
-  {
-    "username": "@IvanK",
-    "rewards": [
-      {
-        "emoji": "🏅",
-        "count": 3
-      },
-      {
-        "emoji": "⭐",
-        "count": 3
-      }
-    ]
-  },
-  {
-    "username": "@ucorp",
-    "rewards": [
-      {
-        "emoji": "🏅",
-        "count": 4
-      },
-      {
-        "emoji": "⭐",
-        "count": 5
-      }
-    ]
-  }
+    {
+        "username": "@IvanK",
+        "rewards": [
+            {
+                "emoji": "🏅",
+                "count": 3
+            },
+            {
+                "emoji": "⭐",
+                "count": 3
+            }
+        ]
+    },
+    {
+        "username": "@ucorp",
+        "rewards": [
+            {
+                "emoji": "🏅",
+                "count": 4
+            },
+            {
+                "emoji": "⭐",
+                "count": 5
+            }
+        ]
+    },
+    {
+        "username": "protopoper",
+        "rewards": [
+            
+        ]
+        
+    }
 ]
