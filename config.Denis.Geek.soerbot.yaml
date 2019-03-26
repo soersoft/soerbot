@@ -1,4 +1,4 @@
-# Discord bot settings
+# Discord bot settings Denis
 discord:
   token: 'NTUxODc0MzQyODA0MjU4ODY3.D3QyNw.bHwKEE6LlhWUD7cLBVsZm-OgWSQ'             # Get bot token at https://discordapp.com/developers/
   channel: '552711633269686292'           # Discord channel for information messages
