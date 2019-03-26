@@ -2,7 +2,9 @@
 
 namespace Tests\Commands;
 
-use SoerBot\Commands\Devs\TopicModel;
+use SoerBot\Commands\Devs\Exceptions\TopicException;
+use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
+use SoerBot\Commands\Devs\Implementations\TopicModel;
 use Tests\TestCase;
 
 class TopicModelTest extends TestCase
@@ -15,77 +17,86 @@ class TopicModelTest extends TestCase
         parent::setUp();
     }
 
-    /*------------Exception block------------*/
+    /**
+     * Exceptions
+     */
     public function testConstructorThrowExceptionWhenFileNotExist()
     {
-        $file = __DIR__ . '/testfiles/not_exist.topic.md';
+        $input = 'not_exist';
+        $path = __DIR__ . '/testfiles/';
+        $extension = '.topic.md';
+        $file = $path . $input . $extension;
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('DevsCommand error: file ' . $file . ' does not exists.');
+        $this->expectException(TopicExceptionFileNotFound::class);
+        $this->expectExceptionMessage('File ' . $file . ' does not exists. Check file source.');
 
-        TopicModel::create($file);
+        $reflection = new \ReflectionClass(TopicModel::class);
+        $topic = $reflection->newInstanceWithoutConstructor();
+        $this->setPrivateVariableValue($topic, 'directory', $path);
+        $topic->__construct($input);
     }
 
-    public function testConstructorThrowExceptionWhenWrongFileExtension()
+    public function testConstructorThrowExceptionWhenFileIsEmpty()
     {
-        $file = __DIR__ . '/testfiles/wrong_extension.md';
+        $input = 'empty';
+        $path = __DIR__ . '/testfiles/';
+        $extension = '.topic.md';
+        $file = $path . $input . $extension;
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('DevsCommand error: file ' . $file . ' has wrong extension and is not valid topic file.');
+        $this->expectException(TopicException::class);
+        $this->expectExceptionMessage('File ' . $file . ' is empty. Check file source.');
 
-        TopicModel::create($file);
-    }
-
-    /*------------Functional block------------*/
-    public function testGetPathReturnExpected()
-    {
-        $path = __DIR__ . '/testfiles/first.topic.md';
-        $topic = TopicModel::create($path);
-
-        $this->assertSame($path, reset($topic)->getPath());
-    }
-
-    public function testGetContentReturnExpected()
-    {
-        $topic = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');
-
-        $this->assertSame("test file 2", reset($topic)->getContent());
-    }
-
-    public function testGetContentReturnNullWhenWrongFile()
-    {
-        $topic = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');
-        $object = reset($topic);
-        $this->setPrivateVariableValue($object, 'filePath', 'not_exist');
-
-        $this->assertNull($object->getContent());
-    }
-
-    public function testIsTopicReturnTrue()
-    {
-        $object = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');
-        $method = $this->getPrivateMethod(reset($object), 'isTopic');
-
-        $this->assertTrue($method->invokeArgs(null, [__DIR__ . '/testfiles/second.topic.md']));
+        $reflection = new \ReflectionClass(TopicModel::class);
+        $topic = $reflection->newInstanceWithoutConstructor();
+        $this->setPrivateVariableValue($topic, 'directory', $path);
+        $topic->__construct($input);
     }
 
     /**
-     * @dataProvider pathsProvider
+     * Corner cases
      */
-    public function testGetCleanNameReturnExpected($path, $expected)
-    {
-        $object = TopicModel::create(__DIR__ . '/testfiles/second.topic.md');
-        $method = $this->getPrivateMethod(reset($object), 'getKey');
 
-        $this->assertSame($expected, $method->invokeArgs(null, [$path]));
+    /**
+     * Functionality
+     */
+    public function testGetContentReturnExpected()
+    {
+        $input = 'second';
+        $path = __DIR__ . '/testfiles/';
+
+        $reflection = new \ReflectionClass(TopicModel::class);
+        $topic = $reflection->newInstanceWithoutConstructor();
+        $this->setPrivateVariableValue($topic, 'directory', $path);
+        $topic->__construct($input);
+
+        $this->assertSame("test file 2", $topic->getContent());
     }
 
-    public function pathsProvider()
+    public function testIsTopicReturnsTrueWhenRightFile()
     {
-        return [
-            [__DIR__ . '/test.topic.md', 'test'],
-            ['/tmp/test/some.topic.md', 'some'],
-            ['test.topic.md', 'test'],
-        ];
+        $input = 'second';
+        $path = __DIR__ . '/testfiles/';
+
+        $reflection = new \ReflectionClass(TopicModel::class);
+        $topic = $reflection->newInstanceWithoutConstructor();
+        $this->setPrivateVariableValue($topic, 'directory', $path);
+        $topic->__construct($input);
+        $method = $this->getPrivateMethod($topic, 'isTopic');
+
+        $this->assertTrue($method->invokeArgs($topic, [__DIR__ . '/testfiles/second.topic.md']));
+    }
+
+    public function testIsTopicReturnsFalseWhenWrongFile()
+    {
+        $input = 'second';
+        $path = __DIR__ . '/testfiles/';
+
+        $reflection = new \ReflectionClass(TopicModel::class);
+        $topic = $reflection->newInstanceWithoutConstructor();
+        $this->setPrivateVariableValue($topic, 'directory', $path);
+        $topic->__construct($input);
+        $method = $this->getPrivateMethod($topic, 'isTopic');
+
+        $this->assertFalse($method->invokeArgs($topic, [__DIR__ . '/testfiles/wrong_extension.md']));
     }
 }

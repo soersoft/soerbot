@@ -4,7 +4,7 @@ namespace Tests\Commands;
 
 use ArrayObject;
 use SoerBot\Commands\Devs\DevsCommand;
-use SoerBot\Commands\Devs\TopicCollection;
+use SoerBot\Commands\Devs\Implementations\TopicModel;
 use Tests\TestCase;
 use React\Promise\Promise;
 
@@ -12,6 +12,13 @@ class DevsCommandTest extends TestCase
 {
     /** @var DevsCommand $command */
     private $command;
+
+    /**
+     * Default client prompt and run method message
+     *
+     * @var string
+     */
+    private $message;
 
     private $client;
 
@@ -29,12 +36,23 @@ class DevsCommandTest extends TestCase
 
         $this->command = $commandCreate($this->client);
 
+        $message = $this->getPrivateMethod($this->command, 'getDefaultMessage');
+        $this->message = $message->invoke($this->command);
+
         parent::setUp();
     }
 
-    /*------------Exception block------------*/
+    /**
+     * Exceptions
+     */
 
-    /*------------Functional block------------*/
+    /**
+     * Corner cases
+     */
+
+    /**
+     * Functionality
+     */
     public function testConstructorMakeRightObject()
     {
         $this->assertEquals($this->command->name, 'devs');
@@ -42,10 +60,8 @@ class DevsCommandTest extends TestCase
         $this->assertEquals($this->command->groupID, 'utils');
     }
 
-    public function testConstructorMakeObjectWithRightArguments()
+    public function testConstructorMakeObjectWithDefaultArguments()
     {
-        $testTopics = new TopicCollection();
-
         $this->assertEquals(count($this->command->args), 1);
         $this->assertArrayHasKey('key', $this->command->args[0]);
         $this->assertArrayHasKey('label', $this->command->args[0]);
@@ -54,59 +70,43 @@ class DevsCommandTest extends TestCase
 
         $this->assertEquals($this->command->args[0]['key'], 'topic');
         $this->assertEquals($this->command->args[0]['label'], 'topic');
-        $this->assertEquals($this->command->args[0]['prompt'], 'Укажите топик: ' . $testTopics->listNames() . '.');
+        $this->assertEquals($this->command->args[0]['prompt'], $this->message);
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
     public function testDevsSayDefaultText()
     {
-        $testTopics = (new TopicCollection(__DIR__ . '/testfiles/'));
-        $this->setPrivateVariableValue($this->command, 'topics', $testTopics);
-
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () {
         });
-        $commandMessage->expects($this->once())->method('say')->with('Укажите топик: first, second.')->willReturn($promise);
+        $commandMessage->expects($this->once())->method('say')->with($this->message)->willReturn($promise);
         $this->command->run($commandMessage, new ArrayObject(['topic' => '']), false);
+    }
+
+    public function testDevsSayDefaultTextWhenNonExistTopic(): void
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $promise = new Promise(function () {
+        });
+        $commandMessage->expects($this->once())->method('say')->with('Команда не найдена.')->willReturn($promise);
+        $this->command->run($commandMessage, new ArrayObject(['topic' => 'not_exist']), false);
     }
 
     public function testDevsSayRightTextWhenExistedTopic()
     {
-        $testTopics = new TopicCollection(__DIR__ . '/testfiles/');
-        $this->setPrivateVariableValue($this->command, 'topics', $testTopics);
+        $input = 'first';
+        $path = __DIR__ . '/testfiles/';
+
+        $reflection = new \ReflectionClass(TopicModel::class);
+        $topic = $reflection->newInstanceWithoutConstructor();
+        $this->setPrivateVariableValue($topic, 'directory', $path);
+        $topic->__construct($input);
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () {
         });
         $commandMessage->expects($this->once())->method('direct')->with('test file 1' . PHP_EOL)->willReturn($promise);
-        $this->command->run($commandMessage, new ArrayObject(['topic' => 'first']), false);
-    }
-
-    public function testDevsSayDefaultTextWhenNonExistTopic(): void
-    {
-        $testTopics = new TopicCollection();
-
-        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () {
-        });
-        $commandMessage->expects($this->once())->method('say')->with('Укажите топик: ' . $testTopics->listNames() . '.')->willReturn($promise);
-        $this->command->run($commandMessage, new ArrayObject(['topic' => 'not_exist']), false);
-    }
-
-    public function testDevsSayRightTextWhenNonExistFile()
-    {
-        $existKey = 'first';
-
-        $testTopics = new TopicCollection(__DIR__ . '/testfiles/');
-        $this->setPrivateVariableValue($this->command, 'topics', $testTopics);
-        $object = $testTopics->getOne($existKey);
-        $this->setPrivateVariableValue($object, 'filePath', 'not_exist');
-
-        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () {
-        });
-        $commandMessage->expects($this->once())->method('say')->with('Команда devs не работает. Мы делаем все возможное, чтобы она снова заработала.')->willReturn($promise);
-        $this->command->run($commandMessage, new ArrayObject(['topic' => $existKey]), false);
+        $this->command->run($commandMessage, new ArrayObject(['topic' => $input]), false, $topic);
     }
 
     // this hack used when test is faild and PHPUnit makes serialization of object properties

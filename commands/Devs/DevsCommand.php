@@ -2,26 +2,18 @@
 
 namespace SoerBot\Commands\Devs;
 
+use SoerBot\Commands\Devs\Exceptions\TopicException;
+use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
+use SoerBot\Commands\Devs\Implementations\TopicModel;
+
 class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
 {
-    /**
-     * @var TopicCollection
-     */
-    protected $topics;
-
     /**
      * @param \CharlotteDunois\Livia\LiviaClient $client
      * @throws \Exception
      */
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
-        try {
-            $this->topics = new TopicCollection();
-        } catch (\Throwable $e) {
-            //log error or notify admin
-            throw new \Exception('Something wrong with devs command. Got error ' . $e->getMessage() . '.');
-        }
-
         parent::__construct($client, [
             'name' => 'devs', // Give command name
             'aliases' => ['dev'],
@@ -37,19 +29,28 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
                 [
                     'key' => 'topic',
                     'label' => 'topic',
-                    'prompt' => 'Укажите топик: ' . $this->topics->listNames() . '.',
+                    'prompt' => $this->getDefaultMessage(),
                     'type' => 'string',
                 ],
             ],
         ]);
     }
 
-    public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
+    public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern, TopicModel $external = null)
     {
-        if (!empty($args) && $this->topics->has($args['topic'])) {
-            if (!($content = $this->topics->getOne($args['topic'])->getContent())) {
-                //log error or notify admin
-                return $message->say('Команда devs не работает. Мы делаем все возможное, чтобы она снова заработала.');
+        if (!empty($args) && !empty($args['topic'])) {
+            try {
+                $topic = ($external !== null) ? $external : new TopicModel($args['topic']);
+                $content = $topic->getContent();
+            } catch (TopicExceptionFileNotFound $e) {
+                // Exception with log level: log exception or notify admin with $e->getMessage()
+                return $message->say('Команда не найдена.');
+            } catch (TopicException $e) {
+                // Exception with high log level: log exception or notify admin with $e->getMessage()
+                return $message->say('Бот временно не работает. Мы уже занимаемся этой проблемой.');
+            } catch (\Throwable $e) {
+                // Exception with high log level: log exception or notify admin with $e->getMessage()
+                return $message->say('Бот временно не работает. Мы уже занимаемся этой проблемой.');
             }
 
             return $message->direct($content, ['split' => true])->then(function ($msg) use ($message, $args) {
@@ -65,11 +66,16 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
             });
         }
 
-        return $message->say('Укажите топик: ' . $this->topics->listNames() . '.');
+        return $message->say($this->getDefaultMessage());
     }
 
     public function serialize()
     {
         return [];
+    }
+
+    protected function getDefaultMessage(): string
+    {
+        return 'Укажите топик или list для получения топиков.';
     }
 }
