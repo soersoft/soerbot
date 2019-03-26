@@ -21,12 +21,14 @@ class FileStorageTest extends TestCase
         parent::setUp();
     }
 
-    /*------------Exception block------------*/
+    /**
+     * Exceptions
+     */
     public function testConstructorThrowExceptionWhenFileNotExist()
     {
         $file = 'not_exist';
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('File ' . $file . ' does not exits.');
+        $this->expectExceptionMessage('File ' . $file . ' does not exists. Check source file.');
 
         new FileStorage($file);
     }
@@ -35,14 +37,19 @@ class FileStorageTest extends TestCase
     {
         $file = __DIR__ . '/empty.txt';
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('File ' . $file . ' was empty.');
+        $this->expectExceptionMessage('File ' . $file . ' is empty. Check source file.');
 
         new FileStorage($file);
     }
 
-    /*------------Corner case block------------*/
+    /**
+     * Corner cases
+     */
 
-    /*------------Functional block------------*/
+    /**
+     * Functionality
+     */
+
     public function testConstructorMakeInstanceWhichImplementRightInterface()
     {
         $this->assertInstanceOf(StorageInterface::class, $this->storage);
@@ -54,9 +61,9 @@ class FileStorageTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    public function testFetchReturnsAnNonEmptyArray()
+    public function testGetReturnsAnNonEmptyArray()
     {
-        $facts = $this->storage->fetch();
+        $facts = $this->storage->get();
 
         $this->assertIsArray($facts);
         $this->assertNotEmpty($facts);

@@ -2,7 +2,7 @@
 
 namespace SoerBot\Commands\PhpFact;
 
-use SoerBot\Commands\PhpFact\Implementations\PhpFact;
+use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Exceptions\StorageException;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
@@ -29,7 +29,7 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
     {
         try {
             $storage = new FileStorage();
-            $fact = new PhpFact($storage);
+            $fact = new PhpFacts($storage);
         } catch (StorageException $e) {
             // Exception on storage level: log exception or notify admin with $e->getMessage()
             return $this->error($message);
@@ -41,16 +41,16 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
             return $this->error($message);
         }
 
-        return $message->say($fact->get());
-    }
-
-    protected function error(\CharlotteDunois\Livia\CommandMessage $message)
-    {
-        return $message->say('Something went wrong. Today without interesting PHP facts. Sorry!');
+        return $message->say($fact->getRandom());
     }
 
     public function serialize()
     {
         return [];
+    }
+
+    protected function error(\CharlotteDunois\Livia\CommandMessage $message)
+    {
+        return $message->say('Something went wrong. Today without interesting PHP facts. Sorry!');
     }
 }

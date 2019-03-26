@@ -9,5 +9,5 @@ interface StorageInterface
      *
      * @return array
      */
-    public function fetch(): array;
+    public function get(): array;
 }

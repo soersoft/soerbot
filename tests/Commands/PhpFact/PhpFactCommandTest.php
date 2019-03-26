@@ -3,10 +3,8 @@
 namespace Tests\Commands;
 
 use ArrayObject;
-use CharlotteDunois\Livia\CommandMessage;
-use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
-use SoerBot\Commands\PhpFact\Implementations\PhpFact;
+use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\PhpFactCommand;
 use Tests\TestCase;
 use React\Promise\Promise;
@@ -30,11 +28,18 @@ class PhpFactCommandTest extends TestCase
         parent::setUp();
     }
 
-    /*------------Exception block------------*/
+    /**
+     * Exceptions
+     */
 
-    /*------------Corner case block------------*/
+    /**
+     * Corner cases
+     */
 
-    /*------------Functional block------------*/
+    /**
+     * Functionality
+     */
+
     public function testPhpFactBasics()
     {
         $this->assertEquals($this->command->name, 'phpfact');
@@ -46,7 +51,7 @@ class PhpFactCommandTest extends TestCase
     {
         try {
             $storage = new FileStorage();
-            $factObject = new PhpFact($storage);
+            $factObject = new PhpFacts($storage);
         } catch (\Throwable $e) {
             $this->fail('Exception with ' . $e->getMessage() . ' was thrown is test method!');
         }
