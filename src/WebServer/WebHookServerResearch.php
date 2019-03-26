@@ -1,9 +1,10 @@
 <?php
+namespace SoerBot\WebServer;
     // use \Psr\Http\Message\ServerRequestInterface;
     // use \React\Http\Response;
     // use React\Http\Server;
     use React\EventLoop\Factory;
-namespace SoerBot\WebServer;
+
     
 class WebHookServerResearch
 {
