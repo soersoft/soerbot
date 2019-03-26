@@ -40,7 +40,7 @@ class Runner
                 echo $message . "\n";
             });
         }
-
+        $this->HttpWebHookServer();
         $this->settings();
         $this->logReadyState();
         $this->login();
@@ -191,5 +191,12 @@ class Runner
     private function loadCommands()
     {
         return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch('./commands', '*.command.php');
+    }
+
+    private function HttpWebHookServer(): void
+    {
+        require_once "./src/WebServer/WebHookServerResearch.php";
+        $ws = new WebServer\WebHookServerResearch();
+        $ws->StartServer();
     }
 }
