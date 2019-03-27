@@ -19,6 +19,8 @@ class LeaderboardAddCommand extends Command
      */
     private $users;
 
+    public $allowRoles;
+
     public function __construct(LiviaClient $client)
     {
         parent::__construct($client, [
@@ -49,6 +51,10 @@ class LeaderboardAddCommand extends Command
         ]);
 
         $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
+
+        $this->allowRoles = [
+          'product owner', 'куратор',
+        ];
     }
 
     /**
@@ -85,5 +91,37 @@ class LeaderboardAddCommand extends Command
     private function addReward(ArrayObject $args): bool
     {
         return $this->users->incrementReward($args['name']->username, $args['emoji']);
+    }
+
+    /**
+     * Checks if the user has permission to use the command.
+     * @param \CharlotteDunois\Livia\CommandMessage  $message
+     * @param bool                                   $ownerOverride  Whether the bot owner(s) will always have permission.
+     * @return bool|string  Whether the user has permission, or an error message to respond with if they don't.
+     */
+    public function hasPermission(\CharlotteDunois\Livia\CommandMessage $message, bool $ownerOverride = true)
+    {
+        $hasPermission = parent::hasPermission($message, $ownerOverride);
+        if ($hasPermission === true) {
+            $hasPermission = $this->hasAllowedRole($message);
+        }
+
+        return $hasPermission;
+    }
+
+    public function hasAllowedRole(\CharlotteDunois\Livia\CommandMessage $message)
+    {
+        if (count($this->allowRoles) > 0) {
+            $allow = false;
+            $roles = $message->member->roles;
+            foreach ($roles as $role) {
+                $roleName = mb_strtolower($role->name);
+                if (in_array($roleName, $this->allowRoles)) {
+                    $allow = true;
+                }
+            }
+
+            return $allow;
+        }
     }
 }
