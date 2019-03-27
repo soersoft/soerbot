@@ -195,8 +195,24 @@ class Runner
 
     private function HttpWebHookServer($aLoop): void
     {
-        require_once "./src/WebServer/WebHookServerResearch.php";
-        $ws = new WebServer\WebHookServerResearch($aLoop);
+        $port = 8080;
+        $response=new \React\Http\Response(
+                200,
+                array('Content-Type' => 'text/plain'),
+                "Hello from Runner!\n"
+            );
+        $ws = new \SoerBot\WebServer\WebHookServer($aLoop, $port, $response);
         $ws->StartServer();
+
+        (new \SoerBot\WebServer\WebHookServer(
+                $aLoop, 
+                8082, 
+                new \React\Http\Response(
+                    200,
+                    array('Content-Type' => 'text/plain'),
+                    "Hello from Runner Too!\n"
+                )
+            )
+        )->StartServer();
     }
 }
