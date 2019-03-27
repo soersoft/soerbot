@@ -5,7 +5,7 @@
         "illuminate/database": "^5.7",
         "symfony/yaml": "^4.2",
         "jonathanmaron/increment-version": "^2.0",
-        "react/http": "0.8.1",
+        "react/http": "0.8.4",
         "react/socket": "1.2"
     },
     "autoload": {
