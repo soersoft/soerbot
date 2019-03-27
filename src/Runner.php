@@ -33,14 +33,14 @@ class Runner
         CapsuleSetup::setup();
     }
 
-    public function execute($aRequest)
+    public function execute()
     {
         if ($this->config('debug', false)) {
             $this->client->on('debug', function ($message) {
                 echo $message . "\n";
             });
         }
-        $this->HttpWebHookServer($this->loop, $aRequest);
+        $this->HttpWebHookServer($this->loop, $request);
         $this->settings();
         $this->logReadyState();
         $this->login();
