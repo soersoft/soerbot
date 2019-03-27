@@ -31,7 +31,7 @@ class TopicModel
      * @throws TopicExceptionFileNotFound
      * @return string
      */
-    public function load(string $topic): string
+    protected function load(string $topic): string
     {
         $file = $this->directory . $topic . $this->extension;
 

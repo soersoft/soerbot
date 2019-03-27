@@ -36,11 +36,11 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
         ]);
     }
 
-    public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern, TopicModel $external = null)
+    public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
         if (!empty($args) && !empty($args['topic'])) {
             try {
-                $topic = ($external !== null) ? $external : new TopicModel($args['topic']);
+                $topic = new TopicModel($args['topic']);
                 $content = $topic->getContent();
             } catch (TopicExceptionFileNotFound $e) {
                 // Exception with log level: log exception or notify admin with $e->getMessage()

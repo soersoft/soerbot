@@ -6,7 +6,6 @@ use ArrayObject;
 use Tests\TestCase;
 use React\Promise\Promise;
 use SoerBot\Commands\Devs\DevsCommand;
-use SoerBot\Commands\Devs\Implementations\TopicModel;
 
 class DevsCommandTest extends TestCase
 {
@@ -92,21 +91,13 @@ class DevsCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['topic' => 'not_exist']), false);
     }
 
-    public function testRunSayRightTextWhenTopicExist()
+    public function testRunSayDefaultTextWhenTopicExist()
     {
-        $input = 'first';
-        $path = __DIR__ . '/testfiles/';
-
-        $reflection = new \ReflectionClass(TopicModel::class);
-        $topic = $reflection->newInstanceWithoutConstructor();
-        $this->setPrivateVariableValue($topic, 'directory', $path);
-        $topic->__construct($input);
-
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () {
         });
-        $commandMessage->expects($this->once())->method('direct')->with('test file 1' . PHP_EOL)->willReturn($promise);
-        $this->command->run($commandMessage, new ArrayObject(['topic' => $input]), false, $topic);
+        $commandMessage->expects($this->once())->method('direct')->with($this->isType('string'))->willReturn($promise);
+        $this->command->run($commandMessage, new ArrayObject(['topic' => 'list']), false);
     }
 
     // this hack used when test is faild and PHPUnit makes serialization of object properties
