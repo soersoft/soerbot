@@ -10,13 +10,13 @@ namespace SoerBot\WebServer;
     
 class WebHookServerResearch
 {
-    private $loop;
+    private $loop; // seems like due existing external loop in it not necessary
     private $server;
     private $socket;
 
-    public function __construct()
+    public function __construct($aLoop)
     {
-        // echo phpinfo();
+        $this -> loop = $aLoop; 
         echo "WebHookServerResearch has created\n";
     }
     
@@ -25,7 +25,7 @@ class WebHookServerResearch
     {
         // https://reactphp.org/
         // see example api: https://habr.com/ru/post/143317/
-        $this -> loop = Factory::create();
+        // $this -> loop = Factory::create(); //due external loop
 
         $this -> server = new Server(function (ServerRequestInterface $request) {
             return new Response(
@@ -40,6 +40,6 @@ class WebHookServerResearch
 
         echo "Server running at http://127.0.0.1:8080\n";
 
-        $this -> loop->run();
+        // $this -> loop->run(); //due external loop
     }
 }
