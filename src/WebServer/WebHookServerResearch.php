@@ -13,21 +13,23 @@ class WebHookServerResearch
     private $loop; // seems like due existing external loop in it not necessary
     private $server;
     private $socket;
+    private $request;
 
-    public function __construct($aLoop)
+    public function __construct($aLoop, $aRequest)
     {
         $this -> loop = $aLoop; 
+        $this->request = $aRequest;
         echo "WebHookServerResearch has created\n";
     }
     
 
-    public function StartServer()
+    public function StartServer($aRequest)
     {
         // https://reactphp.org/
         // see example api: https://habr.com/ru/post/143317/
         // $this -> loop = Factory::create(); //due external loop
 
-        $this -> server = new Server(function (ServerRequestInterface $request) {
+        $this -> server = new Server(function (ServerRequestInterface $aRequest) {
             return new Response(
                 200,
                 array('Content-Type' => 'text/plain'),

@@ -33,14 +33,14 @@ class Runner
         CapsuleSetup::setup();
     }
 
-    public function execute()
+    public function execute($aRequest)
     {
         if ($this->config('debug', false)) {
             $this->client->on('debug', function ($message) {
                 echo $message . "\n";
             });
         }
-        $this->HttpWebHookServer($this->loop);
+        $this->HttpWebHookServer($this->loop, $aRequest);
         $this->settings();
         $this->logReadyState();
         $this->login();
@@ -193,10 +193,10 @@ class Runner
         return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch('./commands', '*.command.php');
     }
 
-    private function HttpWebHookServer($aLoop): void
+    private function HttpWebHookServer($aLoop, $aRequest): void
     {
         require_once "./src/WebServer/WebHookServerResearch.php";
         $ws = new WebServer\WebHookServerResearch($aLoop);
-        $ws->StartServer();
+        $ws->StartServer($aRequest);
     }
 }
