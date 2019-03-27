@@ -4,7 +4,9 @@
         "charlottedunois/livia": "^0.3.1",
         "illuminate/database": "^5.7",
         "symfony/yaml": "^4.2",
-        "jonathanmaron/increment-version": "^2.0"
+        "jonathanmaron/increment-version": "^2.0",
+        "react/http": "0.8.1",
+        "react/socket": "1.2"
     },
     "autoload": {
         "psr-4": {
@@ -20,7 +22,7 @@
         }
     ],
     "scripts": {
-        "post-install-cmd": [
+        "post-update-cmd": [
             "@php -r \"file_exists('config.yaml') || copy('config.example.yaml', 'config.yaml');\""
         ],
         "style-fix": "vendor/bin/php-cs-fixer fix",

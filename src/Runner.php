@@ -40,7 +40,7 @@ class Runner
                 echo $message . "\n";
             });
         }
-
+        $this->HttpWebHookServer();
         $this->settings();
         $this->logReadyState();
         $this->login();
@@ -72,6 +72,9 @@ class Runner
         // Register the command group for our example command
         $this->client->registry->registerGroup(['id' => 'moderation', 'name' => 'Moderation']);
 
+        //Register our types
+        $this->client->registry->registerTypesIn(__DIR__ . '/Types');
+
         // Register our commands (this is an example path)
         // TODO вынести регистрацию команд из файла в структуру.
         $this->client->registry->registerCommand(...$this->loadCommands());
@@ -94,8 +97,10 @@ class Runner
      */
     public function login(): void
     {
+        $config = $this->config('discord');
+
         $this->client
-            ->login($this->config('key'))
+            ->login($config['token'])
             ->done();
     }
 
@@ -118,14 +123,7 @@ class Runner
         $this->client->once('ready', function () {
             try {
                 $channel = $this->client->channels->first(function ($channel) {
-                    $config = Configurator::get(
-                        'SpideyBot',
-                        [
-                            'branch' => 'develop',
-                            'color' => 3066993,
-                            'channel' => 'discord-bot-php',
-                        ]
-                    );
+                    $config = $this->config('discord');
 
                     return $channel->name === $config['channel'];
                 });
@@ -167,10 +165,12 @@ class Runner
      */
     private function configurationForClient()
     {
+        $config = $this->config('discord');
+
         return [
-            'owners' => $this->config('users'),
+            'owners' => $config['admin-users'],
             'unknownCommandResponse' => false,
-            'commandPrefix' => $this->config('command-prefix'),
+            'commandPrefix' => $config['command-prefix'],
         ];
     }
 
@@ -191,5 +191,12 @@ class Runner
     private function loadCommands()
     {
         return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch('./commands', '*.command.php');
+    }
+
+    private function HttpWebHookServer(): void
+    {
+        require_once "./src/WebServer/WebHookServerResearch.php";
+        $ws = new WebServer\WebHookServerResearch();
+        $ws->StartServer();
     }
 }

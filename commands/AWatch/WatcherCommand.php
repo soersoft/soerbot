@@ -1,13 +1,12 @@
 <?php
 
-namespace SoerBot\Commands\Watch;
+namespace SoerBot\Commands\AWatch;
 
 use ArrayObject;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Yasmin\Models\Message;
 use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Watcher\Interfaces\WatcherActorInterface;
-use SoerBot\Commands\Watch\WatcherActors\SpideyBotWatcherActor;
 
 class WatcherCommand extends Command
 {
@@ -15,7 +14,7 @@ class WatcherCommand extends Command
      * Список наблюдателей, кото.
      * @var WatcherActorInterface
      */
-    private $watcherActors;
+    private $watcherActors = [];
 
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
@@ -34,10 +33,9 @@ class WatcherCommand extends Command
         ]);
         $client->on('message', [$this, 'watch']);
 
-        //TODO: продумать автоматическую загрузку наблюдателей
-        $this->watcherActors = [
-            new SpideyBotWatcherActor($client),
-        ];
+        $client->on('RegisterWatcher', function ($watcher) {
+            $this->watcherActors[] = $watcher;
+        });
     }
 
     /**
