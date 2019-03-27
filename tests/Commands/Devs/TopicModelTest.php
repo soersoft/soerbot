@@ -2,10 +2,10 @@
 
 namespace Tests\Commands;
 
-use SoerBot\Commands\Devs\Exceptions\TopicException;
-use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
-use SoerBot\Commands\Devs\Implementations\TopicModel;
 use Tests\TestCase;
+use SoerBot\Commands\Devs\Exceptions\TopicException;
+use SoerBot\Commands\Devs\Implementations\TopicModel;
+use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
 
 class TopicModelTest extends TestCase
 {
@@ -18,7 +18,7 @@ class TopicModelTest extends TestCase
     }
 
     /**
-     * Exceptions
+     * Exceptions.
      */
     public function testConstructorThrowExceptionWhenFileNotExist()
     {
@@ -53,11 +53,11 @@ class TopicModelTest extends TestCase
     }
 
     /**
-     * Corner cases
+     * Corner cases.
      */
 
     /**
-     * Functionality
+     * Functionality.
      */
     public function testGetContentReturnExpected()
     {
@@ -69,10 +69,10 @@ class TopicModelTest extends TestCase
         $this->setPrivateVariableValue($topic, 'directory', $path);
         $topic->__construct($input);
 
-        $this->assertSame("test file 2", $topic->getContent());
+        $this->assertSame('test file 2', $topic->getContent());
     }
 
-    public function testIsTopicReturnsTrueWhenRightFile()
+    public function testIsTopicReturnTrueWhenRightFile()
     {
         $input = 'second';
         $path = __DIR__ . '/testfiles/';
@@ -86,7 +86,7 @@ class TopicModelTest extends TestCase
         $this->assertTrue($method->invokeArgs($topic, [__DIR__ . '/testfiles/second.topic.md']));
     }
 
-    public function testIsTopicReturnsFalseWhenWrongFile()
+    public function testIsTopicReturnFalseWhenWrongFile()
     {
         $input = 'second';
         $path = __DIR__ . '/testfiles/';

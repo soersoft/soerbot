@@ -3,10 +3,10 @@
 namespace Tests\Commands;
 
 use ArrayObject;
-use SoerBot\Commands\Devs\DevsCommand;
-use SoerBot\Commands\Devs\Implementations\TopicModel;
 use Tests\TestCase;
 use React\Promise\Promise;
+use SoerBot\Commands\Devs\DevsCommand;
+use SoerBot\Commands\Devs\Implementations\TopicModel;
 
 class DevsCommandTest extends TestCase
 {
@@ -14,7 +14,7 @@ class DevsCommandTest extends TestCase
     private $command;
 
     /**
-     * Default client prompt and run method message
+     * Default client prompt and run method message.
      *
      * @var string
      */
@@ -43,15 +43,15 @@ class DevsCommandTest extends TestCase
     }
 
     /**
-     * Exceptions
+     * Exceptions.
      */
 
     /**
-     * Corner cases
+     * Corner cases.
      */
 
     /**
-     * Functionality
+     * Functionality.
      */
     public function testConstructorMakeRightObject()
     {
@@ -60,7 +60,7 @@ class DevsCommandTest extends TestCase
         $this->assertEquals($this->command->groupID, 'utils');
     }
 
-    public function testConstructorMakeObjectWithDefaultArguments()
+    public function testConstructorMakeRightObjectWithDefaultArguments()
     {
         $this->assertEquals(count($this->command->args), 1);
         $this->assertArrayHasKey('key', $this->command->args[0]);
@@ -74,7 +74,7 @@ class DevsCommandTest extends TestCase
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
-    public function testDevsSayDefaultText()
+    public function testRunSayDefaultText()
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () {
@@ -83,7 +83,7 @@ class DevsCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['topic' => '']), false);
     }
 
-    public function testDevsSayDefaultTextWhenNonExistTopic(): void
+    public function testRunSayDefaultTextWhenTopicNotExist(): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $promise = new Promise(function () {
@@ -92,7 +92,7 @@ class DevsCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['topic' => 'not_exist']), false);
     }
 
-    public function testDevsSayRightTextWhenExistedTopic()
+    public function testRunSayRightTextWhenTopicExist()
     {
         $input = 'first';
         $path = __DIR__ . '/testfiles/';

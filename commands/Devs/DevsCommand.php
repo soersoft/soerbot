@@ -3,8 +3,8 @@
 namespace SoerBot\Commands\Devs;
 
 use SoerBot\Commands\Devs\Exceptions\TopicException;
-use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
 use SoerBot\Commands\Devs\Implementations\TopicModel;
+use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
 
 class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
 {
