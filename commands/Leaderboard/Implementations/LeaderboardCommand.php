@@ -41,6 +41,7 @@ class LeaderboardCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
+      $this->users->cleanRewards();
         return $message->say($this->users->getLeaderBoardAsString());
     }
 }

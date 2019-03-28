@@ -85,4 +85,28 @@ class UserModel implements UserModelInterface
             return $user->getName() === $username;
         });
     }
+
+    public function checkExistRewards($username)
+    {
+        $total = 0;
+        foreach ($username->getRewards() as $reward) {
+        if (array_key_exists ("emoji", $reward)) {
+            $total += $reward["count"];
+            }
+        }
+        return ($total !==0) ? true: false;
+    }   
+
+    public function cleanRewards()
+    { 
+        foreach ($this->users as $user) {
+        if ($this->checkExistRewards($user) === true) {
+        }
+        else {
+            $this->store->remove($user->getname());
+            $this->store->save();
+            }
+        }
+        return true;
+    }
 }
