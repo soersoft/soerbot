@@ -43,7 +43,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
                 $topic = new TopicModel($args['topic']);
                 $content = $topic->getContent();
             } catch (TopicExceptionFileNotFound $e) {
-                // Exception with log level: log exception or notify admin with $e->getMessage()
+                // Exception with low log level: log exception or notify admin with $e->getMessage()
                 return $message->say('Команда не найдена.');
             } catch (TopicException $e) {
                 // Exception with high log level: log exception or notify admin with $e->getMessage()

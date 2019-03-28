@@ -46,9 +46,6 @@ class DevsCommandMockeryTest extends TestCase
         $expected = 'test file 1' . PHP_EOL;
 
         $external = \Mockery::mock('overload:SoerBot\Commands\Devs\Implementations\TopicModel');
-        $external->shouldReceive('__construct')
-                ->once()
-                ->with($input);
         $external->shouldReceive('getContent')
                 ->once()
                 ->andReturn($expected);

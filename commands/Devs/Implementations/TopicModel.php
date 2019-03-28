@@ -26,6 +26,14 @@ class TopicModel
     }
 
     /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    /**
      * @param string $topic
      * @throws TopicException
      * @throws TopicExceptionFileNotFound
@@ -50,14 +58,6 @@ class TopicModel
         }
 
         return $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent(): string
-    {
-        return $this->content;
     }
 
     /**

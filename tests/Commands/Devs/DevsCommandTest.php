@@ -76,18 +76,14 @@ class DevsCommandTest extends TestCase
     public function testRunSayDefaultText()
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () {
-        });
-        $commandMessage->expects($this->once())->method('say')->with($this->message)->willReturn($promise);
+        $commandMessage->expects($this->once())->method('say')->with($this->message);
         $this->command->run($commandMessage, new ArrayObject(['topic' => '']), false);
     }
 
     public function testRunSayDefaultTextWhenTopicNotExist(): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $promise = new Promise(function () {
-        });
-        $commandMessage->expects($this->once())->method('say')->with('Команда не найдена.')->willReturn($promise);
+        $commandMessage->expects($this->once())->method('say')->with('Команда не найдена.');
         $this->command->run($commandMessage, new ArrayObject(['topic' => 'not_exist']), false);
     }
 
