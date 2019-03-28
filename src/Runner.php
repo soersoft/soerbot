@@ -196,22 +196,29 @@ class Runner
     private function HttpWebHookServer($aLoop): void
     {
         $port = 8080;
-        $response=new \React\Http\Response(
-                200,
-                array('Content-Type' => 'text/plain'),
-                "Hello from Runner!\n"
-            );
-        $ws = new \SoerBot\WebServer\WebHookServer($aLoop, $port, $response);
-        $ws->StartServer();
-
-        (new \SoerBot\WebServer\WebHookServer(
-                $aLoop, 
-                8082, 
+        $requestHandler=//(\Psr\Http\Server\RequestHandlerInterface)
+        (
+            function (ServerRequestInterface $request) {
                 new \React\Http\Response(
                     200,
                     array('Content-Type' => 'text/plain'),
-                    "Hello from Runner Too!\n"
-                )
+                    "Hello from Runner!\n"
+                );
+            });
+        $ws = new \SoerBot\WebServer\HttpWebServer($aLoop, $port, $requestHandler);
+        $ws->StartServer();
+        echo "ws->port: {$ws->port}\n";
+
+        (new \SoerBot\WebServer\HttpWebServer(
+                $aLoop, 
+                8082,
+                function (ServerRequestInterface $request) {
+                    return new \React\Http\Response(
+                        200,
+                        array('Content-Type' => 'text/plain'),
+                        "Hello from Runner Too!\n"
+                    );
+                }
             )
         )->StartServer();
     }
