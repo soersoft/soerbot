@@ -16,10 +16,11 @@ class PhpFacts
      * PhpFact constructor.
      *
      * @param StorageInterface $storage
+     * @throws PhpFactException
      */
     public function __construct(StorageInterface $storage)
     {
-        $this->facts = $this->fetch($storage);
+        $this->facts = $this->load($storage);
 
         if (empty($this->facts)) {
             throw new PhpFactException('Facts array was empty.');
@@ -35,7 +36,17 @@ class PhpFacts
     {
         $length = count($this->facts) - 1;
 
-        return $this->facts[rand(0, $length)];
+        return $this->facts[random_int(0, $length)];
+    }
+
+    /**
+     * Return facts count.
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->facts);
     }
 
     /**
@@ -44,7 +55,7 @@ class PhpFacts
      * @param StorageInterface $storage
      * @return array
      */
-    private function fetch(StorageInterface $storage): array
+    private function load(StorageInterface $storage): array
     {
         return $storage->get();
     }
