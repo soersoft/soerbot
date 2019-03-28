@@ -71,14 +71,18 @@ class HttpWebServer
      * - starting server for listening spicified(in constructor) port.
      * - react on reguesrts with spicified(in constructor) reguesrts handler.
      */
-    public function StartServer()
+    public function StartServer(): HttpWebServer
     {
-        // see: https://sergeyzhuk.me/2018/03/13/using-router-with-reactphp-http/
+        // https://reactphp.org/
+        // see example api: https://habr.com/ru/post/143317/
+        // see using http sever: https://sergeyzhuk.me/2018/03/13/using-router-with-reactphp-http/
         $this->server = new Server($this->requestHandler);
         $this->socket = new Socket($this->port, $this->loop);
         $this->server->listen( $this->socket);
 
         echo "WebHookServer started(port{$this->port})\n";
         // $this->client->emit('debug', "WebHookServer started(port{$this->port})");
+
+        return $this;
     }
 }
