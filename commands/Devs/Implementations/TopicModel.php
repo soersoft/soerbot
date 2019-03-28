@@ -26,12 +26,20 @@ class TopicModel
     }
 
     /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    /**
      * @param string $topic
      * @throws TopicException
      * @throws TopicExceptionFileNotFound
      * @return string
      */
-    public function load(string $topic): string
+    protected function load(string $topic): string
     {
         $file = $this->directory . $topic . $this->extension;
 
@@ -50,14 +58,6 @@ class TopicModel
         }
 
         return $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent(): string
-    {
-        return $this->content;
     }
 
     /**

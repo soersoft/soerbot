@@ -9,9 +9,6 @@ use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
 
 class TopicModelTest extends TestCase
 {
-    /** @var TopicModel $topic */
-    private $topic;
-
     protected function setUp()
     {
         parent::setUp();
