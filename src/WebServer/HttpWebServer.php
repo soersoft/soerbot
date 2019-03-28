@@ -62,7 +62,6 @@ class HttpWebServer
         $this->port = $aPort;
         $this->requestHandler = $aRequestHandler;
 
-        echo "WebHookServer has created\n";
         // $this->client->emit('debug', "WebHookServer has created");
     }
     
@@ -80,7 +79,6 @@ class HttpWebServer
         $this->socket = new Socket($this->port, $this->loop);
         $this->server->listen( $this->socket);
 
-        echo "WebHookServer started(port{$this->port})\n";
         // $this->client->emit('debug', "WebHookServer started(port{$this->port})");
 
         return $this;
