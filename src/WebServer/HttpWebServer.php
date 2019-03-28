@@ -70,7 +70,7 @@ class HttpWebServer
      * - starting server for listening spicified(in constructor) port.
      * - react on reguesrts with spicified(in constructor) reguesrts handler.
      */
-    public function StartServer(): HttpWebServer
+    public function startServer(): HttpWebServer
     {
         // https://reactphp.org/
         // see example api: https://habr.com/ru/post/143317/
