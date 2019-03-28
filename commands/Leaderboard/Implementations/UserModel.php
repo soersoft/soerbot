@@ -9,20 +9,22 @@ use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 class UserModel implements UserModelInterface
 {
     /**
+     * If the leaderboard is empty this message will print.
+     */
+    const LEADERBOARD_IS_EMPTY = 'Пока в таблице лидеров никого нет.';
+
+    /**
      * @var UserModel
      */
     protected static $instance;
-
     /**
      * @var User[]
      */
     protected $users;
-
     /**
      * @var LeaderBoardStoreInterface
      */
     protected $store;
-
     /**
      * Line delimiter for separating users in stringify functions.
      * @var string
@@ -38,8 +40,10 @@ class UserModel implements UserModelInterface
 
         $this->store->load();
 
-        foreach ($this->store->toArray() as $user) {
-            $this->users[] = new User($user['username'], $user['rewards']);
+        if (!empty($users = $this->store->toArray())) {
+            foreach ($users as $user) {
+                $this->users[] = new User($user['username'], $user['rewards']);
+            }
         }
     }
 
@@ -85,14 +89,22 @@ class UserModel implements UserModelInterface
      */
     public function sort($direction = 'desc')
     {
+        if (empty($this->users)) {
+            return $this;
+        }
+
         usort($this->users, function ($a, $b) use ($direction) {
-            if ($a->getPointsAmount() == $b->getPointsAmount()) {
+            if (!($a instanceof User) || !($b instanceof User)) {
+                return 0;
+            }
+
+            if ($a->getPointsAmount() === $b->getPointsAmount()) {
                 return 0;
             }
 
             $result = ($a->getPointsAmount() > $b->getPointsAmount()) ? -1 : 1;
 
-            return ($direction == 'desc') ? $result : $result * -1;
+            return ($direction === 'desc') ? $result : $result * -1;
         });
 
         return $this;
@@ -125,17 +137,21 @@ class UserModel implements UserModelInterface
      */
     public function getLeaderBoardAsString()
     {
-        $str = '';
+        if (empty($this->users)) {
+            return self::LEADERBOARD_IS_EMPTY;
+        }
+
+        $strLeaderBoard = '';
 
         foreach ($this->users as $index => $user) {
             if (array_key_exists($index, $places = [':one: ', ':two: ', ':three: '])) {
                 $user->addPrefix($places[$index]);
             }
 
-            $str .= $user . $this->linesDelimiter;
+            $strLeaderBoard .= $user . $this->linesDelimiter;
         }
 
-        return $str;
+        return $strLeaderBoard;
     }
 
     /**
