@@ -206,10 +206,10 @@ class Runner
                 );
             });
         $ws = new \SoerBot\WebServer\HttpWebServer($aLoop, $port, $requestHandler);
-        $ws->StartServer();
+        $ws->startServer();
         echo "ws->port: {$ws->port}\n";
 
-        (new \SoerBot\WebServer\HttpWebServer(
+        $port =(new \SoerBot\WebServer\HttpWebServer(
                 $aLoop, 
                 8082,
                 function (ServerRequestInterface $request) {
@@ -220,6 +220,7 @@ class Runner
                     );
                 }
             )
-        )->StartServer();
+        )->startServer()->port;
+        echo "Server has started, listening port: {$port}\n";
     }
 }
