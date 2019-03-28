@@ -43,9 +43,14 @@ class User
 
     public function __construct($name, array $rewards, $linesDelimiter = PHP_EOL)
     {
+        foreach ($rewards as $reward) {
+            if ($this->validateReward($reward)) {
+                $this->rewards[] = $reward;
+            }
+        }
+
         $this->name = $name;
         $this->linesDelimiter = $linesDelimiter;
-        $this->rewards = $rewards;
         $this->prefix = null;
     }
 
@@ -63,6 +68,16 @@ class User
     public function getRewards()
     {
         return $this->rewards;
+    }
+
+    /**
+     * Validates that the reward contains right keys.
+     * @param array $reward
+     * @return bool
+     */
+    public function validateReward(array $reward)
+    {
+        return array_key_exists('emoji', $reward) && array_key_exists('count', $reward);
     }
 
     /**
