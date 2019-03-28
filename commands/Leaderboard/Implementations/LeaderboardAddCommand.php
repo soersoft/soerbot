@@ -48,7 +48,7 @@ class LeaderboardAddCommand extends Command
           ],
         ]);
 
-        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
+        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
     }
 
     /**
