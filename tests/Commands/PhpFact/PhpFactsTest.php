@@ -4,7 +4,6 @@ namespace Tests\Commands;
 
 use Tests\TestCase;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
-use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
 use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 
@@ -28,21 +27,63 @@ class PhpFactsTest extends TestCase
     /**
      * Exceptions.
      */
-    public function testThrowExceptionWhenStorageReturnEmpty()
-    {
-        $this->expectException(PhpFactException::class);
-
-        $facts = new PhpFacts(new class() implements StorageInterface {
-            public function get(): array
-            {
-                return [];
-            }
-        });
-    }
 
     /**
      * Corner cases.
      */
+
+    /**
+     * @dataProvider providePositionCorners
+     */
+    public function testHasPositionReturnExpected($position, $expected)
+    {
+        $method = $this->getPrivateMethod($this->facts, 'hasPosition');
+
+        $this->assertSame($expected, $method->invokeArgs($this->facts, [$position]));
+    }
+
+    public function providePositionCorners()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $countFacts = count($this->getPrivateVariableValue($facts, 'facts'));
+
+        return [
+            'below minimum' => [-1, false],
+            'array start' => [0, true],
+            'array before stop' => [$countFacts - 2, true],
+            'array stop' => [$countFacts - 1, true],
+            'above maximum' => [$countFacts, false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideFactsContentCorners
+     */
+    public function testGetReturnExpected($position, $expected)
+    {
+        $this->assertSame($expected, $this->facts->get($position));
+    }
+
+    public function provideFactsContentCorners()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $countFacts = count($this->getPrivateVariableValue($facts, 'facts'));
+        $content = $this->getPrivateVariableValue($facts, 'facts');
+
+        return [
+            'below minimum' => [0, false],
+            'array start' => [1, $content[0]],
+            'array before stop' => [$countFacts - 1, $content[$countFacts - 2]],
+            'array stop' => [$countFacts, $content[$countFacts - 1]],
+            'above maximum' => [$countFacts + 1, false],
+        ];
+    }
 
     /**
      * Functionality.
@@ -69,7 +110,14 @@ class PhpFactsTest extends TestCase
         $this->assertIsArray($method->invokeArgs($this->facts, [$storage]));
     }
 
-    public function testGetRandomReturnStringFromStorage()
+    public function testGetReturnStringFromFacts()
+    {
+        $allFacts = $this->getPrivateVariableValue($this->facts, 'facts');
+
+        $this->assertSame($allFacts[0], $this->facts->get(1));
+    }
+
+    public function testGetRandomReturnStringFromFacts()
     {
         $allFacts = $this->getPrivateVariableValue($this->facts, 'facts');
         $getFact = $this->facts->getRandom();

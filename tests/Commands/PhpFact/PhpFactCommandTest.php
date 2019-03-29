@@ -16,11 +16,9 @@ class PhpFactCommandTest extends TestCase
     private $command;
 
     /**
-     * Default client prompt and run method message.
-     *
-     * @var string
+     * Default command message.
      */
-    private $message;
+    private $defaultMessage;
 
     protected function setUp()
     {
@@ -37,7 +35,7 @@ class PhpFactCommandTest extends TestCase
         $this->command = $commandCreate($this->client);
 
         $message = $this->getPrivateMethod($this->command, 'getDefaultMessage');
-        $this->message = $message->invoke($this->command);
+        $this->defaultMessage = $message->invoke($this->command);
 
         parent::setUp();
     }
@@ -70,29 +68,34 @@ class PhpFactCommandTest extends TestCase
 
         $this->assertEquals($this->command->args[0]['key'], 'command');
         $this->assertEquals($this->command->args[0]['label'], 'command');
-        $this->assertEquals($this->command->args[0]['prompt'], $this->message);
+        $this->assertEquals($this->command->args[0]['prompt'], $this->defaultMessage);
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
     public function testRunSayDefaultTextWhenEmptyCommand()
     {
-        try {
-            $storage = new FileStorage();
-            $factObject = new PhpFacts($storage);
-        } catch (\Throwable $e) {
-            $this->fail('Exception with ' . $e->getMessage() . ' was thrown is test method!');
-        }
-
-        $facts = $this->getPrivateVariableValue($factObject, 'facts');
-
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
                         ->method('say')
                         ->with(
-                            $this->message
+                            $this->defaultMessage
                         );
 
         $this->command->run($commandMessage, new ArrayObject(['command' => '']), false);
+    }
+
+    public function testRunSayDefaultTextWhenCommandNotFound()
+    {
+        $method = $this->getPrivateMethod($this->command, 'getCommandNotFoundMessage');
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())
+            ->method('say')
+            ->with(
+                $method->invokeArgs($this->command, ['non_exist'])
+            );
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => 'non_exist']), false);
     }
 
     public function testRunSayOneOfFactWhenFactCommand()
@@ -123,7 +126,7 @@ class PhpFactCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact']), false);
     }
 
-    public function testRunSayOneOfFactWhenCountCommand()
+    public function testRunSayConcreteFactWhenFactCommandHasExistNumber()
     {
         try {
             $storage = new FileStorage();
@@ -136,11 +139,44 @@ class PhpFactCommandTest extends TestCase
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
+            ->method('say')
+            ->with(
+                $facts[1]
+            );
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 2']), false);
+    }
+
+    public function testRunSayConcreteFactWhenFactCommandHasNonExistNumber()
+    {
+        $method = $this->getPrivateMethod($this->command, 'getFactNotFoundMessage');
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())
+            ->method('say')
+            ->with(
+                $method->invokeArgs($this->command, ['100'])
+            );
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 100']), false);
+    }
+
+    public function testRunSayOneOfFactWhenCountCommand()
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())
                         ->method('say')
                         ->with(
                             'We have 43 facts in collection.'
                         );
 
         $this->command->run($commandMessage, new ArrayObject(['command' => 'stat']), false);
+    }
+
+    public function testInitFactsMakeRightInstance()
+    {
+        $method = $this->getPrivateMethod($this->command, 'initFacts');
+
+        $this->assertInstanceOf(PhpFacts::class, $method->invoke($this->command));
     }
 }
