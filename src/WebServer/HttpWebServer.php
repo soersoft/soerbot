@@ -7,6 +7,7 @@ namespace SoerBot\WebServer;
     use React\Http\Response;
     use React\Http\Server;
     use React\Socket\Server as Socket;
+    use \React\Http\Middleware\LimitConcurrentRequestsMiddleware as arrayRequestsMiddleware;
 
 class HttpWebServer
 {
@@ -18,12 +19,13 @@ class HttpWebServer
     private $socket;
 
     /**
-     * Readonly implements, thanks to https://ttmm.io/tech/php-read-attributes/
+     * readonly implements, thanks to:
+     * - https://ttmm.io/tech/php-read-attributes/
      * 
      * Magic getter for our object.
      *
      * @param string $field
-     * @throws Exception Throws an exception if the field is invalid.
+     * @throws UnexpectedValueException Throws an exception if the field is invalid.
      * @return mixed
      */
     public function __get( $field ) {
@@ -34,53 +36,79 @@ class HttpWebServer
             return $this->server;
         default:
             $class = __CLASS__;
-            throw new Exception( "Invalid property: {$class}->{$field}");
+            throw new UnexpectedValueException( "Invalid property: {$class}->{$field}");
         }
     }
 
     /**
      * Constrictor: 
      * - create instance of WebHookServer
+     *   - with paremeters ready to start new instance of server
      * 
-     * @param $aLoop instance of React\EventLoop\LoopInterface
-     * @param $aPort int 0..9999
-     * @param $aRequestHandler instance of some like delegate function
+     * @param $aLoop application's work loop, not started yet
+     *  - instance of React\EventLoop\LoopInterface
+     * @param $aPort listening port 
+     *  - int 0..9999
+     * @param $aRequestHandler array of reguest handlers middleware, 
+     *  - function() {{}
+     *  - see examples at https://sergeyzhuk.me/2018/03/13/using-router-with-reactphp-http/
      * @throws UnexpectedValueException
+     * @return HttpWebServer instance of
      */
     public function __construct($aLoop, $aPort, $aRequestHandler)
     {
         if (!($aLoop instanceof \React\EventLoop\LoopInterface))
             throw new UnexpectedValueException();
-        if (!is_int($aPort)||($aPort<0||$aPort>9999))
+        if (!\is_int($aPort) || $aPort<0 || $aPort>9999)
             throw new UnexpectedValueException();
-        // if (!($aRequestHandler instanceof \Psr\Http\Server\RequestHandlerInterface))
-        // if (!($aRequestHandler instanceof \Psr\Http\Message\ServerRequestInterface))
         if (!\is_callable($aRequestHandler) && !\is_array($aRequestHandler))
             throw new UnexpectedValueException();
 
         $this->loop = $aLoop;
         $this->port = $aPort;
         $this->requestHandler = $aRequestHandler;
-
-        // $this->client->emit('debug', "WebHookServer has created");
     }
     
     /**
      * StartServer: 
-     * - starting server for listening spicified(in constructor) port.
-     * - react on reguesrts with spicified(in constructor) reguesrts handler.
+     * - starting server for listening defined(in constructor) port.
+     * - the server will react on reguests with defined(in constructor) reguests handlers.
+     * - probably should be started before application's work loop.Run()
+     *  @return HttpWebServer class instance itself , with already started server
      */
     public function startServer(): HttpWebServer
     {
-        // https://reactphp.org/
-        // see example api: https://habr.com/ru/post/143317/
-        // see using http sever: https://sergeyzhuk.me/2018/03/13/using-router-with-reactphp-http/
         $this->server = new Server($this->requestHandler);
         $this->socket = new Socket($this->port, $this->loop);
         $this->server->listen( $this->socket);
 
-        // $this->client->emit('debug', "WebHookServer started(port{$this->port})");
-
         return $this;
+    }
+    
+    /**
+     * Create and Start Server
+     * 
+     * - Constrictor: 
+     *   - create instance of WebHookServer
+     * - StartServer: 
+     *   - starting server for listening defined(in constructor) port.
+     *   - the server will react on reguests with defined(in constructor) reguests handlers.
+     *   - probably should be started before application's work loop.Run()
+     * @param $aLoop application's work loop, not started yet
+     *  - instance of React\EventLoop\LoopInterface
+     * @param $aPort listening port 
+     *  - int 0..9999
+     * @param $aRequestHandler array of reguest handlers middleware, 
+     *  - function() {{}
+     *  - see examples at https://sergeyzhuk.me/2018/03/13/using-router-with-reactphp-http/
+     * @throws UnexpectedValueException
+     * @return HttpWebServer class instance itself , with already started server
+     */
+    public static function createServer($aLoop, $aPort, $aRequestHandler): HttpWebServer
+    {
+        $theHttpWebServer = new HttpWebServer($aLoop, $aPort, $aRequestHandler);
+        $theHttpWebServer->startServer();
+
+        return $the;
     }
 }
