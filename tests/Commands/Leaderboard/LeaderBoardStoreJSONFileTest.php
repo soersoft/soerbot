@@ -38,7 +38,7 @@ class LeaderBoardStoreJSONFileTest extends TestCase
         $this->assertNotEmpty($users);
     }
 
-    public function testToArrayTheSameData()
+    public function testToArrayReturnedTheSameData()
     {
         $array = [
           [
