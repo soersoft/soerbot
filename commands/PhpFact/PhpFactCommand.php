@@ -21,7 +21,14 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
                 'usages' => 5,
                 'duration' => 10,
             ],
-            'args' => [],
+            'args' => [
+                [
+                    'key' => 'command',
+                    'label' => 'command',
+                    'prompt' => $this->getDefaultMessage(),
+                    'type' => 'string',
+                ],
+            ],
         ]);
     }
 
@@ -32,16 +39,29 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
             $fact = new PhpFacts($storage);
         } catch (StorageException $e) {
             // Exception on storage level: log exception or notify admin with $e->getMessage()
-            return $this->error($message);
+            return $this->getErrorMessage($message);
         } catch (PhpFactException $e) {
             // Exception on class level: log exception or notify admin with $e->getMessage()
-            return $this->error($message);
+            return $this->getErrorMessage($message);
         } catch (\Throwable $e) {
             // Exception with emergency level: log exception or notify admin with $e->getMessage()
-            return $this->error($message);
+            return $this->getErrorMessage($message);
         }
 
-        return $message->say($fact->getRandom());
+        switch ($args['command']) {
+            case 'fact':
+                return $message->say($fact->getRandom());
+
+                break;
+            case 'stat':
+                return $message->say('We have ' . $fact->count() . ' facts in collection.');
+
+                break;
+            default:
+                return $message->say($this->getDefaultMessage());
+
+                break;
+        }
     }
 
     public function serialize()
@@ -49,7 +69,12 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
         return [];
     }
 
-    protected function error(\CharlotteDunois\Livia\CommandMessage $message)
+    protected function getDefaultMessage()
+    {
+        return 'Input one of the command:' . PHP_EOL . 'fact - get random php fact' . PHP_EOL . 'stat - get php facts statistics';
+    }
+
+    protected function getErrorMessage(\CharlotteDunois\Livia\CommandMessage $message)
     {
         return $message->say('Something went wrong. Today without interesting PHP facts. Sorry!');
     }

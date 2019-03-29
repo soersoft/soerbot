@@ -2,11 +2,11 @@
 
 namespace Tests\Commands;
 
-use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
+use Tests\TestCase;
+use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
-use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
-use Tests\TestCase;
+use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 
 class PhpFactsTest extends TestCase
 {
@@ -15,7 +15,8 @@ class PhpFactsTest extends TestCase
     protected function setUp()
     {
         try {
-            $storage = new FileStorage();
+            $file = __DIR__ . '/phpfacts.txt';
+            $storage = new FileStorage($file);
             $this->facts = new PhpFacts($storage);
         } catch (\Throwable $e) {
             $this->fail('Exception with ' . $e->getMessage() . ' was thrown is setUp method!');
@@ -25,14 +26,13 @@ class PhpFactsTest extends TestCase
     }
 
     /**
-     * Exceptions
+     * Exceptions.
      */
     public function testThrowExceptionWhenStorageReturnEmpty()
     {
         $this->expectException(PhpFactException::class);
 
-        $facts = new PhpFacts(new class() implements StorageInterface
-        {
+        $facts = new PhpFacts(new class() implements StorageInterface {
             public function get(): array
             {
                 return [];
@@ -41,22 +41,21 @@ class PhpFactsTest extends TestCase
     }
 
     /**
-     * Corner cases
+     * Corner cases.
      */
-
 
     /**
-     * Functionality
+     * Functionality.
      */
-    public function testFetchReturnsAnArray()
+    public function testLoadReturnArray()
     {
         $storage = new FileStorage();
-        $method = $this->getPrivateMethod($this->facts, 'fetch');
+        $method = $this->getPrivateMethod($this->facts, 'load');
 
         $this->assertIsArray($method->invokeArgs($this->facts, [$storage]));
     }
 
-    public function testFetchWorksAsExpected()
+    public function testLoadReturnSameArrayAsFacts()
     {
         $facts = $this->getPrivateVariableValue($this->facts, 'facts');
 
@@ -65,12 +64,12 @@ class PhpFactsTest extends TestCase
             ->method('get')
             ->with()
             ->willReturn($facts);
-        $method = $this->getPrivateMethod($this->facts, 'fetch');
+        $method = $this->getPrivateMethod($this->facts, 'load');
 
         $this->assertIsArray($method->invokeArgs($this->facts, [$storage]));
     }
 
-    public function testGetRandomReturnsStringFromStorageArray()
+    public function testGetRandomReturnStringFromStorage()
     {
         $allFacts = $this->getPrivateVariableValue($this->facts, 'facts');
         $getFact = $this->facts->getRandom();
@@ -78,7 +77,7 @@ class PhpFactsTest extends TestCase
         $this->assertTrue(in_array($getFact, $allFacts, true));
     }
 
-    public function testGetRandomWorksAsExpected()
+    public function testGetRandomReturnExpectedString()
     {
         $facts = $this->getPrivateVariableValue($this->facts, 'facts');
 
@@ -89,5 +88,10 @@ class PhpFactsTest extends TestCase
             ->willReturn($facts);
 
         new PhpFacts($storage);
+    }
+
+    public function testCountReturnExpectedCount()
+    {
+        $this->assertSame(5, $this->facts->count());
     }
 }

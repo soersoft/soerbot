@@ -2,9 +2,9 @@
 
 namespace Tests\Commands;
 
-use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
-use SoerBot\Commands\PhpFact\Implementations\FileStorage;
 use Tests\TestCase;
+use SoerBot\Commands\PhpFact\Implementations\FileStorage;
+use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 
 class FileStorageTest extends TestCase
 {
@@ -22,7 +22,7 @@ class FileStorageTest extends TestCase
     }
 
     /**
-     * Exceptions
+     * Exceptions.
      */
     public function testConstructorThrowExceptionWhenFileNotExist()
     {
@@ -43,29 +43,38 @@ class FileStorageTest extends TestCase
     }
 
     /**
-     * Corner cases
+     * Corner cases.
      */
 
     /**
-     * Functionality
+     * Functionality.
      */
-
-    public function testConstructorMakeInstanceWhichImplementRightInterface()
+    public function testConstructorMakeInstanceImplementRightInterface()
     {
         $this->assertInstanceOf(StorageInterface::class, $this->storage);
     }
 
-    public function testConstructorMakeAnStorageArray()
+    public function testConstructorMakeArrayWhenStart()
     {
         $data = $this->getPrivateVariableValue($this->storage, 'data');
         $this->assertIsArray($data);
     }
 
-    public function testGetReturnsAnNonEmptyArray()
+    public function testGetReturnNonEmptyArray()
     {
         $facts = $this->storage->get();
 
         $this->assertIsArray($facts);
         $this->assertNotEmpty($facts);
+    }
+
+    public function testGetReturnExpected()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = $storage->get();
+
+        $this->assertIsArray($facts);
+        $this->assertCount(5, $facts);
     }
 }

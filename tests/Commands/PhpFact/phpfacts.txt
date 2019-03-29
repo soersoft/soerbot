@@ -1,0 +1,5 @@
+В PHP хорошо развито ООП, на уровне Java/C#: interface, abstract class, class, implements, extends, private, public, protected.
+Помимо развитого ООП в PHP поддерживаются Трейты (trait), они же примеси или миксины.
+На PHP можно писать и в функциональном стиле, есть функции высшего порядка, замыкания, map/filter/reduce, и даже книга с описанием продвинутых техник (аппликативы, функторы, монады): "Functional Programming in PHP" http://www.functionalphp.com/.
+Анонимные функции появились в PHP на 5 лет раньше, чем в Java: июнь 2009 PHP 5.3 vs март 2014 Java 8.
+В PHP есть генераторы (ключевое слово yield) и библиотеки реализующие кооперативную многозадачность (корутины) https://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html.

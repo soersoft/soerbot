@@ -18,7 +18,7 @@ class FileStorage implements StorageInterface
      * @param string $file
      * @throws \Exception
      */
-    public function __construct(string $file = __DIR__ . '/../store/phpfact.txt')
+    public function __construct(string $file = __DIR__ . '/../store/phpfacts.txt')
     {
         $this->data = $this->fetch($file);
     }
