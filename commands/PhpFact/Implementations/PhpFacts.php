@@ -16,14 +16,31 @@ class PhpFacts
      * PhpFact constructor.
      *
      * @param StorageInterface $storage
+     * @throws PhpFactException
      */
     public function __construct(StorageInterface $storage)
     {
-        $this->facts = $this->fetch($storage);
+        $this->facts = $this->load($storage);
 
         if (empty($this->facts)) {
             throw new PhpFactException('Facts array was empty.');
         }
+    }
+
+    /**
+     * @param int $position
+     *
+     * @return bool|string
+     */
+    public function get(int $position)
+    {
+        // position normalization for array indexes
+        --$position;
+        if (array_key_exists($position, $this->facts)) {
+            return $this->facts[$position];
+        }
+
+        return false;
     }
 
     /**
@@ -39,12 +56,22 @@ class PhpFacts
     }
 
     /**
+     * Return facts count.
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->facts);
+    }
+
+    /**
      * Fetch data from storage.
      *
      * @param StorageInterface $storage
      * @return array
      */
-    private function fetch(StorageInterface $storage): array
+    private function load(StorageInterface $storage): array
     {
         return $storage->get();
     }
