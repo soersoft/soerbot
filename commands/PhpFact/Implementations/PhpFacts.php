@@ -28,6 +28,22 @@ class PhpFacts
     }
 
     /**
+     * @param int $position
+     *
+     * @return bool|string
+     */
+    public function get(int $position)
+    {
+        // position normalization for array indexes
+        --$position;
+        if (array_key_exists($position, $this->facts)) {
+            return $this->facts[$position];
+        }
+
+        return false;
+    }
+
+    /**
      * Returns random fact.
      *
      * @return string
@@ -36,7 +52,7 @@ class PhpFacts
     {
         $length = count($this->facts) - 1;
 
-        return $this->facts[random_int(0, $length)];
+        return $this->facts[rand(0, $length)];
     }
 
     /**
@@ -44,7 +60,7 @@ class PhpFacts
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->facts);
     }
