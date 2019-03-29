@@ -36,7 +36,7 @@ class PhpFacts
     {
         // position normalization for array indexes
         --$position;
-        if ($this->hasPosition($position)) {
+        if (array_key_exists($position, $this->facts)) {
             return $this->facts[$position];
         }
 
@@ -63,20 +63,6 @@ class PhpFacts
     public function count(): int
     {
         return count($this->facts);
-    }
-
-    /**
-     * @param int $position
-     * @return bool
-     */
-    private function hasPosition(int $position): bool
-    {
-        $final = count($this->facts) - 1;
-        if ($position < 0 || $position > $final) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

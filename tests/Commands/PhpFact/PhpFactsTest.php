@@ -33,33 +33,6 @@ class PhpFactsTest extends TestCase
      */
 
     /**
-     * @dataProvider providePositionCorners
-     */
-    public function testHasPositionReturnExpected($position, $expected)
-    {
-        $method = $this->getPrivateMethod($this->facts, 'hasPosition');
-
-        $this->assertSame($expected, $method->invokeArgs($this->facts, [$position]));
-    }
-
-    public function providePositionCorners()
-    {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
-        $countFacts = count($this->getPrivateVariableValue($facts, 'facts'));
-
-        return [
-            'below minimum' => [-1, false],
-            'array start' => [0, true],
-            'array before stop' => [$countFacts - 2, true],
-            'array stop' => [$countFacts - 1, true],
-            'above maximum' => [$countFacts, false],
-        ];
-    }
-
-    /**
      * @dataProvider provideFactsContentCorners
      */
     public function testGetReturnExpected($position, $expected)

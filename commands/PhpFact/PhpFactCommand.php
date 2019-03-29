@@ -14,7 +14,7 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
     {
         parent::__construct($client, [
             'name' => 'phpfact', // Give command name
-            'aliases' => ['fact'],
+            'aliases' => ['php'],
             'group' => 'utils', // Group in ['command', 'util']
             'description' => 'Show PHP facts from https://github.com/pqr/5minphp-bot.', // Fill the description
             'guildOnly' => false,
