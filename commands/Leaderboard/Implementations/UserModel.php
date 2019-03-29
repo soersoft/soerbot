@@ -9,9 +9,14 @@ use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 class UserModel implements UserModelInterface
 {
     /**
-     * If the leaderboard is empty this message will print.
+     * If the leaderboard is empty this message will be printed.
      */
     const LEADERBOARD_IS_EMPTY = 'Пока в таблице лидеров никого нет.';
+
+    /**
+     * These emoji will be printed for the first three places.
+     */
+    const  EMOJI_OF_PRIZE_PLACES = [':one: ', ':two: ', ':three: '];
 
     /**
      * @var UserModel
@@ -144,7 +149,7 @@ class UserModel implements UserModelInterface
         $strLeaderBoard = '';
 
         foreach ($this->users as $index => $user) {
-            if (array_key_exists($index, $places = [':one: ', ':two: ', ':three: '])) {
+            if (array_key_exists($index, $places = self::EMOJI_OF_PRIZE_PLACES)) {
                 $user->addPrefix($places[$index]);
             }
 
