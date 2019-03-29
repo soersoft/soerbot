@@ -34,10 +34,9 @@ class PhpFacts
      */
     public function get(int $position)
     {
-        // position normalization for array indexes
-        --$position;
-        if (array_key_exists($position, $this->facts)) {
-            return $this->facts[$position];
+        $index = --$position;
+        if (array_key_exists($index, $this->facts)) {
+            return $this->facts[$index];
         }
 
         return false;
