@@ -48,7 +48,9 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
             throw new StoreFileNotFoundException('File ' . $this->file . ' have not found');
         }
 
-        if ($content = file_get_contents($this->file) === 0) {
+        $content = file_get_contents($this->file);
+
+        if (empty($content)) {
             $this->data = [];
 
             return true;
@@ -67,9 +69,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
         if (count($args) < 2) {
             throw new TooFewArgumentsForUserAdding();
         }
-
-        [$username, $rewards] = $args;
-
+        list($username, $rewards) = $args;
         $this->remove($username);
         array_push($this->data, ['username' => $username, 'rewards' => $rewards]);
 
@@ -78,7 +78,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 
     /**
      * @param $username
-     * @return array|null
+     * @return mixed|null
      */
     public function get($username)
     {
@@ -89,7 +89,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 
     /**
      * @param $username
-     * @return array|null
+     * @return null
      */
     public function remove($username)
     {
