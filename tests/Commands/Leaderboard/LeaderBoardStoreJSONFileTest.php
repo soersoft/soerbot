@@ -35,7 +35,7 @@ class LeaderBoardStoreJSONFileTest extends TestCase
     public function testToArray()
     {
         $users = $this->store->toArray();
-        $this->assertNotEmpty($users);
+        $this->assertIsArray($users);
     }
 
     public function testToArrayReturnedTheSameData()
