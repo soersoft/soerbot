@@ -23,7 +23,7 @@ class PhpFacts
         $this->facts = $this->load($storage);
 
         if (empty($this->facts)) {
-            throw new PhpFactException('Facts array was empty.');
+            throw new PhpFactException('Facts array is empty.');
         }
     }
 
