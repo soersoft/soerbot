@@ -60,7 +60,7 @@ class FileStorageTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    public function testGetReturnNonEmptyArray()
+    public function testGetReturnNotEmptyArray()
     {
         $facts = $this->storage->get();
 

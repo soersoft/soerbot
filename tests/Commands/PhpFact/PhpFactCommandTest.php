@@ -3,11 +3,11 @@
 namespace Tests\Commands;
 
 use ArrayObject;
-use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 use Tests\TestCase;
 use SoerBot\Commands\PhpFact\PhpFactCommand;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
+use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 
 class PhpFactCommandTest extends TestCase
 {
@@ -51,7 +51,7 @@ class PhpFactCommandTest extends TestCase
         $this->assertEquals($this->command->groupID, 'utils');
     }
 
-    public function testConstructorMakeRightObjectWithDefaultArguments()
+    public function testConstructorMakeRightObjectWhenDefaultArguments()
     {
         $this->assertEquals(count($this->command->args), 1);
         $this->assertArrayHasKey('key', $this->command->args[0]);
@@ -79,7 +79,7 @@ class PhpFactCommandTest extends TestCase
 
     public function testRunSayDefaultTextWhenCommandNotFound()
     {
-        $input = 'non_exist';
+        $input = 'not_exist';
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
@@ -138,12 +138,30 @@ class PhpFactCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 2']), false);
     }
 
-    public function testRunSayConcreteFactWhenFactCommandNonExistNumber()
+    public function testRunSayConcreteFactWhenFactCommandNotExistNumber()
     {
+        try {
+            $storage = new FileStorage();
+            $factObject = new PhpFacts($storage);
+        } catch (\Throwable $e) {
+            $this->fail('Exception with ' . $e->getMessage() . ' was thrown is test method!');
+        }
+
+        $facts = $this->getPrivateVariableValue($factObject, 'facts');
+
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
             ->method('say')
-            ->with(CommandHelper::getCommandFactNotFoundMessage('100'));
+            ->with(
+                $this->logicalAnd(
+                    $this->isType('string'),
+                    $this->callback(
+                        function ($parameter) use ($facts) {
+                            return !in_array($parameter, $facts);
+                        }
+                    )
+                )
+            );
 
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 100']), false);
     }

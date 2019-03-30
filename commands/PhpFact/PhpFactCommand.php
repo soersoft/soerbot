@@ -3,11 +3,14 @@
 namespace SoerBot\Commands\PhpFact;
 
 use CharlotteDunois\Livia\CommandMessage;
-use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
+use SoerBot\Commands\PhpFact\Exceptions\CommandException;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Exceptions\StorageException;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
+use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
+use SoerBot\Commands\PhpFact\Implementations\CommandFactory;
+use SoerBot\Commands\PhpFact\Exceptions\CommandNotFoundException;
 
 class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
 {
@@ -45,50 +48,24 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
         try {
             $storage = new FileStorage();
             $facts = new PhpFacts($storage);
-            //$command = createCommand($args)
-
-        } catch (StorageException $e) {
-            // Exception on storage level: log exception or notify admin with $e->getMessage()
+            $command = CommandFactory::build($facts, $parsed);
+        } catch (CommandNotFoundException $e) {
+            return $message->say($e->getMessage());
+        } catch (CommandException $e) {
+            // Exception on class level: log exception or notify admin with $e->getMessage()
             return $message->say(CommandHelper::getCommandErrorMessage());
         } catch (PhpFactException $e) {
             // Exception on class level: log exception or notify admin with $e->getMessage()
+            return $message->say(CommandHelper::getCommandErrorMessage());
+        } catch (StorageException $e) {
+            // Exception on storage level: log exception or notify admin with $e->getMessage()
             return $message->say(CommandHelper::getCommandErrorMessage());
         } catch (\Throwable $e) {
             // Exception with emergency level: log exception or notify admin with $e->getMessage()
             return $message->say(CommandHelper::getCommandErrorMessage());
         }
 
-        if (preg_match('/([a-z]+)(?:\s+(\d+))?$/iSu', $args['command'], $match)) {
-            array_shift($match);
-
-            switch ($match[0]) {
-                case 'fact':
-                    if (!empty($match[1])) {
-                        $fact = $facts->get($match[1]) ? $facts->get($match[1]) : CommandHelper::getCommandFactNotFoundMessage($match[1]);
-
-                        return $message->say($fact);
-                    }
-
-                    return $message->say($facts->getRandom());
-
-                    break;
-                case 'stat':
-                    return $message->say('We have ' . ($facts->count() > 1 ? $facts->count() . ' facts' : $facts->count() . ' fact') . ' in collection.');
-
-                    break;
-                case 'list':
-                    return $message->say(CommandHelper::getCommandDefaultMessage());
-
-                    break;
-                default:
-                    return $message->say(CommandHelper::getCommandNotFoundMessage($args['command']));
-
-                    break;
-            }
-        }
-
-        // return command->say()
-        return $message->say(CommandHelper::getCommandNotFoundMessage($args['command']));
+        return $message->say($command->response());
     }
 
     public function serialize()

@@ -3,11 +3,11 @@
 namespace Tests\Commands;
 
 use ArrayObject;
-use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 use Tests\TestCase;
 use SoerBot\Commands\PhpFact\PhpFactCommand;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Exceptions\StorageException;
+use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 
 class PhpFactCommandMockeryTest extends TestCase
 {
