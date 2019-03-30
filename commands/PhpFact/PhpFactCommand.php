@@ -3,6 +3,7 @@
 namespace SoerBot\Commands\PhpFact;
 
 use CharlotteDunois\Livia\CommandMessage;
+use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Exceptions\CommandException;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
@@ -49,11 +50,10 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
             $storage = new FileStorage();
             $facts = new PhpFacts($storage);
             $command = CommandFactory::build($facts, $parsed);
+        } catch (CommandWrongUsageException $e) {
+            return $message->say($e->getMessage());
         } catch (CommandNotFoundException $e) {
             return $message->say($e->getMessage());
-        } catch (CommandException $e) {
-            // Exception on class level: log exception or notify admin with $e->getMessage()
-            return $message->say(CommandHelper::getCommandErrorMessage());
         } catch (PhpFactException $e) {
             // Exception on class level: log exception or notify admin with $e->getMessage()
             return $message->say(CommandHelper::getCommandErrorMessage());
