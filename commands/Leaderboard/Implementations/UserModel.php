@@ -169,12 +169,16 @@ class UserModel implements UserModelInterface
     /**
      * Returns user instance for chosen username.
      * @param $username
-     * @return User
+     * @return User|null
      */
     protected function get($username)
     {
-        return $this->first($this->users, function ($user) use ($username) {
-            return $user->getName() === $username;
-        });
+        if (!empty($this->users)) {
+            return $this->first($this->users, function ($user) use ($username) {
+                return $user->getName() === $username;
+            });
+        }
+
+        return null;
     }
 }
