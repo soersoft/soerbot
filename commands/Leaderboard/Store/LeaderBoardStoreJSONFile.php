@@ -12,7 +12,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     /**
      * @var array
      */
-    private $data;
+    private $data = [];
 
     /**
      * @var string
@@ -23,7 +23,6 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 
     public function __construct($filename = __DIR__ . '/../Store/leaderboard.json')
     {
-        $this->data = [];
         $this->file = $filename;
     }
 
@@ -48,15 +47,11 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
             throw new StoreFileNotFoundException('File ' . $this->file . ' have not found');
         }
 
-        $content = file_get_contents($this->file);
-
-        if (empty($content)) {
-            $this->data = [];
-
+        if (empty($content = file_get_contents($this->file))) {
             return true;
         }
 
-        return (($this->data = json_decode($content, true)) == true) ?? false;
+        return empty($this->data = json_decode($content, true)) ? false : true;
     }
 
     /**
@@ -69,7 +64,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
         if (count($args) < 2) {
             throw new TooFewArgumentsForUserAdding();
         }
-        list($username, $rewards) = $args;
+        [$username, $rewards] = $args;
         $this->remove($username);
         array_push($this->data, ['username' => $username, 'rewards' => $rewards]);
 
