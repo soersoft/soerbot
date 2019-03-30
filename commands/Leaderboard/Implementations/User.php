@@ -16,7 +16,7 @@ class User
      * The array of user's rewards.
      * @var array
      */
-    protected $rewards;
+    protected $rewards = [];
 
     /**
      * Line delimiter for separating name and rewards in stringify functions.
@@ -43,9 +43,11 @@ class User
 
     public function __construct($name, array $rewards, $linesDelimiter = PHP_EOL)
     {
-        foreach ($rewards as $reward) {
-            if ($this->validateReward($reward)) {
-                $this->rewards[] = $reward;
+        if (!empty($rewards)) {
+            foreach ($rewards as $reward) {
+                if ($this->validateReward($reward)) {
+                    $this->rewards[] = $reward;
+                }
             }
         }
 
@@ -75,7 +77,7 @@ class User
      * @param array $reward
      * @return bool
      */
-    public function validateReward(array $reward)
+    protected function validateReward(array $reward)
     {
         return array_key_exists('emoji', $reward) && array_key_exists('count', $reward);
     }
