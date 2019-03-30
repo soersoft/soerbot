@@ -69,8 +69,6 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
         [$username, $rewards] = $args;
         $this->remove($username);
         array_push($this->data, ['username' => $username, 'rewards' => $rewards]);
-
-        return true;
     }
 
     /**
@@ -86,7 +84,7 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 
     /**
      * @param $username
-     * @return null
+     * @return void
      */
     public function remove($username)
     {
@@ -95,8 +93,6 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
                 return strtolower($user['username']) !== strtolower($username);
             });
         }
-
-        return null;
     }
 
     /**

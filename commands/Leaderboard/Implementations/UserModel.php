@@ -71,7 +71,7 @@ class UserModel implements UserModelInterface
      * Increments chosen reward and saves the result in the store.
      * @param string $username
      * @param string $rewardName
-     * @return bool
+     * @return void
      */
     public function incrementReward($username, $rewardName)
     {
@@ -83,8 +83,6 @@ class UserModel implements UserModelInterface
 
         $this->store->add([$user->getName(), $user->getRewards()]);
         $this->store->save();
-
-        return true;
     }
 
     /**

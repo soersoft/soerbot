@@ -126,11 +126,6 @@ class LeaderBoardStoreJSONFileTest extends TestCase
         $this->assertNull($this->store->get('Username3'));
     }
 
-    public function testRemoveNonExistingUser()
-    {
-        $this->assertNull($this->store->remove('Username10'));
-    }
-
     public function testExists()
     {
         $userExists = $this->getPrivateMethod(LeaderBoardStoreJSONFile::class, 'userExists');

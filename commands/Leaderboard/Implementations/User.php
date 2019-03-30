@@ -98,7 +98,7 @@ class User
      * Updates reward if it exists or creates the new one if it doesn't exist.
      * @param string $rewardName
      * @param int $rewardCount
-     * @return bool
+     * @return void
      */
     public function addReward($rewardName, $rewardCount)
     {
@@ -110,14 +110,12 @@ class User
         } else {
             $this->rewards[] = $newReward;
         }
-
-        return true;
     }
 
     /**
      * Removes reward if the user has it.
      * @param string $rewardName
-     * @return bool
+     * @return void
      */
     public function removeReward($rewardName)
     {
@@ -125,15 +123,13 @@ class User
             $key = $this->findKey($this->rewards, 'emoji', $rewardName);
             unset($this->rewards[$key]);
         }
-
-        return true;
     }
 
     /**
      * Changes reward amount, can take a positive or negative number. Removes reward if its count less then one.
      * @param string $rewardName
      * @param int $value
-     * @return bool
+     * @return void
      */
     public function changeRewardAmount($rewardName, $value)
     {
@@ -141,25 +137,25 @@ class User
             $value += $reward['count'];
         }
 
-        return ($value > 0) ? $this->addReward($rewardName, $value) : $this->removeReward($rewardName);
+        $value > 0 ? $this->addReward($rewardName, $value) : $this->removeReward($rewardName);
     }
 
     /**
      * @param string $rewardName
-     * @return bool
+     * @return void
      */
     public function incrementReward($rewardName)
     {
-        return $this->changeRewardAmount($rewardName, 1);
+        $this->changeRewardAmount($rewardName, 1);
     }
 
     /**
      * @param string $rewardName
-     * @return bool
+     * @return void
      */
     public function decrementReward($rewardName)
     {
-        return $this->changeRewardAmount($rewardName, -1);
+        $this->changeRewardAmount($rewardName, -1);
     }
 
     /**

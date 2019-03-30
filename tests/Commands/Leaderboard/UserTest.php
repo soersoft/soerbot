@@ -87,7 +87,7 @@ class UserTest extends TestCase
     public function testRemoveReward()
     {
         $this->assertEquals(['emoji' => '⭐', 'count' => 5], $this->user->getReward('⭐'));
-        $this->assertTrue($this->user->removeReward('⭐'));
+        $this->user->removeReward('⭐');
         $this->assertFalse($this->user->getReward('⭐'));
     }
 
