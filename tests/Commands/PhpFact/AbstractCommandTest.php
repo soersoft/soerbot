@@ -22,7 +22,6 @@ class AbstractCommandTest extends TestCase
     public function testConstructorMakeRightObject()
     {
         $facts = $this->createMock(PhpFacts::class);
-
         $command = new class($facts) extends AbstractCommand {
             public function response(): string
             {
