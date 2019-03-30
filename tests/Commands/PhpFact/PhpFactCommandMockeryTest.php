@@ -8,6 +8,8 @@ use SoerBot\Commands\PhpFact\PhpFactCommand;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Exceptions\StorageException;
 use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
+use SoerBot\Commands\PhpFact\Exceptions\CommandNotFoundException;
+use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
 
 class PhpFactCommandMockeryTest extends TestCase
 {
@@ -36,6 +38,44 @@ class PhpFactCommandMockeryTest extends TestCase
     public function tearDown()
     {
         \Mockery::close();
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRunSayErrorTextWhenCommandWrongUsageInFactCommand()
+    {
+        $input = 'fact';
+
+        $external = \Mockery::mock('overload:SoerBot\Commands\PhpFact\Implementations\Commands\FactCommand');
+        $external->shouldReceive('__construct')
+                ->once()
+                ->andThrow(new CommandWrongUsageException('Wrong usage.'));
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with('Wrong usage.');
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRunSayErrorTextWhenCommandNotFoundInCommandFactory()
+    {
+        $input = 'not_exist';
+
+        $external = \Mockery::mock('overload:SoerBot\Commands\PhpFact\Implementations\CommandFactory');
+        $external->shouldReceive('build')
+                ->once()
+                ->andThrow(new CommandNotFoundException('Not found command.'));
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with('Not found command.');
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
     }
 
     /**

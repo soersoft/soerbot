@@ -28,15 +28,27 @@ class StatCommandTest extends TestCase
         $this->assertIsString($command->response());
     }
 
-    public function testResponseReturnExpectedSting()
+    public function testResponseReturnExpectedSingleSting()
     {
+        $expected = 'We have 1 fact in collection.';
+
+        $file = __DIR__ . '/../phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+        $this->setPrivateVariableValue($facts, 'facts', ['test']);
+        $command = new StatCommand($facts);
+
+        $this->assertEquals($expected, $command->response());
+    }
+
+    public function testResponseReturnExpectedPluralSting()
+    {
+        $expected = 'We have 5 facts in collection.';
+
         $file = __DIR__ . '/../phpfacts.txt';
         $storage = new FileStorage($file);
         $facts = new PhpFacts($storage);
         $command = new StatCommand($facts);
-
-        $count = count($this->getPrivateVariableValue($facts, 'facts'));
-        $expected = 'We have ' . ($count > 1 ? $count . ' facts' : $count . ' fact') . ' in collection.';
 
         $this->assertEquals($expected, $command->response());
     }

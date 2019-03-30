@@ -31,11 +31,18 @@ class CommandFactoryTest extends TestCase
     /**
      * Exceptions.
      */
-    public function testBuildThrowExceptionWhenCommandNotExist()
+    public function testBuildThrowExceptionWhenCommandNotExistInsidePregMatch()
     {
         $this->expectException(CommandNotFoundException::class);
 
         CommandFactory::build($this->facts, 'not_exist');
+    }
+
+    public function testBuildThrowExceptionWhenCommandNotExistOusidePregMatch()
+    {
+        $this->expectException(CommandNotFoundException::class);
+
+        CommandFactory::build($this->facts, 'not_exist not_exist not_exist not_exist');
     }
 
     /**

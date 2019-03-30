@@ -25,5 +25,6 @@ class ListCommandTest extends TestCase
         $command = new ListCommand($facts);
 
         $this->assertIsString($command->response());
+        $this->assertStringStartsWith('Input ', $command->response());
     }
 }
