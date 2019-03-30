@@ -36,26 +36,17 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
 
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $this->commandHandler($message, $args);
-    }
+        $parsed = trim($args['command']);
 
-    public function serialize()
-    {
-        return [];
-    }
+        if (empty($parsed)) {
+            return $message->say(CommandHelper::getCommandDefaultMessage());
+        }
 
-    /**
-     * Parse args and return result.
-     *
-     * @param CommandMessage $message
-     * @param \ArrayObject $args
-     * @return \React\Promise\ExtendedPromiseInterface
-     */
-    protected function commandHandler(CommandMessage $message, \ArrayObject $args)
-    {
         try {
             $storage = new FileStorage();
             $facts = new PhpFacts($storage);
+            //$command = createCommand($args)
+
         } catch (StorageException $e) {
             // Exception on storage level: log exception or notify admin with $e->getMessage()
             return $message->say(CommandHelper::getCommandErrorMessage());
@@ -65,12 +56,6 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
         } catch (\Throwable $e) {
             // Exception with emergency level: log exception or notify admin with $e->getMessage()
             return $message->say(CommandHelper::getCommandErrorMessage());
-        }
-
-        $parsed = trim($args['command']);
-
-        if (empty($parsed)) {
-            return $message->say(CommandHelper::getCommandDefaultMessage());
         }
 
         if (preg_match('/([a-z]+)(?:\s+(\d+))?$/iSu', $args['command'], $match)) {
@@ -102,6 +87,12 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
             }
         }
 
+        // return command->say()
         return $message->say(CommandHelper::getCommandNotFoundMessage($args['command']));
+    }
+
+    public function serialize()
+    {
+        return [];
     }
 }
