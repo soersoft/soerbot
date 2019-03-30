@@ -32,6 +32,12 @@ class LeaderBoardStoreJSONFileTest extends TestCase
         (new LeaderBoardStoreJSONFile('filename.json'))->load();
     }
 
+    public function testLoadEmptyStore()
+    {
+        $this->store = new LeaderBoardStoreJSONFile(__DIR__ . '/../../Fixtures/leaderboard.empty.tmp.json');
+        $this->assertTrue($this->store->load());
+    }
+
     public function testToArray()
     {
         $users = $this->store->toArray();
