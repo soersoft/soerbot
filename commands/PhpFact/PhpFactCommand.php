@@ -3,15 +3,14 @@
 namespace SoerBot\Commands\PhpFact;
 
 use CharlotteDunois\Livia\CommandMessage;
-use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
-use SoerBot\Commands\PhpFact\Exceptions\CommandException;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Exceptions\StorageException;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
 use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 use SoerBot\Commands\PhpFact\Implementations\CommandFactory;
 use SoerBot\Commands\PhpFact\Exceptions\CommandNotFoundException;
+use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
 
 class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
 {

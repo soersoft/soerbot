@@ -6,12 +6,36 @@ use Tests\TestCase;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
 use SoerBot\Commands\PhpFact\Implementations\Commands\FactCommand;
+use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
 
 class FactCommandTest extends TestCase
 {
+    private $facts;
+
+    protected function setUp()
+    {
+        try {
+            $file = __DIR__ . '/../phpfacts.txt';
+            $storage = new FileStorage($file);
+            $this->facts = new PhpFacts($storage);
+        } catch (\Throwable $e) {
+            $this->fail('Exception with ' . $e->getMessage() . ' was thrown is setUp method!');
+        }
+
+        parent::setUp();
+    }
+
     /**
      * Exceptions.
      */
+    public function testConstructorThrowExceptionWhenPositionArgumentNotNumeric()
+    {
+        $facts = $this->createMock(PhpFacts::class);
+
+        $this->expectException(CommandWrongUsageException::class);
+
+        new FactCommand($facts, ['position' => 'fail']);
+    }
 
     /**
      * Corner cases.
@@ -20,23 +44,44 @@ class FactCommandTest extends TestCase
     /**
      * Functionality.
      */
-    public function testResponseReturnExpected()
+    public function testResponseWithoutArgumentsReturnExpected()
     {
-        $facts = $this->createMock(PhpFacts::class);
-        $command = new FactCommand($facts);
+        $command = new FactCommand($this->facts);
 
         $this->assertIsString($command->response());
     }
 
-    public function testResponseReturnExpectedSting()
+    public function testResponseWithoutArgumentsReturnExpectedSting()
     {
-        $file = __DIR__ . '/../phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-        $command = new FactCommand($facts);
+        $command = new FactCommand($this->facts);
 
-        $content = $this->getPrivateVariableValue($facts, 'facts');
+        $content = $this->getPrivateVariableValue($this->facts, 'facts');
 
         $this->assertContains($command->response(), $content);
+    }
+
+    public function testResponseWithArgumentsReturnExpected()
+    {
+        $command = new FactCommand($this->facts, ['position' => 1]);
+
+        $this->assertIsString($command->response());
+    }
+
+    public function testResponseWithArgumentsReturnExpectedStringWhenFactExist()
+    {
+        $command = new FactCommand($this->facts, ['position' => 2]);
+
+        $content = $this->getPrivateVariableValue($this->facts, 'facts');
+
+        $this->assertEquals($command->response(), $content[1]);
+    }
+
+    public function testResponseWithArgumentsReturnExpectedStringWhenFactNotExist()
+    {
+        $position = 100;
+        $command = new FactCommand($this->facts, ['position' => $position]);
+        $expected = 'The ' . $position . ' is wrong fact. Use $phpfact stat to find right position number.';
+
+        $this->assertEquals($expected, $command->response());
     }
 }

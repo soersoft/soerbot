@@ -10,7 +10,6 @@ use SoerBot\Commands\PhpFact\Exceptions\CommandNotFoundException;
 use SoerBot\Commands\PhpFact\Implementations\Commands\FactCommand;
 use SoerBot\Commands\PhpFact\Implementations\Commands\ListCommand;
 use SoerBot\Commands\PhpFact\Implementations\Commands\StatCommand;
-use SoerBot\Commands\PhpFact\Implementations\Commands\FactExtendedCommand;
 
 class CommandFactoryTest extends TestCase
 {
@@ -57,7 +56,7 @@ class CommandFactoryTest extends TestCase
     {
         $command = CommandFactory::build($this->facts, 'fact 22');
 
-        $this->assertInstanceOf(FactExtendedCommand::class, $command);
+        $this->assertInstanceOf(FactCommand::class, $command);
     }
 
     public function testBuildMakeRightObjectWhenStatCommand()
