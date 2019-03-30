@@ -3,6 +3,7 @@
 namespace Tests\Commands;
 
 use ArrayObject;
+use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 use Tests\TestCase;
 use SoerBot\Commands\PhpFact\PhpFactCommand;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
@@ -44,8 +45,6 @@ class PhpFactCommandMockeryTest extends TestCase
     public function testRunSayErrorTextWhenSomethingWentWrongInPhpFactsClass()
     {
         $input = 'fact';
-        $method = $this->getPrivateMethod($this->command, 'getErrorMessage');
-        $errorMessage = $method->invoke($this->command);
 
         $external = \Mockery::mock('overload:SoerBot\Commands\PhpFact\Implementations\PhpFacts');
         $external->shouldReceive('__construct')
@@ -53,7 +52,7 @@ class PhpFactCommandMockeryTest extends TestCase
                 ->andThrow(new PhpFactException('Facts array is empty.'));
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $commandMessage->expects($this->once())->method('say')->with($errorMessage);
+        $commandMessage->expects($this->once())->method('say')->with(CommandHelper::getCommandErrorMessage());
 
         $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
     }
@@ -75,7 +74,7 @@ class PhpFactCommandMockeryTest extends TestCase
         $external->shouldNotReceive('__construct');
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $commandMessage->expects($this->once())->method('say')->with('Something went wrong. Today without interesting PHP facts. Sorry!');
+        $commandMessage->expects($this->once())->method('say')->with(CommandHelper::getCommandErrorMessage());
 
         $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
     }

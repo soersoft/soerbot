@@ -3,6 +3,7 @@
 namespace Tests\Commands;
 
 use ArrayObject;
+use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 use Tests\TestCase;
 use SoerBot\Commands\PhpFact\PhpFactCommand;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
@@ -14,11 +15,6 @@ class PhpFactCommandTest extends TestCase
      * @var PhpFactCommand
      */
     private $command;
-
-    /**
-     * Default command message.
-     */
-    private $defaultMessage;
 
     protected function setUp()
     {
@@ -33,9 +29,6 @@ class PhpFactCommandTest extends TestCase
         $this->client->expects($this->exactly(2))->method('__get')->with('registry')->willReturn($registry);
 
         $this->command = $commandCreate($this->client);
-
-        $message = $this->getPrivateMethod($this->command, 'getDefaultMessage');
-        $this->defaultMessage = $message->invoke($this->command);
 
         parent::setUp();
     }
@@ -68,7 +61,7 @@ class PhpFactCommandTest extends TestCase
 
         $this->assertEquals($this->command->args[0]['key'], 'command');
         $this->assertEquals($this->command->args[0]['label'], 'command');
-        $this->assertEquals($this->command->args[0]['prompt'], $this->defaultMessage);
+        $this->assertEquals($this->command->args[0]['prompt'], CommandHelper::getCommandDefaultMessage());
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
@@ -78,7 +71,7 @@ class PhpFactCommandTest extends TestCase
         $commandMessage->expects($this->once())
                         ->method('say')
                         ->with(
-                            $this->defaultMessage
+                            CommandHelper::getCommandDefaultMessage()
                         );
 
         $this->command->run($commandMessage, new ArrayObject(['command' => '']), false);
@@ -87,13 +80,11 @@ class PhpFactCommandTest extends TestCase
     public function testRunSayDefaultTextWhenCommandNotFound()
     {
         $input = 'non_exist';
-        $method = $this->getPrivateMethod($this->command, 'getCommandNotFoundMessage');
-        $notFoundMessage = $method->invokeArgs($this->command, [$input]);
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
             ->method('say')
-            ->with($notFoundMessage);
+            ->with(CommandHelper::getCommandNotFoundMessage($input));
 
         $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
     }
@@ -149,13 +140,10 @@ class PhpFactCommandTest extends TestCase
 
     public function testRunSayConcreteFactWhenFactCommandNonExistNumber()
     {
-        $method = $this->getPrivateMethod($this->command, 'getFactNotFoundMessage');
-        $factNotFoundMessage = $method->invokeArgs($this->command, ['100']);
-
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
             ->method('say')
-            ->with($factNotFoundMessage);
+            ->with(CommandHelper::getCommandFactNotFoundMessage('100'));
 
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 100']), false);
     }

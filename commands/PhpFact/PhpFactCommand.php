@@ -3,6 +3,7 @@
 namespace SoerBot\Commands\PhpFact;
 
 use CharlotteDunois\Livia\CommandMessage;
+use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Exceptions\StorageException;
@@ -26,7 +27,7 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
                 [
                     'key' => 'command',
                     'label' => 'command',
-                    'prompt' => $this->getDefaultMessage(),
+                    'prompt' => CommandHelper::getCommandDefaultMessage(),
                     'type' => 'string',
                 ],
             ],
@@ -56,19 +57,19 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
             $facts = $this->initFacts();
         } catch (StorageException $e) {
             // Exception on storage level: log exception or notify admin with $e->getMessage()
-            return $message->say($this->getErrorMessage());
+            return $message->say(CommandHelper::getCommandErrorMessage());
         } catch (PhpFactException $e) {
             // Exception on class level: log exception or notify admin with $e->getMessage()
-            return $message->say($this->getErrorMessage());
+            return $message->say(CommandHelper::getCommandErrorMessage());
         } catch (\Throwable $e) {
             // Exception with emergency level: log exception or notify admin with $e->getMessage()
-            return $message->say($this->getErrorMessage());
+            return $message->say(CommandHelper::getCommandErrorMessage());
         }
 
         $parsed = trim($args['command']);
 
         if (empty($parsed)) {
-            return $message->say($this->getDefaultMessage());
+            return $message->say(CommandHelper::getCommandDefaultMessage());
         }
 
         if (preg_match('/([a-z]+)(?:\s+(\d+))?$/iSu', $args['command'], $match)) {
@@ -77,7 +78,7 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
             switch ($match[0]) {
                 case 'fact':
                     if (!empty($match[1])) {
-                        $fact = $facts->get($match[1]) ? $facts->get($match[1]) : $this->getFactNotFoundMessage($match[1]);
+                        $fact = $facts->get($match[1]) ? $facts->get($match[1]) : CommandHelper::getCommandFactNotFoundMessage($match[1]);
 
                         return $message->say($fact);
                     }
@@ -90,17 +91,17 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
 
                     break;
                 case 'list':
-                    return $message->say($this->getDefaultMessage());
+                    return $message->say(CommandHelper::getCommandDefaultMessage());
 
                     break;
                 default:
-                    return $message->say($this->getCommandNotFoundMessage($args['command']));
+                    return $message->say(CommandHelper::getCommandNotFoundMessage($args['command']));
 
                     break;
             }
         }
 
-        return $message->say($this->getCommandNotFoundMessage($args['command']));
+        return $message->say(CommandHelper::getCommandNotFoundMessage($args['command']));
     }
 
     /**
@@ -114,25 +115,5 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
         $storage = new FileStorage();
 
         return new PhpFacts($storage);
-    }
-
-    protected function getDefaultMessage()
-    {
-        return 'Input one of the command:' . PHP_EOL . 'fact - get random php fact' . PHP_EOL . 'fact [num] - get php fact by number' . PHP_EOL . 'stat - get php facts statistics' . PHP_EOL . 'list - list all possible command';
-    }
-
-    protected function getErrorMessage()
-    {
-        return 'Something went wrong. Today without interesting PHP facts. Sorry!';
-    }
-
-    protected function getCommandNotFoundMessage(string $command)
-    {
-        return 'The ' . $command . ' is wrong command. Use $phpfact list for right command list.';
-    }
-
-    protected function getFactNotFoundMessage(string $position)
-    {
-        return 'The ' . $position . ' is wrong fact. Use $phpfact stat to find right position number.';
     }
 }
