@@ -54,7 +54,8 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
     protected function commandHandler(CommandMessage $message, \ArrayObject $args)
     {
         try {
-            $facts = $this->initFacts();
+            $storage = new FileStorage();
+            $facts = new PhpFacts($storage);
         } catch (StorageException $e) {
             // Exception on storage level: log exception or notify admin with $e->getMessage()
             return $message->say(CommandHelper::getCommandErrorMessage());
@@ -102,18 +103,5 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
         }
 
         return $message->say(CommandHelper::getCommandNotFoundMessage($args['command']));
-    }
-
-    /**
-     * Initialize object.
-     *
-     * @throws \Exception|PhpFactException
-     * @return PhpFacts
-     */
-    protected function initFacts(): PhpFacts
-    {
-        $storage = new FileStorage();
-
-        return new PhpFacts($storage);
     }
 }

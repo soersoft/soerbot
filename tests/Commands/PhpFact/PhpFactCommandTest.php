@@ -159,11 +159,4 @@ class PhpFactCommandTest extends TestCase
 
         $this->command->run($commandMessage, new ArrayObject(['command' => 'stat']), false);
     }
-
-    public function testInitFactsMakeRightInstance()
-    {
-        $method = $this->getPrivateMethod($this->command, 'initFacts');
-
-        $this->assertInstanceOf(PhpFacts::class, $method->invoke($this->command));
-    }
 }
