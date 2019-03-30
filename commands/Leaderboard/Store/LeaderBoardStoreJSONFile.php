@@ -51,7 +51,9 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
             return true;
         }
 
-        return empty($this->data = json_decode($content, true)) ? false : true;
+        $this->data = json_decode($content, true);
+
+        return $this->data === null ? false : true;
     }
 
     /**
