@@ -84,4 +84,18 @@ class FactCommandTest extends TestCase
 
         $this->assertEquals($expected, $command->response());
     }
+
+    public function testValidPositionIsEmptyWhenPositionArgumentNotExist()
+    {
+        $command = new FactCommand($this->facts);
+
+        $this->assertEmpty($this->getPrivateVariableValue($command, 'position'));
+    }
+
+    public function testValidPositionIsSetWhenPositionArgumentExist()
+    {
+        $command = new FactCommand($this->facts, ['position' => 22]);
+
+        $this->assertEquals(22, $this->getPrivateVariableValue($command, 'position'));
+    }
 }

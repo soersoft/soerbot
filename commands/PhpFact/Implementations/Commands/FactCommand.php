@@ -19,9 +19,7 @@ class FactCommand extends AbstractCommand
      */
     public function __construct(PhpFacts $facts, array $args = [])
     {
-        if (!empty($args['position'])) {
-            $this->position = $this->validPosition($args['position']);
-        }
+        $this->position = $this->validPosition($args);
 
         parent::__construct($facts, $args);
     }
@@ -47,16 +45,20 @@ class FactCommand extends AbstractCommand
     /**
      * Checks if position is valid.
      *
-     * @param string $position
+     * @param array $args
      * @throws CommandWrongUsageException
      * @return string
      */
-    protected function validPosition(string $position): string
+    protected function validPosition(array $args): string
     {
-        if (!is_numeric($position)) {
-            throw new CommandWrongUsageException('Wrong usage of fact [num] command. Check if ' . $position . ' is correct argument.');
+        if (empty($args['position'])) {
+            return '';
         }
 
-        return $position;
+        if (!is_numeric($args['position'])) {
+            throw new CommandWrongUsageException('Wrong usage of fact [num] command. Check if ' . $args['position'] . ' is correct argument.');
+        }
+
+        return $args['position'];
     }
 }
