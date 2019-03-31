@@ -32,13 +32,19 @@ class LeaderBoardStoreJSONFileTest extends TestCase
         (new LeaderBoardStoreJSONFile('filename.json'))->load();
     }
 
+    public function testLoadEmptyStore()
+    {
+        $this->store = new LeaderBoardStoreJSONFile(__DIR__ . '/../../Fixtures/leaderboard.empty.tmp.json');
+        $this->assertTrue($this->store->load());
+    }
+
     public function testToArray()
     {
         $users = $this->store->toArray();
-        $this->assertNotEmpty($users);
+        $this->assertIsArray($users);
     }
 
-    public function testToArrayTheSameData()
+    public function testToArrayReturnedTheSameData()
     {
         $array = [
           [
@@ -118,11 +124,6 @@ class LeaderBoardStoreJSONFileTest extends TestCase
         $this->store->remove('Username3');
 
         $this->assertNull($this->store->get('Username3'));
-    }
-
-    public function testRemoveNonExistingUser()
-    {
-        $this->assertNull($this->store->remove('Username10'));
     }
 
     public function testExists()

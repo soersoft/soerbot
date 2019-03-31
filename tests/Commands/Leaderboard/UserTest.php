@@ -37,6 +37,22 @@ class UserTest extends TestCase
         $this->assertEquals(['emoji' => '⭐', 'count' => 2], $this->user->getReward('⭐'));
     }
 
+    public function testValidateRewards()
+    {
+        $rewards = [
+          ['emoji' => '⭐', 'count' => 5],
+          ['emoji' => '🏅', 'coun' => 3],
+          [],
+        ];
+
+        $this->user = new User('Username', $rewards);
+        $this->assertEquals([['emoji' => '⭐', 'count' => 5]], $this->user->getRewards());
+
+        $rewards = [];
+        $this->user = new User('Username', $rewards);
+        $this->assertIsArray($this->user->getRewards());
+    }
+
     public function testAddToRewardAmount()
     {
         $this->user->changeRewardAmount('⭐', 5);
@@ -71,7 +87,7 @@ class UserTest extends TestCase
     public function testRemoveReward()
     {
         $this->assertEquals(['emoji' => '⭐', 'count' => 5], $this->user->getReward('⭐'));
-        $this->assertTrue($this->user->removeReward('⭐'));
+        $this->user->removeReward('⭐');
         $this->assertFalse($this->user->getReward('⭐'));
     }
 

@@ -9,20 +9,27 @@ use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 class UserModel implements UserModelInterface
 {
     /**
+     * If the leaderboard is empty this message will be printed.
+     */
+    const LEADERBOARD_IS_EMPTY = 'Пока в таблице лидеров никого нет.';
+
+    /**
+     * These emoji will be printed for the first three places.
+     */
+    const  EMOJI_OF_PRIZE_PLACES = [':one: ', ':two: ', ':three: '];
+
+    /**
      * @var UserModel
      */
     protected static $instance;
-
     /**
      * @var User[]
      */
     protected $users;
-
     /**
      * @var LeaderBoardStoreInterface
      */
     protected $store;
-
     /**
      * Line delimiter for separating users in stringify functions.
      * @var string
@@ -38,8 +45,10 @@ class UserModel implements UserModelInterface
 
         $this->store->load();
 
-        foreach ($this->store->toArray() as $user) {
-            $this->users[] = new User($user['username'], $user['rewards']);
+        if (!empty($users = $this->store->toArray())) {
+            foreach ($users as $user) {
+                $this->users[] = new User($user['username'], $user['rewards']);
+            }
         }
     }
 
@@ -62,7 +71,7 @@ class UserModel implements UserModelInterface
      * Increments chosen reward and saves the result in the store.
      * @param string $username
      * @param string $rewardName
-     * @return bool
+     * @return void
      */
     public function incrementReward($username, $rewardName)
     {
@@ -74,8 +83,6 @@ class UserModel implements UserModelInterface
 
         $this->store->add([$user->getName(), $user->getRewards()]);
         $this->store->save();
-
-        return true;
     }
 
     /**
@@ -85,14 +92,22 @@ class UserModel implements UserModelInterface
      */
     public function sort($direction = 'desc')
     {
+        if (empty($this->users)) {
+            return $this;
+        }
+
         usort($this->users, function ($a, $b) use ($direction) {
-            if ($a->getPointsAmount() == $b->getPointsAmount()) {
+            if (!($a instanceof User) || !($b instanceof User)) {
+                return 0;
+            }
+
+            if ($a->getPointsAmount() === $b->getPointsAmount()) {
                 return 0;
             }
 
             $result = ($a->getPointsAmount() > $b->getPointsAmount()) ? -1 : 1;
 
-            return ($direction == 'desc') ? $result : $result * -1;
+            return ($direction === 'desc') ? $result : $result * -1;
         });
 
         return $this;
@@ -125,17 +140,21 @@ class UserModel implements UserModelInterface
      */
     public function getLeaderBoardAsString()
     {
-        $str = '';
+        if (empty($this->users)) {
+            return self::LEADERBOARD_IS_EMPTY;
+        }
+
+        $strLeaderBoard = '';
 
         foreach ($this->users as $index => $user) {
-            if (array_key_exists($index, $places = [':one: ', ':two: ', ':three: '])) {
+            if (array_key_exists($index, $places = self::EMOJI_OF_PRIZE_PLACES)) {
                 $user->addPrefix($places[$index]);
             }
 
-            $str .= $user . $this->linesDelimiter;
+            $strLeaderBoard .= $user . $this->linesDelimiter;
         }
 
-        return $str;
+        return $strLeaderBoard;
     }
 
     /**
@@ -148,12 +167,16 @@ class UserModel implements UserModelInterface
     /**
      * Returns user instance for chosen username.
      * @param $username
-     * @return User
+     * @return User|null
      */
     protected function get($username)
     {
-        return $this->first($this->users, function ($user) use ($username) {
-            return $user->getName() === $username;
-        });
+        if (!empty($this->users)) {
+            return $this->first($this->users, function ($user) use ($username) {
+                return $user->getName() === $username;
+            });
+        }
+
+        return null;
     }
 }

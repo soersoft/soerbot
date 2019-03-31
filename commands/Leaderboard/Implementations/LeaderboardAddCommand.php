@@ -2,7 +2,6 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
-use ArrayObject;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
@@ -50,7 +49,7 @@ class LeaderboardAddCommand extends Command
           ],
         ]);
 
-        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
+        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
 
         $this->allowRoles = [
           'product owner', 'куратор',
@@ -65,32 +64,13 @@ class LeaderboardAddCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $message->say(
-            $this->action($args) ? self::SUCCESS_MESSAGE : self::FAILURE_MESSAGE
-        );
-    }
+        try {
+            $this->users->incrementReward($args['name']->username, $args['emoji']);
+        } catch (\Exception $e) {
+            return $message->say(self::FAILURE_MESSAGE);
+        }
 
-    /**
-     * @param ArrayObject $args
-     * @return bool
-     */
-    private function action(ArrayObject $args): bool
-    {
-        return $this->validateArguments($args) && $this->addReward($args);
-    }
-
-    /**
-     * @param ArrayObject $args
-     * @return bool
-     */
-    private function validateArguments(ArrayObject $args): bool
-    {
-        return isset($args['name']) && isset($args['emoji']);
-    }
-
-    private function addReward(ArrayObject $args): bool
-    {
-        return $this->users->incrementReward($args['name']->username, $args['emoji']);
+        return $message->say(self::SUCCESS_MESSAGE);
     }
 
     /**
