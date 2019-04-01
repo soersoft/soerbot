@@ -40,6 +40,43 @@ class FactCommandTest extends TestCase
     /**
      * Corner cases.
      */
+    public function testResponseWithArgumentsWhenPositionIsZero()
+    {
+        $position = 0;
+        $command = new FactCommand($this->facts, ['position' => $position]);
+        $expected = 'The ' . $position . ' is wrong fact. Use $phpfact stat to find right position number.';
+
+        $this->assertEquals($expected, $command->response());
+    }
+
+    public function testResponseWithArgumentsWhenPositionIsOne()
+    {
+        $position = 1;
+        $command = new FactCommand($this->facts, ['position' => $position]);
+
+        $content = $this->getPrivateVariableValue($this->facts, 'facts');
+
+        $this->assertEquals($content[0], $command->response());
+    }
+
+    public function testResponseWithArgumentsWhenPositionIsFive()
+    {
+        $position = 5;
+        $command = new FactCommand($this->facts, ['position' => $position]);
+
+        $content = $this->getPrivateVariableValue($this->facts, 'facts');
+
+        $this->assertEquals($content[4], $command->response());
+    }
+
+    public function testResponseWithArgumentsWhenPositionIsSix()
+    {
+        $position = 6;
+        $command = new FactCommand($this->facts, ['position' => $position]);
+        $expected = 'The ' . $position . ' is wrong fact. Use $phpfact stat to find right position number.';
+
+        $this->assertEquals($expected, $command->response());
+    }
 
     /**
      * Functionality.
@@ -73,7 +110,7 @@ class FactCommandTest extends TestCase
 
         $content = $this->getPrivateVariableValue($this->facts, 'facts');
 
-        $this->assertEquals($command->response(), $content[1]);
+        $this->assertEquals($content[1], $command->response());
     }
 
     public function testResponseWithArgumentsReturnExpectedStringWhenFactNotExist()

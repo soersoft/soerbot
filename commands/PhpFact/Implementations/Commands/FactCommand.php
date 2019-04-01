@@ -8,6 +8,9 @@ use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
 
 class FactCommand extends AbstractCommand
 {
+    /**
+     * @var int
+     */
     private $position;
 
     /**
@@ -31,7 +34,7 @@ class FactCommand extends AbstractCommand
      */
     public function response(): string
     {
-        if (empty($this->position)) {
+        if ($this->position === null) {
             return $this->facts->getRandom();
         }
 
@@ -47,18 +50,18 @@ class FactCommand extends AbstractCommand
      *
      * @param array $args
      * @throws CommandWrongUsageException
-     * @return string
+     * @return int|null
      */
-    protected function validPosition(array $args): string
+    protected function validPosition(array $args): ?int
     {
-        if (empty($args['position'])) {
-            return '';
+        if (!isset($args['position'])) {
+            return null;
         }
 
         if (!is_numeric($args['position'])) {
             throw new CommandWrongUsageException('Wrong usage of fact [num] command. Check if ' . $args['position'] . ' is correct argument.');
         }
 
-        return $args['position'];
+        return (int)$args['position'];
     }
 }

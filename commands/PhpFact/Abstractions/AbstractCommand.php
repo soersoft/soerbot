@@ -6,6 +6,9 @@ use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 
 abstract class AbstractCommand
 {
+    /**
+     * @var PhpFacts
+     */
     protected $facts;
 
     /**
