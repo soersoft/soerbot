@@ -86,16 +86,16 @@ class PhpFactCommandTest extends TestCase
 
     public function testRunSayDefaultTextWhenCommandNotFound()
     {
+        $input = 'non_exist';
         $method = $this->getPrivateMethod($this->command, 'getCommandNotFoundMessage');
+        $notFoundMessage = $method->invokeArgs($this->command, [$input]);
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
             ->method('say')
-            ->with(
-                $method->invokeArgs($this->command, ['non_exist'])
-            );
+            ->with($notFoundMessage);
 
-        $this->command->run($commandMessage, new ArrayObject(['command' => 'non_exist']), false);
+        $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
     }
 
     public function testRunSayOneOfFactWhenFactCommand()
@@ -126,7 +126,7 @@ class PhpFactCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact']), false);
     }
 
-    public function testRunSayConcreteFactWhenFactCommandHasExistNumber()
+    public function testRunSayConcreteFactWhenFactCommandExistingNumber()
     {
         try {
             $storage = new FileStorage();
@@ -147,16 +147,15 @@ class PhpFactCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 2']), false);
     }
 
-    public function testRunSayConcreteFactWhenFactCommandHasNonExistNumber()
+    public function testRunSayConcreteFactWhenFactCommandNonExistNumber()
     {
         $method = $this->getPrivateMethod($this->command, 'getFactNotFoundMessage');
+        $factNotFoundMessage = $method->invokeArgs($this->command, ['100']);
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
             ->method('say')
-            ->with(
-                $method->invokeArgs($this->command, ['100'])
-            );
+            ->with($factNotFoundMessage);
 
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 100']), false);
     }

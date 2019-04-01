@@ -23,7 +23,7 @@ class PhpFacts
         $this->facts = $this->load($storage);
 
         if (empty($this->facts)) {
-            throw new PhpFactException('Facts array was empty.');
+            throw new PhpFactException('Facts array is empty.');
         }
     }
 
@@ -34,10 +34,9 @@ class PhpFacts
      */
     public function get(int $position)
     {
-        // position normalization for array indexes
-        --$position;
-        if (array_key_exists($position, $this->facts)) {
-            return $this->facts[$position];
+        $index = --$position;
+        if (array_key_exists($index, $this->facts)) {
+            return $this->facts[$index];
         }
 
         return false;
