@@ -2,6 +2,7 @@
 
 namespace SoerBot\Commands\Devs;
 
+use SoerBot\Configurator;
 use SoerBot\Commands\Devs\Exceptions\TopicException;
 use SoerBot\Commands\Devs\Implementations\TopicModel;
 use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
@@ -9,11 +10,18 @@ use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
 class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
 {
     /**
+     * @var array
+     */
+    protected $settings = [];
+
+    /**
      * @param \CharlotteDunois\Livia\LiviaClient $client
      * @throws \Exception
      */
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
+        $this->settings = Configurator::get('commands');
+
         parent::__construct($client, [
             'name' => 'devs', // Give command name
             'aliases' => ['dev'],
@@ -40,7 +48,9 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
     {
         if (!empty($args) && !empty($args['topic'])) {
             try {
-                $topic = new TopicModel($args['topic']);
+                $path = __DIR__ . $this->settings['store'];
+
+                $topic = new TopicModel($args['topic'], $path);
                 $content = $topic->getContent();
             } catch (TopicExceptionFileNotFound $e) {
                 // Exception with low log level: log exception or notify admin with $e->getMessage()
