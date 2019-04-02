@@ -9,38 +9,28 @@ use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
 class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
 {
     /**
-     * @param \CharlotteDunois\Livia\LiviaClient $client
-     * @throws \Exception
+     * @var array
      */
-    public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
+    protected $settings = [];
+
+    /**
+     * @param \CharlotteDunois\Livia\LiviaClient $client
+     * @param array $info
+     */
+    public function __construct(\CharlotteDunois\Livia\LiviaClient $client, $info)
     {
-        parent::__construct($client, [
-            'name' => 'devs', // Give command name
-            'aliases' => ['dev'],
-            'group' => 'utils', // Group in ['command', 'util']
-            'description' => 'Команда $devs выводит важные топики.', // Fill the description
-            'guildOnly' => false,
-            'throttling' => [
-                'usages' => 5,
-                'duration' => 10,
-            ],
-            'guarded' => true,
-            'args' => [ // If you need some variables you should either fill this section or remove it
-                [
-                    'key' => 'topic',
-                    'label' => 'topic',
-                    'prompt' => $this->getDefaultMessage(),
-                    'type' => 'string',
-                ],
-            ],
-        ]);
+        parent::__construct($client, $info);
+
+        $this->settings = $info;
     }
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
         if (!empty($args) && !empty($args['topic'])) {
             try {
-                $topic = new TopicModel($args['topic']);
+                $path = __DIR__ . $this->settings['store'];
+
+                $topic = new TopicModel($args['topic'], $path);
                 $content = $topic->getContent();
             } catch (TopicExceptionFileNotFound $e) {
                 // Exception with low log level: log exception or notify admin with $e->getMessage()
