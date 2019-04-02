@@ -7,6 +7,9 @@ use Tests\TestCase;
 use SoerBot\Commands\PhpFact\PhpFactCommand;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Exceptions\StorageException;
+use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
+use SoerBot\Commands\PhpFact\Exceptions\CommandNotFoundException;
+use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
 
 class PhpFactCommandMockeryTest extends TestCase
 {
@@ -41,11 +44,47 @@ class PhpFactCommandMockeryTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
+    public function testRunSayErrorTextWhenCommandWrongUsageInFactCommand()
+    {
+        $input = 'fact';
+
+        $external = \Mockery::mock('overload:SoerBot\Commands\PhpFact\Implementations\Commands\FactCommand');
+        $external->shouldReceive('__construct')
+                ->once()
+                ->andThrow(new CommandWrongUsageException('Wrong usage.'));
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with('Wrong usage.');
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRunSayErrorTextWhenCommandNotFoundInCommandFactory()
+    {
+        $input = 'not_exist';
+
+        $external = \Mockery::mock('overload:SoerBot\Commands\PhpFact\Implementations\CommandFactory');
+        $external->shouldReceive('build')
+                ->once()
+                ->andThrow(new CommandNotFoundException('Not found command.'));
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with('Not found command.');
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testRunSayErrorTextWhenSomethingWentWrongInPhpFactsClass()
     {
         $input = 'fact';
-        $method = $this->getPrivateMethod($this->command, 'getErrorMessage');
-        $errorMessage = $method->invoke($this->command);
 
         $external = \Mockery::mock('overload:SoerBot\Commands\PhpFact\Implementations\PhpFacts');
         $external->shouldReceive('__construct')
@@ -53,7 +92,7 @@ class PhpFactCommandMockeryTest extends TestCase
                 ->andThrow(new PhpFactException('Facts array is empty.'));
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $commandMessage->expects($this->once())->method('say')->with($errorMessage);
+        $commandMessage->expects($this->once())->method('say')->with(CommandHelper::getCommandErrorMessage());
 
         $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
     }
@@ -75,7 +114,7 @@ class PhpFactCommandMockeryTest extends TestCase
         $external->shouldNotReceive('__construct');
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $commandMessage->expects($this->once())->method('say')->with('Something went wrong. Today without interesting PHP facts. Sorry!');
+        $commandMessage->expects($this->once())->method('say')->with(CommandHelper::getCommandErrorMessage());
 
         $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
     }

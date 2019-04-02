@@ -7,6 +7,7 @@ use Tests\TestCase;
 use SoerBot\Commands\PhpFact\PhpFactCommand;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
+use SoerBot\Commands\PhpFact\Implementations\CommandHelper;
 
 class PhpFactCommandTest extends TestCase
 {
@@ -14,11 +15,6 @@ class PhpFactCommandTest extends TestCase
      * @var PhpFactCommand
      */
     private $command;
-
-    /**
-     * Default command message.
-     */
-    private $defaultMessage;
 
     protected function setUp()
     {
@@ -33,9 +29,6 @@ class PhpFactCommandTest extends TestCase
         $this->client->expects($this->exactly(2))->method('__get')->with('registry')->willReturn($registry);
 
         $this->command = $commandCreate($this->client);
-
-        $message = $this->getPrivateMethod($this->command, 'getDefaultMessage');
-        $this->defaultMessage = $message->invoke($this->command);
 
         parent::setUp();
     }
@@ -58,7 +51,7 @@ class PhpFactCommandTest extends TestCase
         $this->assertEquals($this->command->groupID, 'utils');
     }
 
-    public function testConstructorMakeRightObjectWithDefaultArguments()
+    public function testConstructorMakeRightObjectWhenDefaultArguments()
     {
         $this->assertEquals(count($this->command->args), 1);
         $this->assertArrayHasKey('key', $this->command->args[0]);
@@ -68,7 +61,7 @@ class PhpFactCommandTest extends TestCase
 
         $this->assertEquals($this->command->args[0]['key'], 'command');
         $this->assertEquals($this->command->args[0]['label'], 'command');
-        $this->assertEquals($this->command->args[0]['prompt'], $this->defaultMessage);
+        $this->assertEquals($this->command->args[0]['prompt'], CommandHelper::getCommandDefaultMessage());
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
@@ -78,7 +71,7 @@ class PhpFactCommandTest extends TestCase
         $commandMessage->expects($this->once())
                         ->method('say')
                         ->with(
-                            $this->defaultMessage
+                            CommandHelper::getCommandDefaultMessage()
                         );
 
         $this->command->run($commandMessage, new ArrayObject(['command' => '']), false);
@@ -86,14 +79,12 @@ class PhpFactCommandTest extends TestCase
 
     public function testRunSayDefaultTextWhenCommandNotFound()
     {
-        $input = 'non_exist';
-        $method = $this->getPrivateMethod($this->command, 'getCommandNotFoundMessage');
-        $notFoundMessage = $method->invokeArgs($this->command, [$input]);
+        $input = 'not_exist';
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
             ->method('say')
-            ->with($notFoundMessage);
+            ->with(CommandHelper::getCommandNotFoundMessage($input));
 
         $this->command->run($commandMessage, new ArrayObject(['command' => $input]), false);
     }
@@ -147,15 +138,30 @@ class PhpFactCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 2']), false);
     }
 
-    public function testRunSayConcreteFactWhenFactCommandNonExistNumber()
+    public function testRunSayConcreteFactWhenFactCommandNotExistNumber()
     {
-        $method = $this->getPrivateMethod($this->command, 'getFactNotFoundMessage');
-        $factNotFoundMessage = $method->invokeArgs($this->command, ['100']);
+        try {
+            $storage = new FileStorage();
+            $factObject = new PhpFacts($storage);
+        } catch (\Throwable $e) {
+            $this->fail('Exception with ' . $e->getMessage() . ' was thrown is test method!');
+        }
+
+        $facts = $this->getPrivateVariableValue($factObject, 'facts');
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
             ->method('say')
-            ->with($factNotFoundMessage);
+            ->with(
+                $this->logicalAnd(
+                    $this->isType('string'),
+                    $this->callback(
+                        function ($parameter) use ($facts) {
+                            return !in_array($parameter, $facts);
+                        }
+                    )
+                )
+            );
 
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 100']), false);
     }
@@ -170,12 +176,5 @@ class PhpFactCommandTest extends TestCase
                         );
 
         $this->command->run($commandMessage, new ArrayObject(['command' => 'stat']), false);
-    }
-
-    public function testInitFactsMakeRightInstance()
-    {
-        $method = $this->getPrivateMethod($this->command, 'initFacts');
-
-        $this->assertInstanceOf(PhpFacts::class, $method->invoke($this->command));
     }
 }
