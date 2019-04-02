@@ -2,7 +2,7 @@
 
 namespace SoerBot\Commands\Devs;
 
-use SoerBot\Configurator;
+use SoerBot\Settings;
 use SoerBot\Commands\Devs\Exceptions\TopicException;
 use SoerBot\Commands\Devs\Implementations\TopicModel;
 use SoerBot\Commands\Devs\Exceptions\TopicExceptionFileNotFound;
@@ -20,7 +20,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
      */
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
-        $this->settings = Configurator::get('commands');
+        $this->settings = Settings::getInstance()->all();
 
         parent::__construct($client, [
             'name' => 'devs', // Give command name

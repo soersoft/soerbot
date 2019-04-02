@@ -59,6 +59,7 @@ class Runner
 
     /**
      * @return void
+     * @throws Exceptions\ConfigurationFileNotFound
      */
     public function settings(): void
     {
@@ -78,6 +79,8 @@ class Runner
         // Register our commands (this is an example path)
         // TODO вынести регистрацию команд из файла в структуру.
         $this->client->registry->registerCommand(...$this->loadCommands());
+
+        Settings::getInstance();
     }
 
     /**
