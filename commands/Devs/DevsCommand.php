@@ -41,7 +41,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
             ],
         ]);
 
-        $settings = Settings::init($this, __DIR__);
+        $this->settings = Settings::getInstance()->init($this, __DIR__);
     }
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
@@ -61,6 +61,10 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
             } catch (\Throwable $e) {
                 // Exception with high log level: log exception or notify admin with $e->getMessage()
                 return $message->say('Бот временно не работает. Мы уже занимаемся этой проблемой.');
+            }
+
+            if (array_key_exists('expected', $this->settings['devs'])) {
+                $content = $this->settings['devs']['expected'];
             }
 
             return $message->direct($content, ['split' => true])->then(function ($msg) use ($message, $args) {
