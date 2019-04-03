@@ -2,15 +2,15 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\TestCase;
 use SoerBot\Settings;
+use PHPUnit\Framework\TestCase;
 
 class SettingTest extends TestCase
 {
     /**
      * Exceptions.
      */
-    
+
     /**
      * Corner cases.
      */
@@ -32,6 +32,46 @@ class SettingTest extends TestCase
         $instance2 = Settings::getInstance();
 
         $this->assertSame($instance1, $instance2);
+    }
+
+    public function testInitSetCommandNamespace()
+    {
+        $map = [
+            ['name', 'devs'],
+            ['description', 'some description'],
+        ];
+        $command = $this->createMock('\CharlotteDunois\Livia\Commands\Command');
+        $command->method('__get')->will($this->returnValueMap($map));
+
+        $settings = Settings::getInstance()->init($command, __DIR__ . '/Commands/Devs');
+        $this->assertArrayHasKey('devs', $settings);
+    }
+
+    public function testInitSetCommandAttribute()
+    {
+        $map = [
+            ['name', 'devs'],
+            ['description', 'some description'],
+        ];
+        $command = $this->createMock('\CharlotteDunois\Livia\Commands\Command');
+        $command->method('__get')->will($this->returnValueMap($map));
+
+        $settings = Settings::getInstance()->init($command, __DIR__ . '/Commands/Devs');
+        $this->assertContains('some description', $settings['devs']);
+    }
+
+    public function testInitSetCommandAddParametersFromFile()
+    {
+        $map = [
+            ['name', 'devs'],
+            ['description', 'some description'],
+        ];
+        $command = $this->createMock('\CharlotteDunois\Livia\Commands\Command');
+        $command->method('__get')->will($this->returnValueMap($map));
+
+        $settings = Settings::getInstance()->init($command, __DIR__ . '/Commands/Devs');
+        $this->assertArrayHasKey('expected', $settings['devs']);
+        $this->assertEquals('value', $settings['devs']['expected']);
     }
 
     public function testGetReturnExpectedWhenExistKey()

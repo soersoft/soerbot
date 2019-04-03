@@ -2,6 +2,8 @@
 
 namespace SoerBot;
 
+use Symfony\Component\Yaml\Yaml;
+
 class Settings
 {
     /**
@@ -17,8 +19,8 @@ class Settings
     /**
      * Get instance method.
      *
-     * @return Settings
      * @throws Exceptions\ConfigurationFileNotFound
+     * @return Settings
      */
     public static function getInstance(): self
     {
@@ -29,8 +31,26 @@ class Settings
         return self::$instance;
     }
 
+    public function init(\CharlotteDunois\Livia\Commands\Command $command, $dir = __DIR__): array
+    {
+        $namespace = $command->__get('name');
+
+        $this->settings[$namespace] = [
+            'name' => $command->__get('name'),
+            'description' => $command->__get('description'),
+            'path' => $dir,
+        ];
+
+        if (is_dir($dir . '/config/') && file_exists($dir . '/config/config.yaml')) {
+            $localConfig = Yaml::parseFile($dir . '/config/config.yaml');
+            $this->settings[$namespace] = array_merge($this->settings[$namespace], $localConfig);
+        }
+
+        return $this->settings;
+    }
+
     /**
-     * Get setting by key
+     * Get setting by key.
      *
      * @param $key
      * @param null $default
@@ -42,7 +62,7 @@ class Settings
     }
 
     /**
-     * Get all settings
+     * Get all settings.
      *
      * @return array
      */
@@ -61,7 +81,7 @@ class Settings
     }
 
     /**
-     * Magic __clone method
+     * Magic __clone method.
      */
     private function __clone()
     {

@@ -20,8 +20,6 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
      */
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
-        $this->settings = Settings::getInstance()->all();
-
         parent::__construct($client, [
             'name' => 'devs', // Give command name
             'aliases' => ['dev'],
@@ -42,6 +40,8 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
                 ],
             ],
         ]);
+
+        $settings = Settings::init($this, __DIR__);
     }
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
