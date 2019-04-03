@@ -44,11 +44,16 @@ namespace API.Mail #DDDDDD {
 }
 
 namespace API.Send #DDDDDD {
+    interface ISend
+    {
+        + void send(IMail)
+    }
     interface IMailSender
     {
-        + MailPicker mailPicker
+        + void setNextSender(ISend nextSender)
+        + void setAddress(IAddress)
         + IMail createMessage(String command)
-        + void send(IMail)
+        + void send(IMail)=>nextSender.send(IMail)
     }
     class MailPicker << (S,#FF7700) Singleton >>
     {
@@ -73,10 +78,13 @@ namespace API.Send #DDDDDD {
         + List<IPostSenderClass> testConnection(List<IPostSenderClass>)
         + List<IPostSender> createIntances(List<IPostSenderClass>)
     }
+    IMailSender --> ISend
+    ISend <|-- MailPicker
     FMailSender --o MailPicker
+    FMailSender --> ISend
     FMailSender -> IMailSender
     IMailSender ..> API.Mail.IMail
-    IMailSender "many" --* MailPicker :send
+    IMailSender "many" .. MailPicker :send
     MailPicker --> API.Mail.IMail
     MailPicker --o "1" FPostSender :refreshSenders
     MailPicker --o "many" IPostSender
@@ -135,13 +143,13 @@ namespace API.Common #DDDDDD {
     {
         List<Type> findClasses(Type interface)
     }
-    abstract class ClassFinderByInterface
+    class AClassFinder
     {
         List<Type> findClasses(Type interface)
     }
-    interface ITestConnection
+    interface ITest
     {
-        bool TestConnection();
+        bool Test();
     }
     interface ICreateInstance
     {
