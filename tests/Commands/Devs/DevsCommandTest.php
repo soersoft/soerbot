@@ -78,7 +78,7 @@ class DevsCommandTest extends TestCase
         $settings = $this->getPrivateVariableValue($this->command, 'settings');
 
         $this->assertNotEmpty($settings);
-        $this->assertArrayHasKey('store', $settings);
+        $this->assertArrayHasKey('storePath', $settings);
     }
 
     public function testRunSayDefaultText()

@@ -28,7 +28,7 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
     {
         if (!empty($args) && !empty($args['topic'])) {
             try {
-                $path = __DIR__ . $this->settings['store'];
+                $path = $this->settings['storePath'];
 
                 $topic = new TopicModel($args['topic'], $path);
                 $content = $topic->getContent();

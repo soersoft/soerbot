@@ -22,6 +22,6 @@ return function ($client) {
                 'type' => 'string',
             ],
         ],
-        'store' => '/store/',
+        'storePath' => __DIR__ . '/store/',
     ]);
 };
