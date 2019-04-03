@@ -42,13 +42,13 @@ class VotingCommand extends Command
                 [
                     'key' => 'voting',
                     'label' => 'voting',
-                    'prompt' => 'Голосование',
+                    'prompt' => 'Введите название голосования:',
                     'type' => 'string',
                 ],
                 [
                     'key' => 'answer',
                     'label' => 'answer',
-                    'prompt' => 'вариант:',
+                    'prompt' => 'вариант ответа №1:',
                     'type' => 'string',
                 ],
                 
