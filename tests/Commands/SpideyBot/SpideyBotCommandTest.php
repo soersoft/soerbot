@@ -16,7 +16,7 @@ class SpideyBotCommandTest extends TestCase
 
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
 
-        $this->client->expects($this->once())->method('on')->with('RegisterWatcher');
+        $this->client->expects($this->once())->method('emit')->with('RegisterWatcher');
 
         $this->command = $commandCreate($this->client);
 
