@@ -71,6 +71,16 @@ class Configurator
         self::$configurations = Yaml::parseFile(self::$path);
     }
 
+    public static function merge($path)
+    {
+        $oldConfigurations = self::$configurations;
+        $oldPath = self::$path;
+        self::$path = $path;
+        self::load();
+        self::$configurations = array_merge($oldConfigurations, self::$configurations);
+        self::$path = $oldPath;
+    }
+
     /**
      * @throws ConfigurationFileNotFound
      * @return array

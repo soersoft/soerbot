@@ -1,0 +1,7 @@
+# Leaderboard command settings
+
+leaderboard:
+  name: 'leaderboard'
+  description: 'Выводит таблицу участников и набранные очки'
+  storeJSONFile: '../Store/leaderboard.json'
+  group: 'utils'

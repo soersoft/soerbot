@@ -2,9 +2,10 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
+use SoerBot\Configurator;
+use SoerBot\Commands\Command;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
-use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
 class LeaderboardCommand extends Command
@@ -16,21 +17,9 @@ class LeaderboardCommand extends Command
 
     public function __construct(LiviaClient $client)
     {
-        parent::__construct($client, [
-          'name' => 'leaderboard', // Give command name
-          'aliases' => [''],
-          'group' => 'utils', // Group in ['command', 'util']
-          'description' => 'Выводит таблицу участников и набранные очки',
-          'guildOnly' => false,
-          'throttling' => [
-            'usages' => 5,
-            'duration' => 10,
-          ],
-          'guarded' => true,
-          'args' => [],
-        ]);
-
-        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
+        parent::__construct($client);
+        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile($this->storeJSONFile));
+        var_dump(Configurator::get('leaderboard')['storeJSONFile']);
     }
 
     /**
