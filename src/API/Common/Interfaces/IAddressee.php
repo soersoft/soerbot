@@ -1,7 +1,8 @@
 <?php  
   namespace \API\Common;
 
-interface IAddressee { 
-    function get():string;
-    function set(string $value);
+interface IAddressee
+{
+    function getAddressee():string;
+    function setAddressee(string $Addressee);
 }

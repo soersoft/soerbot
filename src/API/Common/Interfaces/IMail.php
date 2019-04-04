@@ -1,10 +1,11 @@
 <?php  
   namespace \API\Common;
 
-interface IMail { 
+interface IMail
+{
     function getMailAddress():IMailAddress;
-    function setMailAddress(IMailAddress $value);
+    function setMailAddress(IMailAddress $MailAddress);
 
     function getMessage():IMessage;
-    function setMessage(IMessage $value);
+    function setMessage(IMessage $Message);
 }

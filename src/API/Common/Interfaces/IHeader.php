@@ -1,7 +1,8 @@
 <?php  
   namespace \API\Common;
 
-interface IHeader { 
-    function get():string;
-    function set(string $value);
+interface IHeader
+{
+    function getHeader():string;
+    function setHeader(string $Header);
 }

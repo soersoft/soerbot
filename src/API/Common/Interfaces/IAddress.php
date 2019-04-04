@@ -1,7 +1,8 @@
 <?php  
   namespace \API\Common;
 
-interface IAddress { 
-    function get():string;
-    function set(string $value);
+interface IAddress
+{
+    function getAddress():string;
+    function setAddress(string $Address);
 }
