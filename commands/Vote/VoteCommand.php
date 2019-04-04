@@ -11,8 +11,8 @@ class VoteCommand extends \CharlotteDunois\Livia\Commands\Command
             'name' => 'vote', // Give command name
             'aliases' => [],
             'group' => 'utils', // Group in ['command', 'util']
-            'description' => 'Description', // Fill the description
-            'guildOnly' => false,
+            'description' => 'Голосование', // Fill the description
+            'guildOnly' => true,
             'throttling' => [
                 'usages' => 5,
                 'duration' => 10,
@@ -25,6 +25,13 @@ class VoteCommand extends \CharlotteDunois\Livia\Commands\Command
                     'prompt' => 'Выберите тип голосования custom / default',
                     'type' => 'string',
                 ],
+                [
+                    'key' => 'answer',
+                    'label' => 'answer',
+                    'prompt' => 'Выберите вариант ответа:',
+                    'type' => 'string',
+                ],
+                
             ],
         ]);
     }
@@ -40,12 +47,23 @@ class VoteCommand extends \CharlotteDunois\Livia\Commands\Command
 
                 break;
             case 'default':
+                $message->say('введите название голосования');
                 $voteTopic = \file_get_contents($basePath . '/vote.topic/default.md');
                 $voteVar = 2;
                 $voteTime = 5;
                 $voteAnonymous = TRUE;          
                 $message->say($voteTopic);
-                
+                switch ($args['answer']) {
+                    case 'vote1':
+                        return $message->say('вы проголосовали за 1 вариант ответа');
+        
+                        break;
+                        case 'vote2':
+                        return $message->say('вы проголосовали за 2 вариант ответа');
+        
+                        break;
+
+                }
                 break;
         }
 
