@@ -83,12 +83,7 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
      */
     private function validateArguments(ArrayObject $args): bool
     {
-      //echo ($args['name']);
-      //echo ($args['emoji']);
-      print_r ($args['name']);
-      //print_r ($args['emoji']);
         return isset($args['name']) && isset($args['emoji']);
-
     }
 
 }
