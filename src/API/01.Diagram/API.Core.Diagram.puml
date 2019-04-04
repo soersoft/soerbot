@@ -1,6 +1,17 @@
 @startuml
-scale 1
+
+'// picture scale
+scale 1 
+
+' // chang graphic modifiers to string
 ' skinparam classAttributeIconSize 0
+
+left header
+<font color=lightblue>    Diagram:</font> <font color=darkBlue>SoerBot.API</font>
+<font color=lightblue>    Status   :</font> <font color=green>WIP ( WorkInProgress )</font>
+endheader
+
+center footer @DenisGeek 2019
 
 namespace API.Mail #DDDDDD {
     IMailAddress "2" *-- IMail
