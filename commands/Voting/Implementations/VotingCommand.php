@@ -30,7 +30,7 @@ class VotingCommand extends Command
         parent::__construct($client, [
             'name' => 'voting', // Give command name
             'aliases' => [],
-            'group' => 'games', // Group in ['command', 'util']
+            'group' => 'utils', // Group in ['command', 'util']
             'description' => 'Голосование:', // Fill the description
             'guildOnly' => false,
             'throttling' => [
