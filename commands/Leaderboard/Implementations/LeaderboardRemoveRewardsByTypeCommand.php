@@ -85,5 +85,4 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
     {
         return isset($args['name']) && isset($args['emoji']);
     }
-
 }
