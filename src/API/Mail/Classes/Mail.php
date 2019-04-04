@@ -1,5 +1,5 @@
 <?php  
-  namespace \API\Common;
+namespace \API\Mail;
 
 class Mail implements IMail
 {

@@ -1,5 +1,5 @@
 <?php  
-  namespace \API\Common;
+namespace \API\Mail;
 
 interface IContent
 {
