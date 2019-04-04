@@ -17,7 +17,7 @@ endheader
 center footer @DenisGeek 2019
 
 namespace API.Common #DDDDDD {
-    IClassFinder<|--ClassFinder
+
     interface ITest
     {
         bool Test();
@@ -51,7 +51,11 @@ namespace API.Tools #DDDDDD {
         List<Type> findClasses(Type interface)
     }
     IClassFinder<|--ClassFinder
-
+    
+    ' class InstanceCreator
+    ' {
+    '     List<Type> findClasses(Type interface)
+    ' }
 
     ' interface IMailHandler
     ' {
