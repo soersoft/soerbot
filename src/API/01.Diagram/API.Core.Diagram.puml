@@ -1,17 +1,70 @@
 @startuml
+' icons: http://plantuml.com/ru/stdlib
 
-'// picture scale
+' // picture scale
 scale 1 
 
-' // chang graphic modifiers to string
+' // to change graphic modifiers to symbol
 ' skinparam classAttributeIconSize 0
+title SoerBot.API
 
 left header
-<font color=lightblue>    Diagram:</font> <font color=darkBlue>SoerBot.API</font>
-<font color=lightblue>    Status   :</font> <font color=green>WIP ( WorkInProgress )</font>
+<font color=lightblue>    Description:</font> <font color=darkBlue>Diagram SoerBot.API provides ready to implement class system of flexible API (Application Programming Interface)</font>
+<font color=lightblue>    Status:        </font> <font color=green>WIP ( WorkInProgress )</font>
+<font color=lightblue>    Creator:      </font> <font color=grey>@DenisGeek (AhokninDenisPavlovich)</font>
 endheader
 
 center footer @DenisGeek 2019
+
+namespace API.Common #DDDDDD {
+    IClassFinder<|--ClassFinder
+    interface ITest
+    {
+        bool Test();
+    }
+    interface ICreateInstance
+    {
+        object CreateInstance();
+    }
+
+    interface IMailHandler
+    {
+    }
+    interface IPostHandler
+    {
+    }
+    
+    ITest --|> IPostHandler 
+    ICreateInstance  --|> IPostHandler
+    ICreateInstance <|-- IMailHandler
+
+}
+
+namespace API.Tools #DDDDDD {
+    ' delegate 
+    interface IClassFinder
+    {
+        List<Type> findClasses(Type interface)
+    }
+    class ClassFinder
+    {
+        List<Type> findClasses(Type interface)
+    }
+    IClassFinder<|--ClassFinder
+
+
+    ' interface IMailHandler
+    ' {
+    ' }
+    ' IMailHandler <|-- IMailReceiver
+    ' IMailHandler <|-- IMailSender
+    ' interface IPostHandler
+    ' {
+    ' }
+    ' IPostReceiver --|> IPostHandler 
+    ' IPostSender  --|> IPostHandler
+
+}
 
 namespace API.Mail #DDDDDD {
     IMailAddress "2" *-- IMail
@@ -55,16 +108,22 @@ namespace API.Mail #DDDDDD {
 }
 
 namespace API.Send #DDDDDD {
-    interface ISend
+    ' class MailHendler << (D,PaleGreen) Delegate >> #yellow-PaleGreen
+    class MailHendler << (D,PaleGreen) Delegate >>
     {
-        + void send(IMail)
+        __definition__
+        + void MailHendler(IMail)
     }
+    note left of MailHendler #grey
+        <color:white>can be nested class</color>
+    end note
     interface IMailSender
     {
-        + void setNextSender(ISend nextSender)
-        + void setAddress(IAddress)
+        ' + void setAddress(IAddress)
+        + <color:SeaGreen>event</color> MailHendler send(IMail)
         + IMail createMessage(String command)
-        + void send(IMail)=>nextSender.send(IMail)
+        + void sendMessage(IMail)<color:BlueViolet>=>this.send(IMail)</color>
+        ' + void send(IMail)=>nextSender.send(IMail)
     }
     class MailPicker << (S,#FF7700) Singleton >>
     {
@@ -78,31 +137,42 @@ namespace API.Send #DDDDDD {
         + void init()
         + void send(IMail)
     }
-    class FMailSender << (F,#FF7700) Factory >>
+    class MailSenderFactory << (F,#FF7700) Factory >>
     {
         + List<IMailSenderClass> scan()
         + List<IMailSender> createIntances(List<IMailSenderClass>)
     }
-    class FPostSender << (F,#FF7700) Factory >>
+    note bottom of MailSenderFactory #grey
+        <color:white>Example of event subscription:</color>
+        IMailSender CreateIntance(MailSenderClass)
+        {
+            var res = (ICreateInstance)MailSenderClass.CreateInstance()
+            (IMailSender)res.send+=MailPicker.send
+        }
+    end note
+    class PostSenderFactory << (F,#FF7700) Factory >>
     {
+        innernn
         + List<IPostSenderClass> scan()
         + List<IPostSenderClass> testConnection(List<IPostSenderClass>)
         + List<IPostSender> createIntances(List<IPostSenderClass>)
     }
-    IMailSender --> ISend
-    ISend <|-- MailPicker
-    FMailSender --o MailPicker
-    FMailSender --> ISend
-    FMailSender -> IMailSender
+    MailHendler<--IMailSender
+    MailSenderFactory --o MailPicker
+    MailSenderFactory -> IMailSender
+    ICreateInstance ()-- IMailSender :<b><i>API.Common
     IMailSender ..> API.Mail.IMail
-    IMailSender "many" .. MailPicker :send
+    IMailSender "many" .. MailPicker :event send
     MailPicker --> API.Mail.IMail
-    MailPicker --o "1" FPostSender :refreshSenders
+    MailPicker --o "1" PostSenderFactory :refreshSenders
     MailPicker --o "many" IPostSender
     API.Mail.IMail <-- IPostSender
-    IPostSender <- FPostSender
+    IPostSender <- PostSenderFactory
+    IPostSender --() ITest :<b><i>API.Common
+    IPostSender --() ICreateInstance:<b><i>API.Common
 }
-
+' class Outgoing << (↓,#FF7700) Stream >>
+' API.Send.IPostSender--> Outgoing
 
 namespace API.Receive #DDDDDD {
     interface IMailReceiver
@@ -139,6 +209,7 @@ namespace API.Receive #DDDDDD {
         + List<IPostReceiver> createIntances(List<IPostReceiverClass>)
     }
     FMailReceiver --> MailSorter : registerRecipient
+    ICreateInstance ()-- IMailReceiver :<b><i>API.Common
     IMailReceiver <- FMailReceiver
     IMailReceiver --> API.Mail.IMail
     IMailReceiver "many" o-- MailSorter
@@ -147,37 +218,13 @@ namespace API.Receive #DDDDDD {
     MailSorter --o "many" IPostReceiver
     API.Mail.IMail <-- IPostReceiver
     IPostReceiver <- FPostReceiver
+    IPostReceiver --() ITest :<b><i>API.Common
+    IPostReceiver --() ICreateInstance:<b><i>API.Common    
 }
+' class Incoming << (↑,#FF7700) Stream >>
+' API.Receive.IPostReceiver--> Incoming
 
-namespace API.Common #DDDDDD {
-    interface IClassFinder
-    {
-        List<Type> findClasses(Type interface)
-    }
-    class AClassFinder
-    {
-        List<Type> findClasses(Type interface)
-    }
-    interface ITest
-    {
-        bool Test();
-    }
-    interface ICreateInstance
-    {
-        object CreateInstance();
-    }
-    interface IMailHandler
-    {
-    }
-    IMailHandler <|-- IMailReceiver
-    IMailHandler <|-- IMailSender
-    interface IPostHandler
-    {
-    }
-    IPostReceiver --|> IPostHandler
-    IPostSender  --|> IPostHandler
 
-}
 
 
 
