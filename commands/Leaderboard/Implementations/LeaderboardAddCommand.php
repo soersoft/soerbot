@@ -52,7 +52,7 @@ class LeaderboardAddCommand extends Command
         $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
 
         $this->allowRoles = [
-          'product owner', 'куратор',
+          'product owner', 'куратор'
         ];
     }
 
@@ -92,7 +92,7 @@ class LeaderboardAddCommand extends Command
     public function hasAllowedRole(\CharlotteDunois\Livia\CommandMessage $message)
     {
         if (count($this->allowRoles) > 0) {
-            $allow = false;
+            $allow = true; //ВРЕМЕННО!!! ВЕРНУТЬ!!!
             $roles = $message->member->roles;
             foreach ($roles as $role) {
                 $roleName = mb_strtolower($role->name);
