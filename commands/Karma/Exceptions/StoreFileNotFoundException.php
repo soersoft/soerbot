@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Karma\WatcherActor\Exceptions;
+namespace SoerBot\Commands\Karma\Exceptions;
 
 class StoreFileNotFoundException extends \Exception
 {

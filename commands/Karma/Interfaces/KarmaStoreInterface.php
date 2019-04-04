@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Karma\WatcherActor\Interfaces;
+namespace SoerBot\Commands\Karma\Interfaces;
 
 interface KarmaStoreInterface
 {

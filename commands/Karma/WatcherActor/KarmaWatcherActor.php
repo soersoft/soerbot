@@ -3,8 +3,8 @@
 namespace SoerBot\Commands\Karma\WatcherActor;
 
 use CharlotteDunois\Yasmin\Models\Message;
+use SoerBot\Commands\Karma\Implementations\UserModel;
 use SoerBot\Watcher\Interfaces\WatcherActorInterface;
-use SoerBot\Commands\Karma\WatcherActor\Implementations\UserModel;
 
 class KarmaWatcherActor implements WatcherActorInterface
 {
@@ -17,6 +17,14 @@ class KarmaWatcherActor implements WatcherActorInterface
     {
         $this->client = $client;
         $this->user = new UserModel();
+    }
+
+    /**
+     * @return SoerBot\Commands\Karma\Implementations\UserModel;
+     */
+    public function getUser(): UserModel
+    {
+        return $this->user;
     }
 
     /**

@@ -1,9 +1,9 @@
 <?php
 
-namespace SoerBot\Commands\Karma\WatcherActor\Implementations;
+namespace SoerBot\Commands\Karma\Implementations;
 
-use SoerBot\Commands\Karma\WatcherActor\Interfaces\KarmaStoreInterface;
-use SoerBot\Commands\Karma\WatcherActor\Exceptions\StoreFileNotFoundException;
+use SoerBot\Commands\Karma\Interfaces\KarmaStoreInterface;
+use SoerBot\Commands\Karma\Exceptions\StoreFileNotFoundException;
 
 /**
  * Class KarmeStoreJSONFile.

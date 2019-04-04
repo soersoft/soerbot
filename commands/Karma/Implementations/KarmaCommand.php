@@ -7,6 +7,8 @@ use SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor;
 
 class KarmaCommand extends Command
 {
+    private $karmaWatcherActor;
+
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
         parent::__construct($client, [
@@ -23,11 +25,22 @@ class KarmaCommand extends Command
                 'args' => [],
             ]);
 
-        $client->emit('RegisterWatcher', new KarmaWatcherActor($client));
+        $this->karmaWatcherActor = $this->createNewKarmaWatcherActor($client);
+
+        $client->emit('RegisterWatcher', $this->karmaWatcherActor);
+    }
+
+    private function createNewKarmaWatcherActor($client)
+    {
+        return new KarmaWatcherActor($client);
     }
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $message->say('Ваша карма: 0');
+        $userName = $message->author->username;
+        $userModel = $this->karmaWatcherActor->getUser();
+        $karma = $userModel->getUserKarma($userName);
+
+        return $message->say("Ваша карма: $karma");
     }
 }
