@@ -1,7 +1,10 @@
-<?php  
+<?php
+
+use \API\Common;
+
 namespace \API\Send;
 
-interface ICreateInstance
+interface IMailSender extends ICreateInstance
 {
-    function CreateInstance():object;
+
 }
