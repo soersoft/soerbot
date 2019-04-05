@@ -4,7 +4,6 @@ namespace SoerBot\Commands\Voting\Implementations;
 
 use ArrayObject;
 use CharlotteDunois\Livia\CommandMessage;
-use CharlotteDunois\Yasmin\Models\Message;
 use CharlotteDunois\Livia\Commands\Command;
 use React\Promise\ExtendedPromiseInterface;
 use SoerBot\Commands\Voting\Services\VotingStoreJSONFile;
@@ -56,6 +55,8 @@ class VotingCommand extends Command
         ]);
 
         $this->store = new VotingStoreJSONFile();
+        $this->VotingActor = $this->createNewVotingActor($client);
+        $client->emit('RegisterVoting', $this->VotingActor);
     }
 
     /**
@@ -64,39 +65,15 @@ class VotingCommand extends Command
      * @param bool $fromPattern
      * @return Message|Message[]|ExtendedPromiseInterface|ExtendedPromiseInterface[]|void|null
      */
-    public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
+    private function createNewVotingActor($client)
     {
-        return $message->say(
-            $this->action($args) ? self::SUCCESS_MESSAGE : self::FAILURE_MESSAGE
-        );
+        return new VotingActor($client);
     }
-
-    /**
-     * @param ArrayObject $args
-     * @return bool
-     */
-    private function validateArguments(ArrayObject $args): bool
+    public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return isset($args['voting']) && isset($args['answer']);
-    }
-
-    /**
-     * @param ArrayObject $args
-     * @return bool
-     */
-    private function addVoting(ArrayObject $args): bool
-    {
-        $this->store->load();
-
-        return $this->store->add([$args['voting'], $args['answer']]);
-    }
-
-    /**
-     * @param ArrayObject $args
-     * @return bool
-     */
-    private function action(ArrayObject $args): bool
-    {
-        return $this->validateArguments($args) && $this->addVoting($args) && $this->store->save();
+        $votingUser = $message->author->username;
+        $votingModel = $this->VotingActor->getUser();
+        $voting = $votingModel->getUserVotinh($votingUser);
+        return $message->reply("Ваше голосование: $voting");
     }
 }

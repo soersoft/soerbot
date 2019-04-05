@@ -45,6 +45,8 @@ class VotingStoreJSONFile implements VotingStoreInterface
     {
         if (file_exists($this->file)) {
             $this->data = json_decode(file_get_contents($this->file), true);
+        }else {
+            $this->createStoreFile();
         }
     }
 
@@ -53,7 +55,7 @@ class VotingStoreJSONFile implements VotingStoreInterface
      */
     public function get()
     {
-        return $this->data[array_rand($this->data)];
+        return $this->data[array($this->data)];
     }
 
     /**
@@ -66,4 +68,15 @@ class VotingStoreJSONFile implements VotingStoreInterface
 
         return true;
     }
+
+public function createStoreFile()
+{
+    try {
+        $storeFile = fopen($this->file, 'w');
+        fwrite($storeFile, '[]');
+        fclose($storeFile);
+    } catch (StoreFileNotFoundException $error) {
+        throw new StoreFileNotFoundException('Voting store file not exist. The file must be created manually');
+    }
+}
 }

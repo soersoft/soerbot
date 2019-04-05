@@ -6,13 +6,13 @@ $voting = '';
 $answer = '';
 $s = [];
 foreach ($parts as $key => $part) {
-    if ($key % 3 == 0) {
+    if ($key % 2 == 0) {
         $voting = trim($part);
     }
-    if ($key % 3 == 1) {
+    if ($key % 2 == 1) {
         $answer = trim($part);
     }
-    if ($key % 3 == 2) {
+    if ($key % 2 == 2) {
         array_push($s, ['voting' => $voting, 'answer' => $answer]);
     }
 }
