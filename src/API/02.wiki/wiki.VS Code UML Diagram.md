@@ -14,3 +14,6 @@ Create file with .puml extension, for show diagram pres Alt+D
 Aditional
 * PHP UML Generator https://stackoverflow.com/questions/393603/php-uml-generator
 * PlantUML to PHP Generator
+
+* event in uml
+  * https://stackoverflow.com/questions/24681328/how-to-represent-event-in-a-uml-class-diagram

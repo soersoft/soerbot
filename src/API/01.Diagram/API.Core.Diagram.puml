@@ -33,7 +33,7 @@ namespace API.Common #DDDDDD {
     interface IPostHandler
     {
     }
-    
+
     ITest --|> IPostHandler 
     ICreateInstance  --|> IPostHandler
     ICreateInstance <|-- IMailHandler
@@ -50,8 +50,17 @@ namespace API.Tools #DDDDDD {
     {
         List<Type> findClasses(Type interface)
     }
-    IClassFinder<|--ClassFinder
-    
+    IClassFinder<|..ClassFinder
+
+    interface IEvent
+    {
+
+    }
+    class EventExample
+    {
+        List<Type> findClasses(Type interface)
+    }
+    IEvent<|..EventExample
     ' class InstanceCreator
     ' {
     '     List<Type> findClasses(Type interface)
