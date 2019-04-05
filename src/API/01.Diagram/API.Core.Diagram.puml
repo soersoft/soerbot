@@ -54,11 +54,14 @@ namespace API.Tools #DDDDDD {
 
     interface IEvent
     {
-
+        + void eventAddHandler(Closure function)
+        + void eventLaunch (arg[])
     }
     class EventExample
     {
-        List<Type> findClasses(Type interface)
+        - List<Closure> _eventHandlers
+        + void eventAddHandler(Closure function)
+        + void eventLaunch (arg[])
     }
     IEvent<|..EventExample
     ' class InstanceCreator
