@@ -201,8 +201,8 @@ namespace API.Send #DDDDDD {
     IPostSender --() ITest :<b><i>API.Common
     IPostSender --() ICreateInstance:<b><i>API.Common
 }
-' class Outgoing << (↓,#FF7700) Stream >>
-' API.Send.IPostSender--> Outgoing
+class Outgoing << (↓,#FF7700) Stream >>
+API.Send.IPostSender--* Outgoing
 
 namespace API.Receive #DDDDDD {
     interface IMailReceiver
@@ -251,8 +251,8 @@ namespace API.Receive #DDDDDD {
     IPostReceiver --() ITest :<b><i>API.Common
     IPostReceiver --() ICreateInstance:<b><i>API.Common    
 }
-' class Incoming << (↑,#FF7700) Stream >>
-' API.Receive.IPostReceiver--> Incoming
+class Incoming << (↑,#FF7700) Stream >>
+API.Receive.IPostReceiver--* Incoming
 
 
 
