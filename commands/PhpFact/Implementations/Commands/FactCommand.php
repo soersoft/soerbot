@@ -2,14 +2,14 @@
 
 namespace SoerBot\Commands\PhpFact\Implementations\Commands;
 
-use SoerBot\Commands\PhpFact\Abstractions\AbstractCommandWithArguments;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
+use SoerBot\Commands\PhpFact\Abstractions\AbstractCommandWithArguments;
 
 class FactCommand extends AbstractCommandWithArguments
 {
     /**
-     * @var int
+     * @var int|null
      */
     private $position;
 
@@ -20,11 +20,11 @@ class FactCommand extends AbstractCommandWithArguments
      * @param array $args
      * @throws CommandWrongUsageException
      */
-    public function __construct(PhpFacts $facts, array $args = [])
+    public function __construct(PhpFacts $facts, array $args)
     {
-        $this->position = $this->validPosition($args);
-
         parent::__construct($facts, $args);
+
+        $this->initPosition();
     }
 
     /**
@@ -48,20 +48,21 @@ class FactCommand extends AbstractCommandWithArguments
     /**
      * Checks if position is valid.
      *
-     * @param array $args
      * @throws CommandWrongUsageException
-     * @return int|null
+     * @return void
      */
-    protected function validPosition(array $args): ?int
+    protected function initPosition(): void
     {
-        if (!isset($args['position'])) {
-            return null;
+        if (!isset($this->args['position'])) {
+            $this->position = null;
+
+            return;
         }
 
-        if (!is_numeric($args['position'])) {
-            throw new CommandWrongUsageException('Wrong usage of fact [num] command. Check if ' . $args['position'] . ' is correct argument.');
+        if (!is_numeric($this->args['position'])) {
+            throw new CommandWrongUsageException('Wrong usage of fact [num] command. Check if ' . $this->args['position'] . ' is correct argument.');
         }
 
-        return (int)$args['position'];
+        $this->position = (int)$this->args['position'];
     }
 }
