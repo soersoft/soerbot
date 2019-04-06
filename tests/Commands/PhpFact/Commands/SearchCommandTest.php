@@ -159,6 +159,14 @@ class SearchCommandTest extends TestCase
         $this->assertCount(2, $found);
     }
 
+    public function testResponseReturnExpectedOneWhenNotExistPattern()
+    {
+        $expected = 'not_exist';
+        $command = new SearchCommand($this->facts, ['argument' => $expected]);
+
+        $this->assertEquals('Nothing found on ' . $expected . ' request', $command->response());
+    }
+
     public function testResponseReturnExpectedOneWhenOneExistPattern()
     {
         $expected = 'yield';
@@ -176,6 +184,6 @@ class SearchCommandTest extends TestCase
 
         $found = $this->facts->search($expected);
 
-        $this->assertEquals($command->response(), $found[0] . PHP_EOL . $found[1]);
+        $this->assertEquals($command->response(), '1. ' . $found[0] . PHP_EOL . '2. ' . $found[1]);
     }
 }

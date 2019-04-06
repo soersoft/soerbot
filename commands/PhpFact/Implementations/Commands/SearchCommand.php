@@ -50,7 +50,24 @@ class SearchCommand extends AbstractCommandWithArguments
      */
     public function response(): string
     {
-        return implode(PHP_EOL, $this->found);
+        if (empty($this->found)) {
+            return 'Nothing found on ' . $this->pattern . ' request';
+        }
+
+        $response = '';
+
+        if (($count = count($this->found)) > 1) {
+            foreach ($this->found as $k => $v) {
+                $response .= ($k + 1) . '. ' . $v;
+                if (--$count) {
+                    $response .= PHP_EOL;
+                }
+            }
+        } else {
+            $response = $this->found[0];
+        }
+
+        return $response;
     }
 
     /**
