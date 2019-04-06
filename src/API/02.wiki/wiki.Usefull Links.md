@@ -22,3 +22,5 @@ namespaces
 typeCasting
     - https://www.geeksforgeeks.org/php-type-casting-and-conversion-of-an-object-to-an-object-of-other-class/
 
+Yasmin is a Discord API library for PHP
+    - https://github.com/CharlotteDunois/Yasmin
