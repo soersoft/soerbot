@@ -16,6 +16,10 @@ endheader
 
 center footer @DenisGeek 2019
 
+legend left
+  a --|> b
+endlegend
+
 namespace API.Common #DDDDDD {
 
     interface ITest
@@ -27,22 +31,22 @@ namespace API.Common #DDDDDD {
         object CreateInstance();
     }
 
-    interface IMailHandler
-    {
-    }
-    interface IPostHandler
-    {
-    }
+    ' interface IMailHandler
+    ' {
+    ' }
+    ' interface IPostHandler
+    ' {
+    ' }
 
-    ITest --|> IPostHandler 
-    ICreateInstance  --|> IPostHandler
-    ICreateInstance <|-- IMailHandler
+    ' ITest --|> IPostHandler 
+    ' ICreateInstance  --|> IPostHandler
+    ' ICreateInstance <|-- IMailHandler
 
 }
 
 namespace API.Tools #DDDDDD {
     ' delegate 
-    interface IClassFinder
+    interface IClassFinder #yellow-PaleGreen
     {
         List<Type> findClasses(Type interface)
     }
@@ -52,18 +56,32 @@ namespace API.Tools #DDDDDD {
     }
     IClassFinder<|..ClassFinder
 
-    interface IEvent
+    interface IEvent #yellow-PaleGreen
     {
         + void eventAddHandler(Closure function)
         + void eventLaunch (arg[])
     }
-    class EventExample
+    class Event
     {
         - List<Closure> _eventHandlers
         + void eventAddHandler(Closure function)
         + void eventLaunch (arg[])
     }
-    IEvent<|..EventExample
+    IEvent<|..Event
+
+    interface IEventsHub #yellow-PaleGreen
+    {
+        + void eventsHubAddEventHandler(string eventName, Closure handler)
+        + void eventsHubLaunchEvent (string eventName, arg[])
+    }
+    class EventsHub
+    {
+        - Dictionary<string,List<Closure>> _eventsDictionary
+        + void eventsHubAddEventHandler(string eventName, Closure handler)
+        + void eventsHubLaunchEvent (string eventName, arg[])
+    }
+    IEventsHub<|..EventsHub
+
     ' class InstanceCreator
     ' {
     '     List<Type> findClasses(Type interface)
@@ -124,22 +142,24 @@ namespace API.Mail #DDDDDD {
 }
 
 namespace API.Send #DDDDDD {
-    ' class MailHendler << (D,PaleGreen) Delegate >> #yellow-PaleGreen
-    class MailHendler << (D,PaleGreen) Delegate >>
-    {
-        __definition__
-        + void MailHendler(IMail)
-    }
-    note left of MailHendler #grey
-        <color:white>can be nested class</color>
-    end note
+ 
+    ' class MailHendler << (D,PaleGreen) Delegate >>
+    ' {
+    '     __definition__
+    '     + void MailHendler(IMail)
+    ' }
+    ' note left of MailHendler #grey
+    '     <color:white>can be nested class</color>
+    ' end note
     interface IMailSender
     {
         ' + void setAddress(IAddress)
-        + <color:SeaGreen>event</color> MailHendler send(IMail)
+        ~ <color:SeaGreen>event MailHendler send(IMail) </color>
         + IMail createMessage(String command)
         + void sendMessage(IMail)<color:BlueViolet>=>this.send(IMail)</color>
         ' + void send(IMail)=>nextSender.send(IMail)
+        __<color:SeaGreen>events__
+        IEvent MailHendler send(IMail)=> implement API.Tools.IEvent
     }
     class MailPicker << (S,#FF7700) Singleton >>
     {
@@ -173,11 +193,12 @@ namespace API.Send #DDDDDD {
         + List<IPostSenderClass> testConnection(List<IPostSenderClass>)
         + List<IPostSender> createIntances(List<IPostSenderClass>)
     }
-    MailHendler<--IMailSender
+    ' MailHendler<--IMailSender
     MailSenderFactory --o MailPicker
     MailSenderFactory -> IMailSender
     ICreateInstance ()-- IMailSender :<b><i>API.Common
-    IMailSender ..> API.Mail.IMail
+    IEvent ()-- IMailSender :<b><i>API.Tools
+    IMailSender --> API.Mail.IMail
     IMailSender "many" .. MailPicker :event send
     MailPicker --> API.Mail.IMail
     MailPicker --o "1" PostSenderFactory :refreshSenders
