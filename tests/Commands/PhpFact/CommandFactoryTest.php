@@ -5,6 +5,7 @@ namespace Tests\Commands\PhpFact;
 use PHPUnit\Framework\TestCase;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
+use SoerBot\Commands\PhpFact\Abstractions\CommandInterface;
 use SoerBot\Commands\PhpFact\Implementations\CommandFactory;
 use SoerBot\Commands\PhpFact\Exceptions\CommandNotFoundException;
 use SoerBot\Commands\PhpFact\Implementations\Commands\FactCommand;
@@ -52,6 +53,13 @@ class CommandFactoryTest extends TestCase
     /**
      * Functionality.
      */
+    public function testBuildMakeObjectWhichImplementsRightInterface()
+    {
+        $command = CommandFactory::build($this->facts, 'list');
+
+        $this->assertInstanceOf(CommandInterface::class, $command);
+    }
+
     public function testBuildMakeRightObjectWhenFactCommand()
     {
         $command = CommandFactory::build($this->facts, 'fact');

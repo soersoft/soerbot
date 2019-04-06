@@ -83,14 +83,14 @@ class FactCommandTest extends TestCase
      */
     public function testResponseWithoutArgumentsReturnExpected()
     {
-        $command = new FactCommand($this->facts);
+        $command = new FactCommand($this->facts, []);
 
         $this->assertIsString($command->response());
     }
 
     public function testResponseWithoutArgumentsReturnExpectedSting()
     {
-        $command = new FactCommand($this->facts);
+        $command = new FactCommand($this->facts, []);
 
         $content = $this->getPrivateVariableValue($this->facts, 'facts');
 
@@ -124,7 +124,7 @@ class FactCommandTest extends TestCase
 
     public function testValidPositionIsEmptyWhenPositionArgumentNotExist()
     {
-        $command = new FactCommand($this->facts);
+        $command = new FactCommand($this->facts, []);
 
         $this->assertEmpty($this->getPrivateVariableValue($command, 'position'));
     }

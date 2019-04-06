@@ -2,7 +2,7 @@
 
 namespace SoerBot\Commands\PhpFact\Implementations;
 
-use SoerBot\Commands\PhpFact\Abstractions\AbstractCommand;
+use SoerBot\Commands\PhpFact\Abstractions\CommandInterface;
 use SoerBot\Commands\PhpFact\Exceptions\CommandNotFoundException;
 use SoerBot\Commands\PhpFact\Implementations\Commands\FactCommand;
 use SoerBot\Commands\PhpFact\Implementations\Commands\ListCommand;
@@ -17,9 +17,9 @@ class CommandFactory
      * @param PhpFacts $facts
      * @param string $input
      * @throws CommandNotFoundException|CommandWrongUsageException
-     * @return AbstractCommand
+     * @return CommandInterface
      */
-    public static function build(PhpFacts $facts, string $input): AbstractCommand
+    public static function build(PhpFacts $facts, string $input): CommandInterface
     {
         if (preg_match('/^(?<command>[a-z]+)(?:\s+(?<position>\d+))?$/iSu', $input, $match)) {
             array_shift($match);

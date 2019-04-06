@@ -2,11 +2,11 @@
 
 namespace SoerBot\Commands\PhpFact\Implementations\Commands;
 
+use SoerBot\Commands\PhpFact\Abstractions\AbstractCommandWithArguments;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
-use SoerBot\Commands\PhpFact\Abstractions\AbstractCommand;
 use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
 
-class FactCommand extends AbstractCommand
+class FactCommand extends AbstractCommandWithArguments
 {
     /**
      * @var int
