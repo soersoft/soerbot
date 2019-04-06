@@ -16,7 +16,6 @@ class Event implements IEvent
      *  - instance of Closure https://www.php.net/closure
      * 
      * @throws UnexpectedValueException
-     * @return void
      */
     public function eventAddHandler(Closure $function):void
     {

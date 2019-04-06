@@ -142,24 +142,17 @@ namespace API.Mail #DDDDDD {
 }
 
 namespace API.Send #DDDDDD {
- 
-    ' class MailHendler << (D,PaleGreen) Delegate >>
-    ' {
-    '     __definition__
-    '     + void MailHendler(IMail)
-    ' }
-    ' note left of MailHendler #grey
-    '     <color:white>can be nested class</color>
-    ' end note
     interface IMailSender
     {
-        ' + void setAddress(IAddress)
-        ~ <color:SeaGreen>event MailHendler send(IMail) </color>
-        + IMail createMessage(String command)
+        + void setAddress(IAddress)
+        + IMail createMessage()
+
+        ~ <color:SeaGreen>delegate void MailHandler(IMail)</color>
+        ~ <color:SeaGreen>event MailHandler send(IMail)</color>
         + void sendMessage(IMail)<color:BlueViolet>=>this.send(IMail)</color>
-        ' + void send(IMail)=>nextSender.send(IMail)
-        __<color:SeaGreen>events__
-        IEvent MailHendler send(IMail)=> implement API.Tools.IEvent
+        __<color:SeaGreen>events in PHP__
+        IEventsHub.eventsHubAddEventHandler("send", void function(IMail))
+        IEventsHub.eventsHubLaunchEvent("send",["IMail" =>IMail])
     }
     class MailPicker << (S,#FF7700) Singleton >>
     {
@@ -197,7 +190,7 @@ namespace API.Send #DDDDDD {
     MailSenderFactory --o MailPicker
     MailSenderFactory -> IMailSender
     ICreateInstance ()-- IMailSender :<b><i>API.Common
-    IEvent ()-- IMailSender :<b><i>API.Tools
+    IEventsHub ()-- IMailSender :<b><i>API.Tools
     IMailSender --> API.Mail.IMail
     IMailSender "many" .. MailPicker :event send
     MailPicker --> API.Mail.IMail

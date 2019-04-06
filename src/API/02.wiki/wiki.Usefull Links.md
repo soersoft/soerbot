@@ -7,14 +7,18 @@ evens in php
         - https://www.php.net/closure
 
 arrays
+    - https://www.php.net/manual/ru/language.types.array.php
     - https://www.w3schools.com/php/php_arrays.asp
     - add value to array
         - $this->_eventHandlers[] = $function; // this way 
         - array_push($this->_eventHandlers, $function); // or this (like to stack)
             - https://stackoverflow.com/questions/676677/how-to-add-elements-to-an-empty-array-in-php
 
-namespaces 
+namespaces
  - BFM:
     - https://www.php.net/manual/ru/language.namespaces.php
     - https://www.php.net/manual/en/language.namespaces.php
+
+typeCasting
+    - https://www.geeksforgeeks.org/php-type-casting-and-conversion-of-an-object-to-an-object-of-other-class/
 
