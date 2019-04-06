@@ -8,6 +8,7 @@ use SoerBot\Commands\PhpFact\Implementations\Commands\FactCommand;
 use SoerBot\Commands\PhpFact\Implementations\Commands\ListCommand;
 use SoerBot\Commands\PhpFact\Implementations\Commands\StatCommand;
 use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
+use SoerBot\Commands\PhpFact\Implementations\Commands\SearchCommand;
 
 class CommandFactory
 {
@@ -26,6 +27,10 @@ class CommandFactory
 
             if ('fact' === $match['command']) {
                 return new FactCommand($facts, $match);
+            }
+
+            if ('search' === $match['command']) {
+                return new SearchCommand($facts, $match);
             }
 
             if ('stat' === $match['command']) {

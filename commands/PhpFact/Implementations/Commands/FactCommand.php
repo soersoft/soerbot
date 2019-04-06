@@ -60,7 +60,7 @@ class FactCommand extends AbstractCommandWithArguments
         }
 
         if (!is_numeric($this->args['argument'])) {
-            throw new CommandWrongUsageException('Wrong usage of fact [num] command. Check if ' . $this->args['argument'] . ' is correct argument.');
+            throw new CommandWrongUsageException('Wrong usage of fact command. Check if ' . $this->args['argument'] . ' is correct argument.');
         }
 
         $this->position = (int)$this->args['argument'];
