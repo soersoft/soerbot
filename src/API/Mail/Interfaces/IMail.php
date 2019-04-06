@@ -3,8 +3,11 @@ namespace \API\Mail;
 
 interface IMail
 {
-    function getMailAddress():IMailAddress;
-    function setMailAddress(IMailAddress $MailAddress);
+    function getMailAddressSender():IMailAddress;
+    function setMailAddressSender(IMailAddress $MailAddress);
+
+    function getMailAddressReciever():IMailAddress;
+    function setMailAddressReciever(IMailAddress $MailAddress);
 
     function getMessage():IMessage;
     function setMessage(IMessage $Message);

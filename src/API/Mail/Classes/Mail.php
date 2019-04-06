@@ -4,17 +4,28 @@ namespace \API\Mail;
 class Mail implements IMail
 {
   // IMailAddress
-  private $MailAddress = "";
-  public function getMailAddress($MailAddress):IMailAddress
+  private $MailAddressReciever = "";
+  public function getMailAddressReciever($MailAddress):IMailAddress
     { return $this->MailAddress; }
-  public function setMailAddress(IMailAddress $MailAddress)
+  public function setMailAddressReciever(IMailAddress $MailAddress)
     {
       if (!($MailAddress instanceof IMailAddress))
         throw new UnexpectedValueException();
 
-      $this->MailAddress = $MailAddress;
+      $this->MailAddressReciever = $MailAddress;
     }
 
+  // IMailAddress
+  private $MailAddressSender = "";
+  public function getMailAddressSender($MailAddress):IMailAddress
+    { return $this->MailAddress; }
+  public function setMailAddressSender(IMailAddress $MailAddress)
+    {
+      if (!($MailAddress instanceof IMailAddress))
+        throw new UnexpectedValueException();
+
+      $this->MailAddressSender = $MailAddress;
+    }
   // IMessage
   private $Message;
   public function getMessage():IMessage
