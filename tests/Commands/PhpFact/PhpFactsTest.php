@@ -4,6 +4,7 @@ namespace Tests\Commands;
 
 use Tests\TestCase;
 use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
+use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
 use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 
@@ -27,10 +28,74 @@ class PhpFactsTest extends TestCase
     /**
      * Exceptions.
      */
+    public function testSearchThrowExceptionWhenEmptyInput()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $this->expectException(PhpFactException::class);
+        $this->expectExceptionMessage('Passed patter is empty.');
+
+        $facts->search('');
+    }
+
+    public function testSearchThrowExceptionWhenPatternIsLessThanMinLength()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $this->expectException(PhpFactException::class);
+        $this->expectExceptionMessage('Passed pattern is less than minimum ' . PhpFacts::SEARCH_MIN_LENGTH . ' chars.');
+
+        $facts->search(str_repeat('t', PhpFacts::SEARCH_MIN_LENGTH - 1));
+    }
+
+    public function testSearchThrowExceptionWhenPatternIsMoreThanMaxLength()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $this->expectException(PhpFactException::class);
+        $this->expectExceptionMessage('Passed pattern is more than maximum ' . PhpFacts::SEARCH_MAX_LENGTH . ' chars.');
+
+        $facts->search(str_repeat('t', PhpFacts::SEARCH_MAX_LENGTH + 1));
+    }
 
     /**
      * Corner cases.
      */
+    public function testSearchDontThrowExceptionWhenPatternIsMin()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        try {
+            $facts->search(str_repeat('t', PhpFacts::SEARCH_MIN_LENGTH));
+        } catch (PhpFactException $e) {
+            $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
+        }
+
+        $this->assertTrue(true);
+    }
+
+    public function testSearchDontThrowExceptionWhenPatternIsMax()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        try {
+            $facts->search(str_repeat('t', PhpFacts::SEARCH_MAX_LENGTH));
+        } catch (PhpFactException $e) {
+            $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
+        }
+
+        $this->assertTrue(true);
+    }
 
     /**
      * @dataProvider provideFactsContentCorners
@@ -109,6 +174,39 @@ class PhpFactsTest extends TestCase
             ->willReturn($facts);
 
         new PhpFacts($storage);
+    }
+
+    public function testSearchFindNothingWhenNotExistPattern()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $this->assertEmpty($facts->search('not_exist'));
+    }
+
+    public function testSearchFindOneWhenOneExistPattern()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $result = $facts->search('yield');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+    }
+
+    public function testSearchFindTwoWhenTwoExistPattern()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $result = $facts->search('java');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(2, $result);
     }
 
     public function testCountReturnExpectedCount()
