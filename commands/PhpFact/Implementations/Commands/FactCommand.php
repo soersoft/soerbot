@@ -53,16 +53,16 @@ class FactCommand extends AbstractCommandWithArguments
      */
     protected function initPosition(): void
     {
-        if (!isset($this->args['position'])) {
+        if (!isset($this->args['argument'])) {
             $this->position = null;
 
             return;
         }
 
-        if (!is_numeric($this->args['position'])) {
-            throw new CommandWrongUsageException('Wrong usage of fact [num] command. Check if ' . $this->args['position'] . ' is correct argument.');
+        if (!is_numeric($this->args['argument'])) {
+            throw new CommandWrongUsageException('Wrong usage of fact [num] command. Check if ' . $this->args['argument'] . ' is correct argument.');
         }
 
-        $this->position = (int)$this->args['position'];
+        $this->position = (int)$this->args['argument'];
     }
 }

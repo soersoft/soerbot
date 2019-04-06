@@ -21,7 +21,7 @@ class CommandFactory
      */
     public static function build(PhpFacts $facts, string $input): CommandInterface
     {
-        if (preg_match('/^(?<command>[a-z]+)(?:\s+(?<position>\d+))?$/iSu', $input, $match)) {
+        if (preg_match('/^(?<command>[a-z]+)(?:\s+(?<argument>.*))?$/iSu', $input, $match)) {
             array_shift($match);
 
             if ('fact' === $match['command']) {
