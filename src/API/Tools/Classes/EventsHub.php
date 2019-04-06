@@ -1,7 +1,7 @@
 <?php  
 namespace \API\Tools;
 
-class IEventsHub implements IEventsHub
+class EventsHub implements IEventsHub
 {
     // IEventsHub
     /**
@@ -35,7 +35,7 @@ class IEventsHub implements IEventsHub
      *  - untyped array
      *    - danger: can be exceptions, due use uncontrolled values
      */
-    function eventsHubLaunchEvent($eventName, array $arg = null):void
+    function eventsHubLaunchEvent(string $eventName, array $arg = null):void
     {
         // thanks to https://klisl.com/events_php.html
         foreach ($this->_eventsCollection as $eventNameHandler)
