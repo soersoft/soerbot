@@ -12,11 +12,17 @@ class SearchCommand extends AbstractCommandWithArguments
     /**
      * Minimum pattern length.
      */
-    public const MIN_LENGTH = 3;
+    public const PATTERN_MIN_LENGTH = 3;
+
     /**
      * Maximum pattern length.
      */
-    public const MAX_LENGTH = 32;
+    public const PATTERN_MAX_LENGTH = 32;
+
+    /**
+     * Maximum response output length.
+     */
+    public const OUTPUT_MAX_LENGTH = 2000;
 
     /**
      * @var string
@@ -51,20 +57,30 @@ class SearchCommand extends AbstractCommandWithArguments
     public function response(): string
     {
         if (empty($this->found)) {
-            return 'Nothing found on ' . $this->pattern . ' request';
+            return 'Nothing found with ' . $this->pattern . ' request.';
+        }
+
+        $count = count($this->found);
+
+        if ($count === 1) {
+            return $this->found[0];
         }
 
         $response = '';
+        $maximum = self::OUTPUT_MAX_LENGTH - 4;
 
-        if (($count = count($this->found)) > 1) {
-            foreach ($this->found as $k => $v) {
-                $response .= ($k + 1) . '. ' . $v;
-                if (--$count > 1) {
-                    $response .= PHP_EOL;
-                }
+        foreach ($this->found as $k => $v) {
+            if (mb_strlen($response . $v) > $maximum) {
+                $response .= PHP_EOL . '...';
+
+                break;
             }
-        } else {
-            $response = $this->found[0];
+
+            $response .= ($k + 1) . '. ' . $v;
+
+            if (--$count) {
+                $response .= PHP_EOL;
+            }
         }
 
         return $response;
@@ -90,12 +106,12 @@ class SearchCommand extends AbstractCommandWithArguments
 
         $length = mb_strlen($this->args['argument']);
 
-        if ($length < self::MIN_LENGTH) {
-            throw new CommandWrongUsageException('Wrong usage of search command. Argument is less than minimum ' . self::MIN_LENGTH . ' chars.');
+        if ($length < self::PATTERN_MIN_LENGTH) {
+            throw new CommandWrongUsageException('Wrong usage of search command. Argument is less than minimum ' . self::PATTERN_MIN_LENGTH . ' chars.');
         }
 
-        if ($length > self::MAX_LENGTH) {
-            throw new CommandWrongUsageException('Wrong usage of search command. Argument is more than maximum ' . self::MAX_LENGTH . ' chars.');
+        if ($length > self::PATTERN_MAX_LENGTH) {
+            throw new CommandWrongUsageException('Wrong usage of search command. Argument is more than maximum ' . self::PATTERN_MAX_LENGTH . ' chars.');
         }
 
         $this->pattern = $this->args['argument'];

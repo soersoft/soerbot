@@ -53,9 +53,9 @@ class SearchCommandTest extends TestCase
         $facts = $this->createMock(PhpFacts::class);
 
         $this->expectException(CommandWrongUsageException::class);
-        $this->expectExceptionMessage('Wrong usage of search command. Argument is less than minimum ' . SearchCommand::MIN_LENGTH . ' chars.');
+        $this->expectExceptionMessage('Wrong usage of search command. Argument is less than minimum ' . SearchCommand::PATTERN_MIN_LENGTH . ' chars.');
 
-        new SearchCommand($facts, ['argument' => str_repeat('t', SearchCommand::MIN_LENGTH - 1)]);
+        new SearchCommand($facts, ['argument' => str_repeat('t', SearchCommand::PATTERN_MIN_LENGTH - 1)]);
     }
 
     public function testConstructorThrowExceptionWhenPatternIsMoreThanMaxLength()
@@ -63,9 +63,9 @@ class SearchCommandTest extends TestCase
         $facts = $this->createMock(PhpFacts::class);
 
         $this->expectException(CommandWrongUsageException::class);
-        $this->expectExceptionMessage('Wrong usage of search command. Argument is more than maximum ' . SearchCommand::MAX_LENGTH . ' chars.');
+        $this->expectExceptionMessage('Wrong usage of search command. Argument is more than maximum ' . SearchCommand::PATTERN_MAX_LENGTH . ' chars.');
 
-        new SearchCommand($facts, ['argument' => str_repeat('t', SearchCommand::MAX_LENGTH + 1)]);
+        new SearchCommand($facts, ['argument' => str_repeat('t', SearchCommand::PATTERN_MAX_LENGTH + 1)]);
     }
 
     /**
@@ -76,7 +76,7 @@ class SearchCommandTest extends TestCase
         $facts = $this->createMock(PhpFacts::class);
 
         try {
-            new SearchCommand($facts, ['argument' => str_repeat('t', SearchCommand::MIN_LENGTH)]);
+            new SearchCommand($facts, ['argument' => str_repeat('t', SearchCommand::PATTERN_MIN_LENGTH)]);
         } catch (CommandWrongUsageException $e) {
             $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
         }
@@ -89,12 +89,21 @@ class SearchCommandTest extends TestCase
         $facts = $this->createMock(PhpFacts::class);
 
         try {
-            new SearchCommand($facts, ['argument' => str_repeat('t', SearchCommand::MAX_LENGTH)]);
+            new SearchCommand($facts, ['argument' => str_repeat('t', SearchCommand::PATTERN_MAX_LENGTH)]);
         } catch (CommandWrongUsageException $e) {
             $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
         }
 
         $this->assertTrue(true);
+    }
+
+    public function testResponseReturnNoMoreThanMaximumOutput()
+    {
+        $maximum = SearchCommand::OUTPUT_MAX_LENGTH;
+        $pattern = 'php';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
+
+        $this->assertTrue(mb_strlen($command->response()) < $maximum);
     }
 
     /**
@@ -159,7 +168,7 @@ class SearchCommandTest extends TestCase
         $this->assertCount(2, $found);
     }
 
-    public function testSearchFindThreeWhenThreeExistPattern()
+    public function testSearchFindFiveWhenFiveExistPattern()
     {
         $expected = 'java';
         $command = new SearchCommand($this->facts, ['argument' => $expected]);
@@ -167,7 +176,7 @@ class SearchCommandTest extends TestCase
         $found = $this->getPrivateVariableValue($command, 'found');
 
         $this->assertNotEmpty($found);
-        $this->assertCount(3, $found);
+        $this->assertCount(5, $found);
     }
 
     public function testResponseReturnNothingWhenNotExistPattern()
@@ -175,7 +184,7 @@ class SearchCommandTest extends TestCase
         $expected = 'not_exist';
         $command = new SearchCommand($this->facts, ['argument' => $expected]);
 
-        $this->assertEquals('Nothing found on ' . $expected . ' request', $command->response());
+        $this->assertEquals('Nothing found with ' . $expected . ' request.', $command->response());
     }
 
     public function testResponseReturnExpectedOneWhenOneExistPattern()
@@ -190,20 +199,32 @@ class SearchCommandTest extends TestCase
 
     public function testResponseReturnExpectedTwoWhenTwoExistPattern()
     {
-        $result = $this->facts->search('ооп');
+        $pattern = 'ооп';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
 
-        $this->assertNotEmpty($result);
-        $this->assertCount(2, $result);
+        $found = $this->facts->search($pattern);
+
+        $this->assertEquals('1. ' . $found[0] . PHP_EOL . '2. ' . $found[1], $command->response());
     }
 
-    public function testResponseReturnExpectedThreeWhenThtreeExistPattern()
+    public function testResponseReturnExpectedThreeWhenThreeExistPattern()
+    {
+        $pattern = 'код';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
+
+        $found = $this->facts->search($pattern);
+
+        $this->assertEquals('1. ' . $found[0] . PHP_EOL . '2. ' . $found[1] . PHP_EOL . '3. ' . $found[2], $command->response());
+    }
+
+    public function testResponseReturnExpectedFiveWhenFiveExistPattern()
     {
         $pattern = 'java';
         $command = new SearchCommand($this->facts, ['argument' => $pattern]);
 
         $found = $this->facts->search($pattern);
 
-        $this->assertEquals('1. ' . $found[0] . PHP_EOL . '2. ' . $found[1] . '3. ' . $found[2], $command->response());
+        $this->assertEquals('1. ' . $found[0] . PHP_EOL . '2. ' . $found[1] . PHP_EOL . '3. ' . $found[2] . PHP_EOL . '4. ' . $found[3] . PHP_EOL . '5. ' . $found[4], $command->response());
     }
 
     public function testResponseReturnExpectedOneWhenOneWithSpaceExistPattern()
@@ -247,6 +268,6 @@ class SearchCommandTest extends TestCase
         $pattern = 'octrin';
         $command = new SearchCommand($this->facts, ['argument' => $pattern]);
 
-        $this->assertEquals('Nothing found on ' . $pattern . ' request', $command->response());
+        $this->assertEquals('Nothing found with ' . $pattern . ' request.', $command->response());
     }
 }

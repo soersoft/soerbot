@@ -39,17 +39,17 @@ class PhpFactsTest extends TestCase
     public function testSearchThrowExceptionWhenPatternIsLessThanMinLength()
     {
         $this->expectException(PhpFactException::class);
-        $this->expectExceptionMessage('Passed pattern is less than minimum ' . PhpFacts::SEARCH_MIN_LENGTH . ' chars.');
+        $this->expectExceptionMessage('Passed pattern is less than minimum ' . PhpFacts::PATTERN_MIN_LENGTH . ' chars.');
 
-        $this->facts->search(str_repeat('t', PhpFacts::SEARCH_MIN_LENGTH - 1));
+        $this->facts->search(str_repeat('t', PhpFacts::PATTERN_MIN_LENGTH - 1));
     }
 
     public function testSearchThrowExceptionWhenPatternIsMoreThanMaxLength()
     {
         $this->expectException(PhpFactException::class);
-        $this->expectExceptionMessage('Passed pattern is more than maximum ' . PhpFacts::SEARCH_MAX_LENGTH . ' chars.');
+        $this->expectExceptionMessage('Passed pattern is more than maximum ' . PhpFacts::PATTERN_MAX_LENGTH . ' chars.');
 
-        $this->facts->search(str_repeat('t', PhpFacts::SEARCH_MAX_LENGTH + 1));
+        $this->facts->search(str_repeat('t', PhpFacts::PATTERN_MAX_LENGTH + 1));
     }
 
     /**
@@ -58,7 +58,7 @@ class PhpFactsTest extends TestCase
     public function testSearchDontThrowExceptionWhenPatternIsMin()
     {
         try {
-            $this->facts->search(str_repeat('t', PhpFacts::SEARCH_MIN_LENGTH));
+            $this->facts->search(str_repeat('t', PhpFacts::PATTERN_MIN_LENGTH));
         } catch (PhpFactException $e) {
             $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
         }
@@ -69,7 +69,7 @@ class PhpFactsTest extends TestCase
     public function testSearchDontThrowExceptionWhenPatternIsMax()
     {
         try {
-            $this->facts->search(str_repeat('t', PhpFacts::SEARCH_MAX_LENGTH));
+            $this->facts->search(str_repeat('t', PhpFacts::PATTERN_MAX_LENGTH));
         } catch (PhpFactException $e) {
             $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
         }
@@ -177,12 +177,12 @@ class PhpFactsTest extends TestCase
         $this->assertCount(2, $result);
     }
 
-    public function testSearchFindThreeWhenThreeExistPattern()
+    public function testSearchFindFiveWhenFiveExistPattern()
     {
         $result = $this->facts->search('java');
 
         $this->assertNotEmpty($result);
-        $this->assertCount(3, $result);
+        $this->assertCount(5, $result);
     }
 
     public function testSearchFindOneWhenOneWithSpaceExistPattern()
@@ -224,6 +224,6 @@ class PhpFactsTest extends TestCase
 
     public function testCountReturnExpectedCount()
     {
-        $this->assertSame(9, $this->facts->count());
+        $this->assertSame(16, $this->facts->count());
     }
 }

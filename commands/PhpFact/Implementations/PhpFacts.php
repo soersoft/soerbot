@@ -10,11 +10,11 @@ class PhpFacts
     /**
      * Minimum pattern length.
      */
-    public const SEARCH_MIN_LENGTH = 3;
+    public const PATTERN_MIN_LENGTH = 3;
     /**
      * Maximum pattern length.
      */
-    public const SEARCH_MAX_LENGTH = 32;
+    public const PATTERN_MAX_LENGTH = 32;
 
     /**
      * @var array
@@ -79,12 +79,12 @@ class PhpFacts
             throw new PhpFactException('Passed pattern is empty.');
         }
 
-        if ($length < self::SEARCH_MIN_LENGTH) {
-            throw new PhpFactException('Passed pattern is less than minimum ' . self::SEARCH_MIN_LENGTH . ' chars.');
+        if ($length < self::PATTERN_MIN_LENGTH) {
+            throw new PhpFactException('Passed pattern is less than minimum ' . self::PATTERN_MIN_LENGTH . ' chars.');
         }
 
-        if ($length > self::SEARCH_MAX_LENGTH) {
-            throw new PhpFactException('Passed pattern is more than maximum ' . self::SEARCH_MAX_LENGTH . ' chars.');
+        if ($length > self::PATTERN_MAX_LENGTH) {
+            throw new PhpFactException('Passed pattern is more than maximum ' . self::PATTERN_MAX_LENGTH . ' chars.');
         }
 
         $found = [];
