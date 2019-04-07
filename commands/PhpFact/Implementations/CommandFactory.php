@@ -2,12 +2,13 @@
 
 namespace SoerBot\Commands\PhpFact\Implementations;
 
-use SoerBot\Commands\PhpFact\Abstractions\AbstractCommand;
+use SoerBot\Commands\PhpFact\Abstractions\CommandInterface;
 use SoerBot\Commands\PhpFact\Exceptions\CommandNotFoundException;
 use SoerBot\Commands\PhpFact\Implementations\Commands\FactCommand;
 use SoerBot\Commands\PhpFact\Implementations\Commands\ListCommand;
 use SoerBot\Commands\PhpFact\Implementations\Commands\StatCommand;
 use SoerBot\Commands\PhpFact\Exceptions\CommandWrongUsageException;
+use SoerBot\Commands\PhpFact\Implementations\Commands\SearchCommand;
 
 class CommandFactory
 {
@@ -17,15 +18,19 @@ class CommandFactory
      * @param PhpFacts $facts
      * @param string $input
      * @throws CommandNotFoundException|CommandWrongUsageException
-     * @return AbstractCommand
+     * @return CommandInterface
      */
-    public static function build(PhpFacts $facts, string $input): AbstractCommand
+    public static function build(PhpFacts $facts, string $input): CommandInterface
     {
-        if (preg_match('/^(?<command>[a-z]+)(?:\s+(?<position>\d+))?$/iSu', $input, $match)) {
+        if (preg_match('/^(?<command>[a-z]+)(?:\s+(?<argument>.*))?$/iSu', $input, $match)) {
             array_shift($match);
 
             if ('fact' === $match['command']) {
                 return new FactCommand($facts, $match);
+            }
+
+            if ('search' === $match['command']) {
+                return new SearchCommand($facts, $match);
             }
 
             if ('stat' === $match['command']) {

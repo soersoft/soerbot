@@ -2,9 +2,9 @@
 
 namespace SoerBot\Commands\PhpFact\Implementations\Commands;
 
-use SoerBot\Commands\PhpFact\Abstractions\AbstractCommand;
+use SoerBot\Commands\PhpFact\Abstractions\AbstractCommandWithoutArguments;
 
-class StatCommand extends AbstractCommand
+class StatCommand extends AbstractCommandWithoutArguments
 {
     /**
      * Returns command result.

@@ -117,7 +117,7 @@ class PhpFactCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact']), false);
     }
 
-    public function testRunSayConcreteFactWhenFactCommandExistingNumber()
+    public function testRunSayConcreteFactWhenFactCommandExistNumber()
     {
         try {
             $storage = new FileStorage();
@@ -164,6 +164,55 @@ class PhpFactCommandTest extends TestCase
             );
 
         $this->command->run($commandMessage, new ArrayObject(['command' => 'fact 100']), false);
+    }
+
+    public function testRunSaySearchFactWhenSearchCommandExistPattern()
+    {
+        try {
+            $storage = new FileStorage();
+            $factObject = new PhpFacts($storage);
+        } catch (\Throwable $e) {
+            $this->fail('Exception with ' . $e->getMessage() . ' was thrown is test method!');
+        }
+
+        $facts = $this->getPrivateVariableValue($factObject, 'facts');
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())
+            ->method('say')
+            ->with(
+                $facts[4]
+            );
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => 'search yield']), false);
+    }
+
+    public function testRunSaySearchFactWhenSearchCommandNotExistPattern()
+    {
+        try {
+            $storage = new FileStorage();
+            $factObject = new PhpFacts($storage);
+        } catch (\Throwable $e) {
+            $this->fail('Exception with ' . $e->getMessage() . ' was thrown is test method!');
+        }
+
+        $facts = $this->getPrivateVariableValue($factObject, 'facts');
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())
+            ->method('say')
+            ->with(
+                $this->logicalAnd(
+                    $this->isType('string'),
+                    $this->callback(
+                        function ($parameter) use ($facts) {
+                            return !in_array($parameter, $facts);
+                        }
+                    )
+                )
+            );
+
+        $this->command->run($commandMessage, new ArrayObject(['command' => 'search not_exist']), false);
     }
 
     public function testRunSayOneOfFactWhenCountCommand()
