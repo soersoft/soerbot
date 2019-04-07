@@ -1,6 +1,10 @@
 <?php  
 namespace \API\Tools;
 
+
+/**
+ * thanks to https://klisl.com/events_php.html
+ */
 class EventsHub implements IEventsHub
 {
     // IEventsHub
@@ -21,8 +25,8 @@ class EventsHub implements IEventsHub
      */
     function eventsHubAddEventHandler(string $eventName, Closure $eventHandler):void
     {
-        if (!\is_callable($eventHandler) && !($eventHandler instanceof Closure))
-        throw new UnexpectedValueException();
+        if (!\is_callable($eventHandler) || !($eventHandler instanceof Closure))
+            throw new UnexpectedValueException();
 
         $this->_eventsCollection[]=[$eventName=>$eventHandler];
     }
@@ -37,7 +41,6 @@ class EventsHub implements IEventsHub
      */
     function eventsHubLaunchEvent(string $eventName, array $arg = null):void
     {
-        // thanks to https://klisl.com/events_php.html
         foreach ($this->_eventsCollection as $eventNameHandler)
             if (array_key_exists($eventName, $eventNameHandler))
                 call_user_func($eventNameHandler[$eventName], $arg);

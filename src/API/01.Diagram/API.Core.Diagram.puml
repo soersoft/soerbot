@@ -8,251 +8,264 @@ scale 1
 ' skinparam classAttributeIconSize 0
 title SoerBot.API
 
-left header
-<font color=lightblue>    Description:</font> <font color=darkBlue>Diagram SoerBot.API provides ready to implement class system of flexible API (Application Programming Interface)</font>
-<font color=lightblue>    Status:        </font> <font color=green>WIP ( WorkInProgress )</font>
-<font color=lightblue>    Creator:      </font> <font color=grey>@DenisGeek (AhokninDenisPavlovich)</font>
-endheader
+' left header
+' <font color=lightblue>    Description:</font> <font color=darkBlue>Diagram SoerBot.API provides ready to implement class system of flexible API (Application Programming Interface)</font>
+' <font color=lightblue>    Status:        </font> <font color=green>WIP ( WorkInProgress )</font>
+' <font color=lightblue>    Creator:      </font> <font color=grey>@DenisGeek (AhokninDenisPavlovich)</font>
+' endheader
 
 center footer @DenisGeek 2019
 
-legend left
-  a --|> b
+legend Right
+    <font color=lightblue>    Description:</font> <font color=darkBlue>Diagram SoerBot.API provides ready to implement class system of flexible API (Application Programming Interface)</font>
+    <font color=lightblue>    Status:        </font> <font color=green>WIP ( WorkInProgress )</font>
+    <font color=lightblue>    Creator:      </font> <font color=grey>@DenisGeek (AhokninDenisPavlovich)</font>
 endlegend
 
-namespace API.Common #DDDDDD {
+package Support {
+    
+    namespace API.Common #DDDDDD {
+        hide members
 
-    interface ITest
-    {
-        bool Test();
-    }
-    interface ICreateInstance
-    {
-        object CreateInstance();
-    }
-
-    ' interface IMailHandler
-    ' {
-    ' }
-    ' interface IPostHandler
-    ' {
-    ' }
-
-    ' ITest --|> IPostHandler 
-    ' ICreateInstance  --|> IPostHandler
-    ' ICreateInstance <|-- IMailHandler
-
-}
-
-namespace API.Tools #DDDDDD {
-    ' delegate 
-    interface IClassFinder #yellow-PaleGreen
-    {
-        List<Type> findClasses(Type interface)
-    }
-    class ClassFinder
-    {
-        List<Type> findClasses(Type interface)
-    }
-    IClassFinder<|..ClassFinder
-
-    interface IEvent #yellow-PaleGreen
-    {
-        + void eventAddHandler(Closure function)
-        + void eventLaunch (arg[])
-    }
-    class Event
-    {
-        - List<Closure> _eventHandlers
-        + void eventAddHandler(Closure function)
-        + void eventLaunch (arg[])
-    }
-    IEvent<|..Event
-
-    interface IEventsHub #yellow-PaleGreen
-    {
-        + void eventsHubAddEventHandler(string eventName, Closure handler)
-        + void eventsHubLaunchEvent (string eventName, arg[])
-    }
-    class EventsHub
-    {
-        - Dictionary<string,List<Closure>> _eventsDictionary
-        + void eventsHubAddEventHandler(string eventName, Closure handler)
-        + void eventsHubLaunchEvent (string eventName, arg[])
-    }
-    IEventsHub<|..EventsHub
-
-    ' class InstanceCreator
-    ' {
-    '     List<Type> findClasses(Type interface)
-    ' }
-
-    ' interface IMailHandler
-    ' {
-    ' }
-    ' IMailHandler <|-- IMailReceiver
-    ' IMailHandler <|-- IMailSender
-    ' interface IPostHandler
-    ' {
-    ' }
-    ' IPostReceiver --|> IPostHandler 
-    ' IPostSender  --|> IPostHandler
-
-}
-
-namespace API.Mail #DDDDDD {
-    IMailAddress "2" *-- IMail
-    IMessage "1" *-- IMail
-
-    IContent <|-- IMessage
-    IHeader <|-- IMessage
-    IAddressee <|-- IMailAddress
-    IAddress <|-- IMailAddress
-
-    interface IAddress
-    {
-        + String Address 
-    }
-    interface IAddressee
-    {
-        + String Addressee
-    } 
-
-    interface IMailAddress
-    {
-    }
-
-    interface IHeader
-    {
-        + String Header 
-    }
-    interface IContent
-    {
-        + JSON Content
-    }
-    interface IMessage
-    {
-    }
-    interface IMail
-    {
-        + IMailAddress reciever
-        + IMailAddress sender
-        + IMessage message
-    }
-}
-
-namespace API.Send #DDDDDD {
-    interface IMailSender
-    {
-        + void setAddress(IAddress)
-        + IMail createMessage()
-
-        ~ <color:SeaGreen>delegate void MailHandler(IMail)</color>
-        ~ <color:SeaGreen>event MailHandler send(IMail)</color>
-        + void sendMessage(IMail)<color:BlueViolet>=>this.send(IMail)</color>
-        __<color:SeaGreen>events in PHP__
-        IEventsHub.eventsHubAddEventHandler("send", void function(IMail))
-        IEventsHub.eventsHubLaunchEvent("send",["IMail" =>IMail])
-    }
-    class MailPicker << (S,#FF7700) Singleton >>
-    {
-        - List<IPostSender> sendes
-        + void refreshSenders()
-
-        + void send(IMail)
-    }
-    interface IPostSender
-    {
-        + void init()
-        + void send(IMail)
-    }
-    class MailSenderFactory << (F,#FF7700) Factory >>
-    {
-        + List<IMailSenderClass> scan()
-        + List<IMailSender> createIntances(List<IMailSenderClass>)
-    }
-    note bottom of MailSenderFactory #grey
-        <color:white>Example of event subscription:</color>
-        IMailSender CreateIntance(MailSenderClass)
+        interface ITest
         {
-            var res = (ICreateInstance)MailSenderClass.CreateInstance()
-            (IMailSender)res.send+=MailPicker.send
+            bool Test();
         }
-    end note
-    class PostSenderFactory << (F,#FF7700) Factory >>
-    {
-        innernn
-        + List<IPostSenderClass> scan()
-        + List<IPostSenderClass> testConnection(List<IPostSenderClass>)
-        + List<IPostSender> createIntances(List<IPostSenderClass>)
-    }
-    ' MailHendler<--IMailSender
-    MailSenderFactory --o MailPicker
-    MailSenderFactory -> IMailSender
-    ICreateInstance ()-- IMailSender :<b><i>API.Common
-    IEventsHub ()-- IMailSender :<b><i>API.Tools
-    IMailSender --> API.Mail.IMail
-    IMailSender "many" .. MailPicker :event send
-    MailPicker --> API.Mail.IMail
-    MailPicker --o "1" PostSenderFactory :refreshSenders
-    MailPicker --o "many" IPostSender
-    API.Mail.IMail <-- IPostSender
-    IPostSender <- PostSenderFactory
-    IPostSender --() ITest :<b><i>API.Common
-    IPostSender --() ICreateInstance:<b><i>API.Common
-}
-class Outgoing << (↓,#FF7700) Stream >>
-API.Send.IPostSender--* Outgoing
+        interface ICreateInstance
+        {
+            object CreateInstance();
+        }
 
-namespace API.Receive #DDDDDD {
-    interface IMailReceiver
-    {
-        + void handleMessage(IMail)
-        + void receive(IMail)
-    }
-    class MailSorter << (S,#FF7700) Singleton >>
-    {
-        - List<IPostReceiver> recieves
-        - List<IMailReceiver> recipients
-        + void refreshReceivers()
- 
-        + void registerRecipient(IMailReceiver)
-        + void deleteRecipient(IMailReceiver)
+        ' interface IMailHandler
+        ' {
+        ' }
+        ' interface IPostHandler
+        ' {
+        ' }
 
-       + void receive(IMail)
+        ' ITest --|> IPostHandler 
+        ' ICreateInstance  --|> IPostHandler
+        ' ICreateInstance <|-- IMailHandler
+
     }
-    interface IPostReceiver
-    {
-        + IMailReceiver MailReceiver
-        + void init(MailSorter)
-        + void received(IMail)
+
+    namespace API.Tools #DDDDDD {
+        hide members
+
+        interface IClassFinder #yellow-PaleGreen
+        {
+            List<Type> findClasses(Type interface)
+        }
+        class ClassFinder
+        {
+            List<Type> findClasses(Type interface)
+        }
+        IClassFinder<|..ClassFinder
+
+        interface IEvent #yellow-PaleGreen
+        {
+            + void eventAddHandler(Closure function)
+            + void eventLaunch (arg[])
+        }
+        class Event
+        {
+            - List<Closure> _eventHandlers
+            + void eventAddHandler(Closure function)
+            + void eventLaunch (arg[])
+        }
+        IEvent<|..Event
+
+        interface IEventsHub #yellow-PaleGreen
+        {
+            + void eventsHubAddEventHandler(string eventName, Closure handler)
+            + void eventsHubLaunchEvent (string eventName, arg[])
+        }
+        class EventsHub
+        {
+            - Dictionary<string,List<Closure>> _eventsDictionary
+            + void eventsHubAddEventHandler(string eventName, Closure handler)
+            + void eventsHubLaunchEvent (string eventName, arg[])
+        }
+        IEventsHub<|..EventsHub
+
+        ' class InstanceCreator
+        ' {
+        '     List<Type> findClasses(Type interface)
+        ' }
+
+        ' interface IMailHandler
+        ' {
+        ' }
+        ' IMailHandler <|-- IMailReceiver
+        ' IMailHandler <|-- IMailSender
+        ' interface IPostHandler
+        ' {
+        ' }
+        ' IPostReceiver --|> IPostHandler 
+        ' IPostSender  --|> IPostHandler
+
     }
-    class FMailReceiver << (F,#FF7700) Factory >>
-    {
-        + List<IMailReceiverClass> scan()
-        + List<IMailReceiver> createIntances(List<IMailReceiverClass>)
-    }
-    class FPostReceiver << (F,#FF7700) Factory >>
-    {
-        + List<IPostReceiverClass> scan()
-        + List<IPostReceiverClass> testConnection(List<IPostReceiverClass>)
-        + List<IPostReceiver> createIntances(List<IPostReceiverClass>)
-    }
-    FMailReceiver --> MailSorter : registerRecipient
-    ICreateInstance ()-- IMailReceiver :<b><i>API.Common
-    IMailReceiver <- FMailReceiver
-    IMailReceiver --> API.Mail.IMail
-    IMailReceiver "many" o-- MailSorter
-    MailSorter --> API.Mail.IMail
-    MailSorter --o "1" FPostReceiver : refreshReceivers
-    MailSorter --o "many" IPostReceiver
-    API.Mail.IMail <-- IPostReceiver
-    IPostReceiver <- FPostReceiver
-    IPostReceiver --() ITest :<b><i>API.Common
-    IPostReceiver --() ICreateInstance:<b><i>API.Common    
 }
-class Incoming << (↑,#FF7700) Stream >>
-API.Receive.IPostReceiver--* Incoming
+
+package Core 
+{
+    hide API.Mail
+    namespace API.Mail #DDDDDD {
+        IMailAddress "2" *-- IMail
+        IMessage "1" *-- IMail
+
+        IContent <|-- IMessage
+        IHeader <|-- IMessage
+        IAddressee <|-- IMailAddress
+        IAddress <|-- IMailAddress
+
+        interface IAddress
+        {
+            + String Address 
+        }
+        interface IAddressee
+        {
+            + String Addressee
+        } 
+
+        interface IMailAddress
+        {
+        }
+
+        interface IHeader
+        {
+            + String Header 
+        }
+        interface IContent
+        {
+            + JSON Content
+        }
+        interface IMessage
+        {
+        }
+        interface IMail
+        {
+            + IMailAddress reciever
+            + IMailAddress sender
+            + IMessage message
+        }
+    }
+
+    namespace API.Send #DDDDDD {
+        interface IMailSender
+        {
+            + void setAddress(IAddress)
+            + IMail createMessage()
+
+            ~ <color:SeaGreen>delegate void MailHandler(IMail)</color>
+            ~ <color:SeaGreen>event MailHandler send(IMail)</color>
+            + void sendMessage(IMail)<color:BlueViolet>=>this.send(IMail)</color>
+            __<color:SeaGreen>events in PHP__
+            IEventsHub.eventsHubAddEventHandler("send", void function(IMail))
+            IEventsHub.eventsHubLaunchEvent("send",["IMail" =>IMail])
+        }
+        class MailPicker << (S,#FF7700) Singleton >>
+        {
+            - List<IPostSender> sendes
+            + void refreshSenders()
+
+            + void send(IMail)
+        }
+        interface IPostSender
+        {
+            + void init()
+            + void send(IMail)
+        }
+        class MailSenderFactory << (F,#FF7700) Factory >>
+        {
+            + List<IMailSenderClass> scan()
+            + List<IMailSender> createIntances(List<IMailSenderClass>)
+        }
+        note bottom of MailSenderFactory #grey
+            <color:white>Example of event subscription:</color>
+            IMailSender CreateIntance(MailSenderClass)
+            {
+                var res = (ICreateInstance)MailSenderClass.CreateInstance()
+                (IMailSender)res.send+=MailPicker.send
+            }
+        end note
+        class PostSenderFactory << (F,#FF7700) Factory >>
+        {
+            innernn
+            + List<IPostSenderClass> scan()
+            + List<IPostSenderClass> testConnection(List<IPostSenderClass>)
+            + List<IPostSender> createIntances(List<IPostSenderClass>)
+        }
+        ' MailHendler<--IMailSender
+        MailSenderFactory --o MailPicker
+        MailSenderFactory -> IMailSender
+        ICreateInstance ()-- IMailSender :<b><i>API.Common
+        IEventsHub ()-- IMailSender :<b><i>API.Tools
+        IMailSender --> API.Mail.IMail
+        IMailSender "many" .. MailPicker :event send
+        MailPicker --> API.Mail.IMail
+        MailPicker --o "1" PostSenderFactory :refreshSenders
+        MailPicker --o "many" IPostSender
+        API.Mail.IMail <-- IPostSender
+        IPostSender <- PostSenderFactory
+        IPostSender --() ITest :<b><i>API.Common
+        IPostSender --() ICreateInstance:<b><i>API.Common
+    }
+    class Outgoing << (↓,#FF7700) Stream >>
+    API.Send.IPostSender--* Outgoing
+
+    hide API.Receive
+    namespace API.Receive #DDDDDD {
+        interface IMailReceiver
+        {
+            + void handleMessage(IMail)
+            + void receive(IMail)
+        }
+        class MailSorter << (S,#FF7700) Singleton >>
+        {
+            - List<IPostReceiver> recieves
+            - List<IMailReceiver> recipients
+            + void refreshReceivers()
+    
+            + void registerRecipient(IMailReceiver)
+            + void deleteRecipient(IMailReceiver)
+
+           + void receive(IMail)
+        }
+        interface IPostReceiver
+        {
+            + IMailReceiver MailReceiver
+            + void init(MailSorter)
+            + void received(IMail)
+        }
+        class FMailReceiver << (F,#FF7700) Factory >>
+        {
+            + List<IMailReceiverClass> scan()
+            + List<IMailReceiver> createIntances(List<IMailReceiverClass>)
+        }
+        class FPostReceiver << (F,#FF7700) Factory >>
+        {
+            + List<IPostReceiverClass> scan()
+            + List<IPostReceiverClass> testConnection(List<IPostReceiverClass>)
+            + List<IPostReceiver> createIntances(List<IPostReceiverClass>)
+        }
+        FMailReceiver --> MailSorter : registerRecipient
+        ICreateInstance ()-- IMailReceiver :<b><i>API.Common
+        IMailReceiver <- FMailReceiver
+        IMailReceiver --> API.Mail.IMail
+        IMailReceiver "many" o-- MailSorter
+        MailSorter --> API.Mail.IMail
+        MailSorter --o "1" FPostReceiver : refreshReceivers
+        MailSorter --o "many" IPostReceiver
+        API.Mail.IMail <-- IPostReceiver
+        IPostReceiver <- FPostReceiver
+        IPostReceiver --() ITest :<b><i>API.Common
+        IPostReceiver --() ICreateInstance:<b><i>API.Common
+    }
+    class Incoming << (↑,#FF7700) Stream >>
+    API.Receive.IPostReceiver--* Incoming
+}
+
 
 
 
