@@ -193,6 +193,22 @@ class PhpFactsTest extends TestCase
         $this->assertCount(1, $result);
     }
 
+    public function testSearchFindOneWhenOneAtLineBeginning()
+    {
+        $result = $this->facts->search('помимо');
+
+        $this->assertNotEmpty($result);
+        $this->assertStringStartsWith('Помимо развитого ООП', $result[0]);
+    }
+
+    public function testSearchFindOneWhenOneAtLineEnd()
+    {
+        $result = $this->facts->search('миксины');
+
+        $this->assertNotEmpty($result);
+        $this->assertStringEndsWith('они же примеси или миксины.', $result[0]);
+    }
+
     public function testSearchFindOneWhenThreeInsideWordExistPattern()
     {
         $result = $this->facts->search('orm');

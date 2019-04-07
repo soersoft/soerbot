@@ -216,6 +216,22 @@ class SearchCommandTest extends TestCase
         $this->assertEquals($found[0], $command->response());
     }
 
+    public function testResponseReturnExpectedOneWhenOneAtLineBeginning()
+    {
+        $pattern = 'помимо';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
+
+        $this->assertStringStartsWith('Помимо развитого ООП', $command->response());
+    }
+
+    public function testResponseReturnExpectedOneWhenOneAtLineEnd()
+    {
+        $pattern = 'миксины';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
+
+        $this->assertStringEndsWith('они же примеси или миксины.', $command->response());
+    }
+
     public function testResponseReturnExpectedOneWhenThreeInTextExistPattern()
     {
         $pattern = 'ORM';
