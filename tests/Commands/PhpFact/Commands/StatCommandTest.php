@@ -43,7 +43,8 @@ class StatCommandTest extends TestCase
 
     public function testResponseReturnExpectedPluralSting()
     {
-        $expected = 'We have 5 facts in collection.';
+        $count = count(file(__DIR__ . '/../phpfacts.txt'));
+        $expected = 'We have ' . $count . ' facts in collection.';
 
         $file = __DIR__ . '/../phpfacts.txt';
         $storage = new FileStorage($file);

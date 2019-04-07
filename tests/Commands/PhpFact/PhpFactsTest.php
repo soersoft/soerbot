@@ -30,38 +30,26 @@ class PhpFactsTest extends TestCase
      */
     public function testSearchThrowExceptionWhenEmptyInput()
     {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
         $this->expectException(PhpFactException::class);
         $this->expectExceptionMessage('Passed pattern is empty.');
 
-        $facts->search('');
+        $this->facts->search('');
     }
 
     public function testSearchThrowExceptionWhenPatternIsLessThanMinLength()
     {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
         $this->expectException(PhpFactException::class);
         $this->expectExceptionMessage('Passed pattern is less than minimum ' . PhpFacts::SEARCH_MIN_LENGTH . ' chars.');
 
-        $facts->search(str_repeat('t', PhpFacts::SEARCH_MIN_LENGTH - 1));
+        $this->facts->search(str_repeat('t', PhpFacts::SEARCH_MIN_LENGTH - 1));
     }
 
     public function testSearchThrowExceptionWhenPatternIsMoreThanMaxLength()
     {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
         $this->expectException(PhpFactException::class);
         $this->expectExceptionMessage('Passed pattern is more than maximum ' . PhpFacts::SEARCH_MAX_LENGTH . ' chars.');
 
-        $facts->search(str_repeat('t', PhpFacts::SEARCH_MAX_LENGTH + 1));
+        $this->facts->search(str_repeat('t', PhpFacts::SEARCH_MAX_LENGTH + 1));
     }
 
     /**
@@ -69,12 +57,8 @@ class PhpFactsTest extends TestCase
      */
     public function testSearchDontThrowExceptionWhenPatternIsMin()
     {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
         try {
-            $facts->search(str_repeat('t', PhpFacts::SEARCH_MIN_LENGTH));
+            $this->facts->search(str_repeat('t', PhpFacts::SEARCH_MIN_LENGTH));
         } catch (PhpFactException $e) {
             $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
         }
@@ -84,12 +68,8 @@ class PhpFactsTest extends TestCase
 
     public function testSearchDontThrowExceptionWhenPatternIsMax()
     {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
         try {
-            $facts->search(str_repeat('t', PhpFacts::SEARCH_MAX_LENGTH));
+            $this->facts->search(str_repeat('t', PhpFacts::SEARCH_MAX_LENGTH));
         } catch (PhpFactException $e) {
             $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
         }
@@ -178,20 +158,12 @@ class PhpFactsTest extends TestCase
 
     public function testSearchFindNothingWhenNotExistPattern()
     {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
-        $this->assertEmpty($facts->search('not_exist'));
+        $this->assertEmpty($this->facts->search('not_exist'));
     }
 
     public function testSearchFindOneWhenOneExistPattern()
     {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
-        $result = $facts->search('yield');
+        $result = $this->facts->search('yield');
 
         $this->assertNotEmpty($result);
         $this->assertCount(1, $result);
@@ -199,18 +171,43 @@ class PhpFactsTest extends TestCase
 
     public function testSearchFindTwoWhenTwoExistPattern()
     {
-        $file = __DIR__ . '/phpfacts.txt';
-        $storage = new FileStorage($file);
-        $facts = new PhpFacts($storage);
-
-        $result = $facts->search('java');
+        $result = $this->facts->search('ооп');
 
         $this->assertNotEmpty($result);
         $this->assertCount(2, $result);
     }
 
+    public function testSearchFindThreeWhenThreeExistPattern()
+    {
+        $result = $this->facts->search('java');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(3, $result);
+    }
+
+    public function testSearchFindOneWhenOneWithSpaceExistPattern()
+    {
+        $result = $this->facts->search('PHP 5');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+    }
+
+    public function testSearchFindOneWhenThreeInsideWordExistPattern()
+    {
+        $result = $this->facts->search('orm');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+    }
+
+    public function testSearchFindNothingWhenOneInsideWordExistPattern()
+    {
+        $this->assertEmpty($this->facts->search('octrin'));
+    }
+
     public function testCountReturnExpectedCount()
     {
-        $this->assertSame(5, $this->facts->count());
+        $this->assertSame(9, $this->facts->count());
     }
 }

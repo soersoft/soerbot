@@ -150,7 +150,7 @@ class SearchCommandTest extends TestCase
 
     public function testSearchFindTwoWhenTwoExistPattern()
     {
-        $expected = 'java';
+        $expected = 'ооп';
         $command = new SearchCommand($this->facts, ['argument' => $expected]);
 
         $found = $this->getPrivateVariableValue($command, 'found');
@@ -159,7 +159,18 @@ class SearchCommandTest extends TestCase
         $this->assertCount(2, $found);
     }
 
-    public function testResponseReturnExpectedOneWhenNotExistPattern()
+    public function testSearchFindThreeWhenThreeExistPattern()
+    {
+        $expected = 'java';
+        $command = new SearchCommand($this->facts, ['argument' => $expected]);
+
+        $found = $this->getPrivateVariableValue($command, 'found');
+
+        $this->assertNotEmpty($found);
+        $this->assertCount(3, $found);
+    }
+
+    public function testResponseReturnNothingWhenNotExistPattern()
     {
         $expected = 'not_exist';
         $command = new SearchCommand($this->facts, ['argument' => $expected]);
@@ -169,21 +180,57 @@ class SearchCommandTest extends TestCase
 
     public function testResponseReturnExpectedOneWhenOneExistPattern()
     {
-        $expected = 'yield';
-        $command = new SearchCommand($this->facts, ['argument' => $expected]);
+        $pattern = 'yield';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
 
-        $found = $this->facts->search($expected);
+        $found = $this->facts->search($pattern);
 
-        $this->assertEquals($command->response(), $found[0]);
+        $this->assertEquals($found[0], $command->response());
     }
 
     public function testResponseReturnExpectedTwoWhenTwoExistPattern()
     {
-        $expected = 'java';
-        $command = new SearchCommand($this->facts, ['argument' => $expected]);
+        $result = $this->facts->search('ооп');
 
-        $found = $this->facts->search($expected);
+        $this->assertNotEmpty($result);
+        $this->assertCount(2, $result);
+    }
 
-        $this->assertEquals($command->response(), '1. ' . $found[0] . PHP_EOL . '2. ' . $found[1]);
+    public function testResponseReturnExpectedThreeWhenThtreeExistPattern()
+    {
+        $pattern = 'java';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
+
+        $found = $this->facts->search($pattern);
+
+        $this->assertEquals('1. ' . $found[0] . PHP_EOL . '2. ' . $found[1] . '3. ' . $found[2], $command->response());
+    }
+
+    public function testResponseReturnExpectedOneWhenOneWithSpaceExistPattern()
+    {
+        $pattern = 'PHP 5';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
+
+        $found = $this->facts->search($pattern);
+
+        $this->assertEquals($found[0], $command->response());
+    }
+
+    public function testResponseReturnExpectedOneWhenThreeInTextExistPattern()
+    {
+        $pattern = 'ORM';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
+
+        $found = $this->facts->search($pattern);
+
+        $this->assertEquals($found[0], $command->response());
+    }
+
+    public function testResponseReturnNothingWhenOneInsideWordExistPattern()
+    {
+        $pattern = 'octrin';
+        $command = new SearchCommand($this->facts, ['argument' => $pattern]);
+
+        $this->assertEquals('Nothing found on ' . $pattern . ' request', $command->response());
     }
 }

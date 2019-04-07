@@ -90,7 +90,7 @@ class PhpFacts
         $found = [];
 
         foreach ($this->facts as $fact) {
-            if (mb_stripos($fact, $pattern) !== false) {
+            if (preg_match('/\b' . $pattern . '\b/iSu', $fact)) {
                 $found[] = $fact;
             }
         }
