@@ -76,7 +76,7 @@ class PhpFacts
         $length = mb_strlen($pattern);
 
         if ($length === 0) {
-            throw new PhpFactException('Passed patter is empty.');
+            throw new PhpFactException('Passed pattern is empty.');
         }
 
         if ($length < self::SEARCH_MIN_LENGTH) {

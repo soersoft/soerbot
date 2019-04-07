@@ -59,7 +59,7 @@ class SearchCommand extends AbstractCommandWithArguments
         if (($count = count($this->found)) > 1) {
             foreach ($this->found as $k => $v) {
                 $response .= ($k + 1) . '. ' . $v;
-                if (--$count) {
+                if (--$count > 1) {
                     $response .= PHP_EOL;
                 }
             }

@@ -35,7 +35,7 @@ class PhpFactsTest extends TestCase
         $facts = new PhpFacts($storage);
 
         $this->expectException(PhpFactException::class);
-        $this->expectExceptionMessage('Passed patter is empty.');
+        $this->expectExceptionMessage('Passed pattern is empty.');
 
         $facts->search('');
     }
