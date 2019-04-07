@@ -2,13 +2,12 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
-use SoerBot\Configurator;
-use SoerBot\Commands\Command;
+use SoerBot\Commands\SoerCommand;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
 use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
-class LeaderboardCommand extends Command
+class LeaderboardCommand extends SoerCommand
 {
     /**
      * @var UserModel
@@ -18,8 +17,7 @@ class LeaderboardCommand extends Command
     public function __construct(LiviaClient $client)
     {
         parent::__construct($client);
-        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile($this->storeJSONFile));
-        var_dump(Configurator::get('leaderboard')['storeJSONFile']);
+        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile(__DIR__ . $this->storeJSONFile));
     }
 
     /**
