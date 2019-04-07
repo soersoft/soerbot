@@ -42,7 +42,7 @@ class KarmaCommandTest extends TestCase
         $karmaWatcherActor->expects($this->once())->method('getUser')->willReturn($userModel);
         $userModel->expects($this->once())->method('getUserKarma')->with($userName)->willReturn(20);
 
-        $commandMessage->expects($this->once())->method('say')->with('Ваша карма: 20')->willReturn($promise);
+        $commandMessage->expects($this->once())->method('reply')->with('Ваша карма: 20')->willReturn($promise);
 
         $this->command->run($commandMessage, new ArrayObject(), false);
     }

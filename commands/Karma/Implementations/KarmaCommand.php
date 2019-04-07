@@ -41,6 +41,6 @@ class KarmaCommand extends Command
         $userModel = $this->karmaWatcherActor->getUser();
         $karma = $userModel->getUserKarma($userName);
 
-        return $message->say("Ваша карма: $karma");
+        return $message->reply("Ваша карма: $karma");
     }
 }
