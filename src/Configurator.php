@@ -92,15 +92,23 @@ class Configurator
     /**
      * Appends settings from the file to already existed settings.
      * @param string $path Path to additional configuration file
+     * @param string $namespace Allows to add nested set of options to main config
      * @throws ConfigurationFileNotFound
      */
-    public static function merge($path)
+    public static function merge($path, $namespace = null)
     {
         $oldConfigurations = self::$configurations;
         $oldPath = self::$path;
         self::$path = $path;
         self::load();
-        self::$configurations = array_merge(self::$configurations, $oldConfigurations);
+
+        if (isset($namespace)) {
+            $oldConfigurations[$namespace] = self::$configurations;
+            self::$configurations = $oldConfigurations;
+        } else {
+            self::$configurations = array_merge(self::$configurations, $oldConfigurations);
+        }
+
         self::$path = $oldPath;
     }
 
