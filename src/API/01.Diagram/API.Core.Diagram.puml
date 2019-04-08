@@ -202,11 +202,8 @@ package Core
         }
         MailSenderStorage --o MailSenderFactory
 
-        class MailPicker << (S,#FF7700) Singleton (static) >>
+        class MailPicker << (S,#FF7700) Singleton (static) >> #PaleGreen-Green
         {
-            - List<IPostSender> sendes
-            + void refreshSenders()
-
             + void send(IMail)
         }
         interface IPostSender #PaleGreen-Green
@@ -237,7 +234,7 @@ package Core
         IMailSender --> API.Mail.IMail
         IMailSender "many" .. MailPicker :event send
         MailPicker --> API.Mail.IMail
-        MailPicker --o "1" PostSenderFactory :refreshSenders
+        MailPicker -* PostSenderStorage
         MailPicker --o "many" IPostSender
         API.Mail.IMail <-- IPostSender
         IPostSender <- PostSenderFactory
