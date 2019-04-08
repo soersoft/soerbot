@@ -6,27 +6,27 @@ use \API\Mail;
 
 namespace \API\Send;
 
-class MailSenderFactory
+class PostSenderFactory
 {
     /**
-     * 
+     * get all classes, implements
+     * - IPostSender
      */
     public function scan():array
     {
-        return \API\Tools\ClassFinder.findClasses(IMailSender::class);
+        return \API\Tools\ClassFinder.findClasses(IPostSender::class);
     }
 
     /**
-     * createIntances of all found casses implements IMailSender
+     * createIntances of all found casses implements IPostSender
      */
     public function createIntances(array $classes):array
     {
         $res = array();
         foreach($classes as $class)
         {
-            if (!($class instanceof IMailSender) || !($class instanceof ICreateInstance))
+            if (!($class instanceof IPostSender) || !($class instanceof ICreateInstance))
                 continue;
-            // $res[]=((IMailSender)($class)).CreateInstance();
             $res[]=$class.CreateInstance();
         }
         return $res;
@@ -34,21 +34,21 @@ class MailSenderFactory
     /**
      * Subscribe MailPicker.send(IMail) to event send(IMail)
      * for each instance
+     * @return List of working instances
      */
-    public function subscribe(array $instancesMS)
+    public function test(array $instances):array
     {
-        foreach($instancesMS as $instanceMS)
+        $res = array();
+        foreach($instances as $instance)
         {
-            $my_fun = function ($arg){
-                if (!(count($arg)==1))
-                    throw new UnexpectedValueException();
-                $mail = $arg[0];
-                if (!($mail instanceof  \API\Mail\IMail))
-                    throw new UnexpectedValueException();
-                MailPicker.send($mail);
-            };
-            $instanceMS.onSendMessage($my_fun);
+            if (!($instance instanceof \API\Common\ITest))
+                continue;
+            if (!($instance->test()))
+                continue;
+
+            $res[] = $instance;
         }
+        return $res;
     }
 
 }
