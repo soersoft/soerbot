@@ -30,10 +30,10 @@ class PostSenderStorage
      */
     public static function refreshPostSenders()
     {
-        $factory = new \API\Send\MailSenderFactory();
+        $factory = new \API\Send\PostSenderFactory();
         
         $classes = $factory->scan();
-        self::$instancesOfIMailSender = $factory->createIntances($classes);
-        $factory->Subscribe(self::$instancesOfIMailSender);
+        self::$instancesOfIPostSender = $factory->createIntances($classes);
+        $factory->Subscribe(self::$instancesOfIPostSender);
     }
 }
