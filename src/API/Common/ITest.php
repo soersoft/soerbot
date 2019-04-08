@@ -3,5 +3,5 @@ namespace \API\Common;
 
 interface ITest
 {
-    function Test():bool;
+    function test():bool;
 }
