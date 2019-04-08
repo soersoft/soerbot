@@ -25,7 +25,7 @@ endlegend
 package Support {
     
     namespace API.Common #DDDDDD {
-        hide members
+        ' hide members
 
         interface ITest
         {
@@ -35,7 +35,11 @@ package Support {
         {
             object CreateInstance();
         }
-
+        interface IFactory
+        {
+            + function scan():array;
+            + function createIntances(array $classes):array;
+        }
         ' interface IMailHandler
         ' {
         ' }
@@ -51,6 +55,14 @@ package Support {
 
     namespace API.Tools #DDDDDD {
         ' hide members
+
+        class InstancesStorage
+        {
+            + List<object> instances;
+            + void clearInstances()
+            + void refreshInstances(IFactory factory)
+        }
+        InstancesStorage --o API.Common.IFactory
 
         interface IClassFinder #yellow-PaleGreen
         {
@@ -166,25 +178,26 @@ package Core
             + void sendMessage(IMail $mail)
             + void onSendMessage(Closure $eventHandler)
         }
-                
+
         class MailSenderFactory << (F,#FF7700) Factory >> #PaleGreen-Green
         {
             + List<IMailSenderClass> scan()
             + List<IMailSenderInstance> createIntances(List<IMailSenderClass>)
             + void subscribe(List<IMailSenderInstance>)
         }
-        note bottom of MailSenderFactory #grey
-            <color:white>Example of event subscription:</color>
-            IMailSender CreateIntance(MailSenderClass)
-            {
-                var res = (ICreateInstance)MailSenderClass.CreateInstance()
-                (IMailSender)res.send+=MailPicker.send
-            }
-        end note
+        MailSenderFactory -() IFactory :<b><i>API.Common
+        ' note bottom of MailSenderFactory #grey
+        '     <color:white>Example of event subscription:</color>
+        '     IMailSender CreateIntance(MailSenderClass)
+        '     {
+        '         var res = (ICreateInstance)MailSenderClass.CreateInstance()
+        '         (IMailSender)res.send+=MailPicker.send
+        '     }
+        ' end note
         class MailSenderStorage << (S,#FF7700) Singleton(static) >> #PaleGreen-Green
         {
-            -static List<IMailSenderInstance> instancesOfIMailSender
-            +static void clear()
+            -static InstancesStorage _instancesStorage
+            +static InstancesStorage getInstancesStorage()
             +static void refresh()
         }
         MailSenderStorage --o MailSenderFactory
@@ -203,11 +216,19 @@ package Core
 
         class PostSenderFactory << (F,#FF7700) Factory >> #PaleGreen-Green
         {
-            innernn
             + List<IPostSenderClass> scan()
             + List<IPostSenderClass> testConnection(List<IPostSenderClass>)
             + List<IPostSender> createIntances(List<IPostSenderClass>)
         }
+        PostSenderFactory -() IFactory :<b><i>API.Common
+        class PostSenderStorage << (S,#FF7700) Singleton(static) >> #PaleGreen-Green
+        {
+            -static InstancesStorage _instancesStorage
+            +static InstancesStorage getInstancesStorage()
+            +static void refresh()
+        }
+        PostSenderStorage --o PostSenderFactory
+
         ' MailHendler<--IMailSender
         MailSenderFactory --o MailPicker
         MailSenderFactory -> IMailSender
