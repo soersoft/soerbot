@@ -157,13 +157,32 @@ package Core
             + void setAddress(IAddress)
             + IMail createMessage()
 
-            ~ <color:SeaGreen>delegate void MailHandler(IMail)</color>
-            ~ <color:SeaGreen>event MailHandler send(IMail)</color>
-            + void sendMessage(IMail)<color:BlueViolet>=>this.send(IMail)</color>
-            __<color:SeaGreen>events in PHP__
-            IEventsHub.eventsHubAddEventHandler("send", void function(IMail))
-            IEventsHub.eventsHubLaunchEvent("send",["IMail" =>IMail])
+            + void sendMessage(IMail $mail)
+            + void onSendMessage(Closure $eventHandler):void;
         }
+                
+        class MailSenderFactory << (F,#FF7700) Factory (static) >>
+        {
+            + List<IMailSenderClass> scan()
+            + List<IMailSenderInstance> createIntances(List<IMailSenderClass>)
+            + void subscribe(List<IMailSenderInstance>)
+        }
+        note bottom of MailSenderFactory #grey
+            <color:white>Example of event subscription:</color>
+            IMailSender CreateIntance(MailSenderClass)
+            {
+                var res = (ICreateInstance)MailSenderClass.CreateInstance()
+                (IMailSender)res.send+=MailPicker.send
+            }
+        end note
+        class MailSenderStorage << (S,#FF7700) Singleton(static) >>
+        {
+            -static List<IMailSenderInstance> instancesOfIMailSender
+            +static void clear()
+            +static void refresh()
+        }
+        MailSenderStorage --o MailSenderFactory
+
         class MailPicker << (S,#FF7700) Singleton >>
         {
             - List<IPostSender> sendes
@@ -175,20 +194,7 @@ package Core
         {
             + void init()
             + void send(IMail)
-        }
-        class MailSenderFactory << (F,#FF7700) Factory >>
-        {
-            + List<IMailSenderClass> scan()
-            + List<IMailSender> createIntances(List<IMailSenderClass>)
-        }
-        note bottom of MailSenderFactory #grey
-            <color:white>Example of event subscription:</color>
-            IMailSender CreateIntance(MailSenderClass)
-            {
-                var res = (ICreateInstance)MailSenderClass.CreateInstance()
-                (IMailSender)res.send+=MailPicker.send
-            }
-        end note
+
         class PostSenderFactory << (F,#FF7700) Factory >>
         {
             innernn
@@ -200,7 +206,7 @@ package Core
         MailSenderFactory --o MailPicker
         MailSenderFactory -> IMailSender
         ICreateInstance ()-- IMailSender :<b><i>API.Common
-        IEventsHub ()-- IMailSender :<b><i>API.Tools
+        ' IEventsHub ()-- IMailSender :<b><i>API.Tools
         IMailSender --> API.Mail.IMail
         IMailSender "many" .. MailPicker :event send
         MailPicker --> API.Mail.IMail
