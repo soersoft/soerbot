@@ -92,7 +92,7 @@ class LeaderboardAddCommand extends Command
     public function hasAllowedRole(\CharlotteDunois\Livia\CommandMessage $message)
     {
         if (count($this->allowRoles) > 0) {
-            $allow = true; //ВРЕМЕННО!!! ВЕРНУТЬ!!!
+            $allow = false;
             $roles = $message->member->roles;
             foreach ($roles as $role) {
                 $roleName = mb_strtolower($role->name);
