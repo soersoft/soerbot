@@ -7,9 +7,11 @@ namespace \API\Send;
 /***
  * It's provide possibility to send IMail as 
  * - get reguest
+ * - interface IPostSender extends 
+ *  - ICreateInstance,
+ *  - ITest
  */
 class PostSenderHttpGet implements IPostSender
-// interface IPostSender extends ICreateInstance
 {
     /**
      * returns instance of this class
@@ -22,6 +24,21 @@ class PostSenderHttpGet implements IPostSender
         return new PostSenderHttpGet();
     }
     /**
+     * Test instance
+     * - test service possibility to work
+     *  - for now dummy, not enough knowledge
+     * - implements:
+     *  - API.Common.ITest
+     * 
+     * @return usefull or usless service
+     * - bool: true or false
+     */
+    public function test(): bool
+    {
+        return true; // dummy
+    }
+
+    /**
      * to sends IMail as 
      * - get reguest
      *  - probably needs more deep pasrce adderess
@@ -30,7 +47,7 @@ class PostSenderHttpGet implements IPostSender
      * - see:
      *  - http://docs.php.net/manual/da/function.http-get.php
      * 
-     *@param $mail this is needs to send
+     * @param $mail this is needs to send
      *  - instance IMail
      * 
      * @throws UnexpectedValueException
