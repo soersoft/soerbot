@@ -67,13 +67,13 @@ package Support {
             + void eventAddHandler(Closure function)
             + void eventLaunch (arg[])
         }
-        class Event
+        class ApiEvent
         {
             - List<Closure> _eventHandlers
             + void eventAddHandler(Closure function)
             + void eventLaunch (arg[])
         }
-        IEvent<|..Event
+        IEvent<|..ApiEvent
 
         interface IEventsHub #yellow-PaleGreen
         {
@@ -109,7 +109,7 @@ package Support {
 
 package Core 
 {
-    hide API.Mail
+    ' hide API.Mail
     namespace API.Mail #DDDDDD {
         IMailAddress "2" *-- IMail
         IMessage "1" *-- IMail
@@ -158,10 +158,10 @@ package Core
             + IMail createMessage()
 
             + void sendMessage(IMail $mail)
-            + void onSendMessage(Closure $eventHandler):void;
+            + void onSendMessage(Closure $eventHandler)
         }
                 
-        class MailSenderFactory << (F,#FF7700) Factory (static) >>
+        class MailSenderFactory << (F,#FF7700) Factory >>
         {
             + List<IMailSenderClass> scan()
             + List<IMailSenderInstance> createIntances(List<IMailSenderClass>)
@@ -220,7 +220,7 @@ package Core
     class Outgoing << (↓,#FF7700) Stream >>
     API.Send.IPostSender--* Outgoing
 
-    hide API.Receive
+    ' hide API.Receive
     namespace API.Receive #DDDDDD {
         interface IMailReceiver
         {
