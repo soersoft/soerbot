@@ -198,9 +198,9 @@ package Core
         }
         interface IPostSender
         {
-            + void init()
             + void send(IMail)
-
+        }
+        
         class PostSenderFactory << (F,#FF7700) Factory >>
         {
             innernn

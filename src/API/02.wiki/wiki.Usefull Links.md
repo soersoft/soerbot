@@ -24,3 +24,7 @@ typeCasting
 
 Yasmin is a Discord API library for PHP
     - https://github.com/CharlotteDunois/Yasmin
+
+
+PHP Get JSON
+    - https://stackoverflow.com/questions/10217068/receive-json-object-from-http-get-in-php
