@@ -27,15 +27,15 @@ package Support {
     namespace API.Common #DDDDDD {
         ' hide members
 
-        interface ITest
+        interface ITest #PaleGreen-Green
         {
             bool Test();
         }
-        interface ICreateInstance
+        interface ICreateInstance #PaleGreen-Green
         {
             object CreateInstance();
         }
-        interface IFactory
+        interface IFactory #PaleGreen-Green
         {
             + function scan():array;
             + function createIntances(array $classes):array;
@@ -56,7 +56,7 @@ package Support {
     namespace API.Tools #DDDDDD {
         ' hide members
 
-        class InstancesStorage
+        class InstancesStorage #PaleGreen-Green
         {
             + List<object> instances;
             + void clearInstances()
@@ -68,7 +68,7 @@ package Support {
         {
             List<Type> findClasses(Type interface)
         }
-        class ClassFinder
+        class ClassFinder #PaleGreen-Green
         {
             List<Type> findClasses(Type interface)
         }
@@ -79,7 +79,7 @@ package Support {
             + void eventAddHandler(Closure function)
             + void eventLaunch (arg[])
         }
-        class ApiEvent
+        class ApiEvent #PaleGreen-Green
         {
             - List<Closure> _eventHandlers
             + void eventAddHandler(Closure function)
@@ -92,7 +92,7 @@ package Support {
             + void eventsHubAddEventHandler(string eventName, Closure handler)
             + void eventsHubLaunchEvent (string eventName, arg[])
         }
-        class EventsHub
+        class EventsHub #PaleGreen-Green
         {
             - Dictionary<string,List<Closure>> _eventsDictionary
             + void eventsHubAddEventHandler(string eventName, Closure handler)
@@ -135,31 +135,31 @@ package Core
         IAddressee <|-- IMailAddress
         IAddress <|-- IMailAddress
 
-        interface IAddress
+        interface IAddress #PaleGreen-Green
         {
             + String Address 
         }
-        interface IAddressee
+        interface IAddressee #PaleGreen-Green
         {
             + String Addressee
         } 
 
-        interface IMailAddress
+        interface IMailAddress #PaleGreen-Green
         {
         }
 
-        interface IHeader
+        interface IHeader #PaleGreen-Green
         {
             + String Header 
         }
-        interface IContent
+        interface IContent #PaleGreen-Green
         {
             + JSON Content
         }
-        interface IMessage
+        interface IMessage #PaleGreen-Green
         {
         }
-        interface IMail
+        interface IMail #PaleGreen-Green
         {
             + IMailAddress reciever
             + IMailAddress sender
