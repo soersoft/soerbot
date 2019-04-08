@@ -2,7 +2,6 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
-use ArrayObject;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
@@ -18,6 +17,8 @@ class LeaderboardAddCommand extends Command
      * @var UserModel
      */
     private $users;
+
+    public $allowRoles;
 
     public function __construct(LiviaClient $client)
     {
@@ -48,7 +49,11 @@ class LeaderboardAddCommand extends Command
           ],
         ]);
 
-        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
+        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
+
+        $this->allowRoles = [
+          'product owner', 'куратор'
+        ];
     }
 
     /**
@@ -59,31 +64,44 @@ class LeaderboardAddCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $message->say(
-            $this->action($args) ? self::SUCCESS_MESSAGE : self::FAILURE_MESSAGE
-        );
+        try {
+            $this->users->incrementReward($args['name']->username, $args['emoji']);
+        } catch (\Exception $e) {
+            return $message->say(self::FAILURE_MESSAGE);
+        }
+
+        return $message->say(self::SUCCESS_MESSAGE);
     }
 
     /**
-     * @param ArrayObject $args
-     * @return bool
+     * Checks if the user has permission to use the command.
+     * @param \CharlotteDunois\Livia\CommandMessage  $message
+     * @param bool                                   $ownerOverride  Whether the bot owner(s) will always have permission.
+     * @return bool|string  Whether the user has permission, or an error message to respond with if they don't.
      */
-    private function action(ArrayObject $args): bool
+    public function hasPermission(\CharlotteDunois\Livia\CommandMessage $message, bool $ownerOverride = true)
     {
-        return $this->validateArguments($args) && $this->addReward($args);
+        $hasPermission = parent::hasPermission($message, $ownerOverride);
+        if ($hasPermission === true) {
+            $hasPermission = $this->hasAllowedRole($message);
+        }
+
+        return $hasPermission;
     }
 
-    /**
-     * @param ArrayObject $args
-     * @return bool
-     */
-    private function validateArguments(ArrayObject $args): bool
+    public function hasAllowedRole(\CharlotteDunois\Livia\CommandMessage $message)
     {
-        return isset($args['name']) && isset($args['emoji']);
-    }
+        if (count($this->allowRoles) > 0) {
+            $allow = false;
+            $roles = $message->member->roles;
+            foreach ($roles as $role) {
+                $roleName = mb_strtolower($role->name);
+                if (in_array($roleName, $this->allowRoles)) {
+                    $allow = true;
+                }
+            }
 
-    private function addReward(ArrayObject $args): bool
-    {
-        return $this->users->incrementReward($args['name']->username, $args['emoji']);
+            return $allow;
+        }
     }
 }

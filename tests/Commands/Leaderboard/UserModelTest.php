@@ -38,7 +38,7 @@ class UserModelTest extends TestCase
 
         $this->setPrivateVariableValue($this->users, 'store', $store);
 
-        $this->assertTrue($this->users->incrementReward('Username', '🏅'));
+        $this->users->incrementReward('Username', '🏅');
     }
 
     public function testGetLeaderboardAsString()

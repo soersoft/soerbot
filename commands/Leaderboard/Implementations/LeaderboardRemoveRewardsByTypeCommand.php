@@ -18,37 +18,37 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
     private $users;
 
     protected $config = [
-        'name' => 'leaderboard-remove-rewards', // Give command name
-        'aliases' => [''],
-        'group' => 'utils', // Group in ['command', 'util']
-        'description' => 'Удаляет все награды указанного типа у участника',
-        'guildOnly' => false,
-        'throttling' => [
-            'usages' => 5,
-            'duration' => 10,
+      'name' => 'leaderboard-remove-rewards', // Give command name
+      'aliases' => [''],
+      'group' => 'utils', // Group in ['command', 'util']
+      'description' => 'Удаляет все награды указанного типа у участника',
+      'guildOnly' => false,
+      'throttling' => [
+        'usages' => 5,
+        'duration' => 10,
+      ],
+      'guarded' => true,
+      'args' => [ // If you need some variables you should either fill this section or remove it
+        [
+          'key' => 'name',
+          'label' => 'name',
+          'prompt' => 'Введите имя пользователя',
+          'type' => 'user',
         ],
-        'guarded' => true,
-        'args' => [ // If you need some variables you should either fill this section or remove it
-            [
-                'key' => 'name',
-                'label' => 'name',
-                'prompt' => 'Введите имя пользователя',
-                'type' => 'user',
-            ],
-            [
-                'key' => 'emoji',
-                'label' => 'emoji',
-                'prompt' => 'Какую награду удалить?',
-                'type' => 'reward',
-            ],
+        [
+          'key' => 'emoji',
+          'label' => 'emoji',
+          'prompt' => 'Какую награду удалить?',
+          'type' => 'reward',
         ],
+      ],
     ];
 
     public function __construct(LiviaClient $client)
     {
         parent::__construct($client, $this->config);
 
-        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile(realpath(__DIR__ . '/../Store/leaderboard.json')));
+        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
     }
 
     /**
@@ -59,9 +59,13 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $message->say(
-            $this->action($args) ? self::SUCCESS_MESSAGE : self::FAILURE_MESSAGE
-        );
+      try {
+        $this->users->removeRewardsByType($args['name']->username, $args['emoji']);
+      }
+      catch (\Exception $e) {
+        return $message->say(self::FAILURE_MESSAGE . $e);
+      }
+    return $message->say(self::SUCCESS_MESSAGE);
     }
 
     /**
@@ -70,7 +74,7 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
      */
     private function action(ArrayObject $args): bool
     {
-        return $this->validateArguments($args) && $this->removeRewards($args);
+        return $this->validateArguments($args);
     }
 
     /**
@@ -81,11 +85,4 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
     {
         return isset($args['name']) && isset($args['emoji']);
     }
-
-    private function removeRewards(ArrayObject $args): bool
-    {
-        return $this->users->removeRewardsByType($args['name']->username, $args['emoji']);
-    }
-
-
 }

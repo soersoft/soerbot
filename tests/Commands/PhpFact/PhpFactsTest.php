@@ -2,11 +2,11 @@
 
 namespace Tests\Commands;
 
-use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
+use Tests\TestCase;
+use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
 use SoerBot\Commands\PhpFact\Exceptions\PhpFactException;
 use SoerBot\Commands\PhpFact\Implementations\FileStorage;
-use SoerBot\Commands\PhpFact\Implementations\PhpFacts;
-use Tests\TestCase;
+use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 
 class PhpFactsTest extends TestCase
 {
@@ -15,7 +15,8 @@ class PhpFactsTest extends TestCase
     protected function setUp()
     {
         try {
-            $storage = new FileStorage();
+            $file = __DIR__ . '/phpfacts.txt';
+            $storage = new FileStorage($file);
             $this->facts = new PhpFacts($storage);
         } catch (\Throwable $e) {
             $this->fail('Exception with ' . $e->getMessage() . ' was thrown is setUp method!');
@@ -25,38 +26,95 @@ class PhpFactsTest extends TestCase
     }
 
     /**
-     * Exceptions
+     * Exceptions.
      */
-    public function testThrowExceptionWhenStorageReturnEmpty()
+    public function testSearchThrowExceptionWhenEmptyInput()
     {
         $this->expectException(PhpFactException::class);
+        $this->expectExceptionMessage('Passed pattern is empty.');
 
-        $facts = new PhpFacts(new class() implements StorageInterface
-        {
-            public function get(): array
-            {
-                return [];
-            }
-        });
+        $this->facts->search('');
+    }
+
+    public function testSearchThrowExceptionWhenPatternIsLessThanMinLength()
+    {
+        $this->expectException(PhpFactException::class);
+        $this->expectExceptionMessage('Passed pattern is less than minimum ' . PhpFacts::PATTERN_MIN_LENGTH . ' chars.');
+
+        $this->facts->search(str_repeat('t', PhpFacts::PATTERN_MIN_LENGTH - 1));
+    }
+
+    public function testSearchThrowExceptionWhenPatternIsMoreThanMaxLength()
+    {
+        $this->expectException(PhpFactException::class);
+        $this->expectExceptionMessage('Passed pattern is more than maximum ' . PhpFacts::PATTERN_MAX_LENGTH . ' chars.');
+
+        $this->facts->search(str_repeat('t', PhpFacts::PATTERN_MAX_LENGTH + 1));
     }
 
     /**
-     * Corner cases
+     * Corner cases.
      */
+    public function testSearchDontThrowExceptionWhenPatternIsMin()
+    {
+        try {
+            $this->facts->search(str_repeat('t', PhpFacts::PATTERN_MIN_LENGTH));
+        } catch (PhpFactException $e) {
+            $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
+        }
 
+        $this->assertTrue(true);
+    }
+
+    public function testSearchDontThrowExceptionWhenPatternIsMax()
+    {
+        try {
+            $this->facts->search(str_repeat('t', PhpFacts::PATTERN_MAX_LENGTH));
+        } catch (PhpFactException $e) {
+            $this->fail('Exception thrown on min plus one with message ' . $e->getMessage() . '');
+        }
+
+        $this->assertTrue(true);
+    }
 
     /**
-     * Functionality
+     * @dataProvider provideFactsContentCorners
      */
-    public function testFetchReturnsAnArray()
+    public function testGetReturnExpected($position, $expected)
+    {
+        $this->assertSame($expected, $this->facts->get($position));
+    }
+
+    public function provideFactsContentCorners()
+    {
+        $file = __DIR__ . '/phpfacts.txt';
+        $storage = new FileStorage($file);
+        $facts = new PhpFacts($storage);
+
+        $countFacts = count($this->getPrivateVariableValue($facts, 'facts'));
+        $content = $this->getPrivateVariableValue($facts, 'facts');
+
+        return [
+            'below minimum' => [0, false],
+            'array start' => [1, $content[0]],
+            'array before stop' => [$countFacts - 1, $content[$countFacts - 2]],
+            'array stop' => [$countFacts, $content[$countFacts - 1]],
+            'above maximum' => [$countFacts + 1, false],
+        ];
+    }
+
+    /**
+     * Functionality.
+     */
+    public function testLoadReturnArray()
     {
         $storage = new FileStorage();
-        $method = $this->getPrivateMethod($this->facts, 'fetch');
+        $method = $this->getPrivateMethod($this->facts, 'load');
 
         $this->assertIsArray($method->invokeArgs($this->facts, [$storage]));
     }
 
-    public function testFetchWorksAsExpected()
+    public function testLoadReturnSameArrayAsFacts()
     {
         $facts = $this->getPrivateVariableValue($this->facts, 'facts');
 
@@ -65,12 +123,19 @@ class PhpFactsTest extends TestCase
             ->method('get')
             ->with()
             ->willReturn($facts);
-        $method = $this->getPrivateMethod($this->facts, 'fetch');
+        $method = $this->getPrivateMethod($this->facts, 'load');
 
         $this->assertIsArray($method->invokeArgs($this->facts, [$storage]));
     }
 
-    public function testGetRandomReturnsStringFromStorageArray()
+    public function testGetReturnStringFromFacts()
+    {
+        $allFacts = $this->getPrivateVariableValue($this->facts, 'facts');
+
+        $this->assertSame($allFacts[0], $this->facts->get(1));
+    }
+
+    public function testGetRandomReturnStringFromFacts()
     {
         $allFacts = $this->getPrivateVariableValue($this->facts, 'facts');
         $getFact = $this->facts->getRandom();
@@ -78,7 +143,7 @@ class PhpFactsTest extends TestCase
         $this->assertTrue(in_array($getFact, $allFacts, true));
     }
 
-    public function testGetRandomWorksAsExpected()
+    public function testGetRandomReturnExpectedString()
     {
         $facts = $this->getPrivateVariableValue($this->facts, 'facts');
 
@@ -89,5 +154,76 @@ class PhpFactsTest extends TestCase
             ->willReturn($facts);
 
         new PhpFacts($storage);
+    }
+
+    public function testSearchFindNothingWhenNotExistPattern()
+    {
+        $this->assertEmpty($this->facts->search('not_exist'));
+    }
+
+    public function testSearchFindOneWhenOneExistPattern()
+    {
+        $result = $this->facts->search('yield');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+    }
+
+    public function testSearchFindTwoWhenTwoExistPattern()
+    {
+        $result = $this->facts->search('ооп');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(2, $result);
+    }
+
+    public function testSearchFindFiveWhenFiveExistPattern()
+    {
+        $result = $this->facts->search('java');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(5, $result);
+    }
+
+    public function testSearchFindOneWhenOneWithSpaceExistPattern()
+    {
+        $result = $this->facts->search('PHP 5');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+    }
+
+    public function testSearchFindOneWhenOneAtLineBeginning()
+    {
+        $result = $this->facts->search('помимо');
+
+        $this->assertNotEmpty($result);
+        $this->assertStringStartsWith('Помимо развитого ООП', $result[0]);
+    }
+
+    public function testSearchFindOneWhenOneAtLineEnd()
+    {
+        $result = $this->facts->search('миксины');
+
+        $this->assertNotEmpty($result);
+        $this->assertStringEndsWith('они же примеси или миксины.', $result[0]);
+    }
+
+    public function testSearchFindOneWhenThreeInsideWordExistPattern()
+    {
+        $result = $this->facts->search('orm');
+
+        $this->assertNotEmpty($result);
+        $this->assertCount(1, $result);
+    }
+
+    public function testSearchFindNothingWhenOneInsideWordExistPattern()
+    {
+        $this->assertEmpty($this->facts->search('octrin'));
+    }
+
+    public function testCountReturnExpectedCount()
+    {
+        $this->assertSame(16, $this->facts->count());
     }
 }

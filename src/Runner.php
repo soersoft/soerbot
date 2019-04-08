@@ -4,7 +4,9 @@ namespace SoerBot;
 
 use React\EventLoop\Factory;
 use CharlotteDunois\Livia\LiviaClient;
+use CharlotteDunois\Yasmin\Models\Message;
 use SoerBot\Database\Settings\CapsuleSetup;
+use SoerBot\Watcher\Interfaces\WatcherActorInterface;
 
 class Runner
 {
@@ -17,6 +19,12 @@ class Runner
      * @var LiviaClient
      */
     private $client;
+
+    /**
+     * Список наблюдателей.
+     * @var WatcherActorInterface
+     */
+    private $watcherActors = [];
 
     /**
      * Runner constructor.
@@ -40,6 +48,14 @@ class Runner
                 echo $message . "\n";
             });
         }
+
+        $this->client->on('message', function ($message) {
+            $this->watchMessages($message);
+        });
+
+        $this->client->on('RegisterWatcher', function ($watcher) {
+            $this->watcherActors[] = $watcher;
+        });
 
         $this->settings();
         $this->logReadyState();
@@ -191,5 +207,14 @@ class Runner
     private function loadCommands()
     {
         return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch('./commands', '*.command.php');
+    }
+
+    private function watchMessages(Message $message)
+    {
+        foreach ($this->watcherActors as $actor) {
+            if ($actor->isPassRequirements($message)) {
+                $actor->run($message);
+            }
+        }
     }
 }

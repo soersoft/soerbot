@@ -36,6 +36,7 @@ class LeaderboardCommandTest extends TestCase
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
 
+        $this->users->expects($this->once())->method('sort')->will($this->returnValue($this->users));
         $this->users->expects($this->once())->method('getLeaderBoardAsString')->will($this->returnValue('string'));
         $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
 

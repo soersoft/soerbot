@@ -8,6 +8,15 @@ use SoerBot\Commands\PhpFact\Abstractions\StorageInterface;
 class PhpFacts
 {
     /**
+     * Minimum pattern length.
+     */
+    public const PATTERN_MIN_LENGTH = 3;
+    /**
+     * Maximum pattern length.
+     */
+    public const PATTERN_MAX_LENGTH = 32;
+
+    /**
      * @var array
      */
     private $facts = [];
@@ -16,14 +25,30 @@ class PhpFacts
      * PhpFact constructor.
      *
      * @param StorageInterface $storage
+     * @throws PhpFactException
      */
     public function __construct(StorageInterface $storage)
     {
-        $this->facts = $this->fetch($storage);
+        $this->facts = $this->load($storage);
 
         if (empty($this->facts)) {
-            throw new PhpFactException('Facts array was empty.');
+            throw new PhpFactException('Facts array is empty.');
         }
+    }
+
+    /**
+     * @param int $position
+     *
+     * @return bool|string
+     */
+    public function get(int $position)
+    {
+        $index = --$position;
+        if (array_key_exists($index, $this->facts)) {
+            return $this->facts[$index];
+        }
+
+        return false;
     }
 
     /**
@@ -39,12 +64,57 @@ class PhpFacts
     }
 
     /**
+     * Search PHP facts by pattern.
+     *
+     * @param string $pattern
+     * @throws PhpFactException
+     * @return array
+     */
+    public function search(string $pattern): array
+    {
+        $pattern = trim($pattern);
+        $length = mb_strlen($pattern);
+
+        if ($length === 0) {
+            throw new PhpFactException('Passed pattern is empty.');
+        }
+
+        if ($length < self::PATTERN_MIN_LENGTH) {
+            throw new PhpFactException('Passed pattern is less than minimum ' . self::PATTERN_MIN_LENGTH . ' chars.');
+        }
+
+        if ($length > self::PATTERN_MAX_LENGTH) {
+            throw new PhpFactException('Passed pattern is more than maximum ' . self::PATTERN_MAX_LENGTH . ' chars.');
+        }
+
+        $found = [];
+
+        foreach ($this->facts as $fact) {
+            if (preg_match('/\b' . $pattern . '\b/iSu', $fact)) {
+                $found[] = $fact;
+            }
+        }
+
+        return $found;
+    }
+
+    /**
+     * Return facts count.
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->facts);
+    }
+
+    /**
      * Fetch data from storage.
      *
      * @param StorageInterface $storage
      * @return array
      */
-    private function fetch(StorageInterface $storage): array
+    private function load(StorageInterface $storage): array
     {
         return $storage->get();
     }
