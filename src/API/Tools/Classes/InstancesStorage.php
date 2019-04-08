@@ -9,7 +9,7 @@ class InstancesStorage
     /**
      * list of instances
      */
-    protected $instances = array();
+    public $instances = array();
     /**
      * clear list of instances
      */

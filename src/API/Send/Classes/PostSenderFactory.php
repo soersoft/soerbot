@@ -9,7 +9,7 @@ namespace \API\Send;
 class PostSenderFactory implements IFactory
 {
     /**
-     * get all classes, implements
+     * get all classes, implements IPostSender
      * - API.Common.IFactory
      *  - scan()
      */
@@ -20,7 +20,7 @@ class PostSenderFactory implements IFactory
 
     /**
      * createIntances of all found casses implements IPostSender
-    * - API.Common.IFactory
+     * - API.Common.IFactory
      *  - createIntances()
      */
     public function createIntances(array $classes):array
