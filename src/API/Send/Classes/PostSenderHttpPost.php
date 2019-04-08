@@ -7,9 +7,11 @@ namespace \API\Send;
 /***
  * It's provide possibility to send IMail as 
  * - post reguest
+ * - interface IPostSender extends 
+ *  - ICreateInstance,
+ *  - ITest
  */
 class PostSenderHttpPost implements IPostSender
-// interface IPostSender extends ICreateInstance
 {
     /**
      * returns instance of this class
@@ -21,6 +23,21 @@ class PostSenderHttpPost implements IPostSender
     {
         return new PostSenderHttpPost();
     }
+    /**
+     * Test instance
+     * - test service possibility to work
+     *  - for now dummy, not enough knowledge
+     * - implements:
+     *  - API.Common.ITest
+     * 
+     * @return usefull or usless service
+     * - bool: true or false
+     */
+    public function test(): bool
+    {
+        return true; // dummy
+    }
+
     /**
      * to sends IMail as 
      * - post reguest
