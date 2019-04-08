@@ -40,6 +40,8 @@ class MailSenderFactory
         foreach($instancesMS as $instanceMS)
         {
             $my_fun = function ($arg){
+                if (!(count($arg)==1))
+                    throw new UnexpectedValueException();
                 $mail = $arg[0];
                 if (!($mail instanceof  \API\Mail\IMail))
                     throw new UnexpectedValueException();
