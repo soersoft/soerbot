@@ -29,7 +29,7 @@ class VotingCommand extends Command
         parent::__construct($client, [
             'name' => 'voting', // Give command name
             'aliases' => [],
-            'group' => 'utils', // Group in ['command', 'util']
+            'group' => 'games', // Group in ['command', 'util']
             'description' => 'Голосование:', // Fill the description
             'guildOnly' => false,
             'throttling' => [
@@ -39,24 +39,15 @@ class VotingCommand extends Command
             'guarded' => true,
             'args' => [ // If you need some variables you should either fill this section or remove it
                 [
-                    'key' => 'voting',
-                    'label' => 'voting',
-                    'prompt' => 'Введите название голосования:',
+                    'key' => 'question',
+                    'label' => 'question',
+                    'prompt' => 'Введите голосование в таком виде (question?|answer1|answer2 ...):',
                     'type' => 'string',
-                ],
-                [
-                    'key' => 'answer',
-                    'label' => 'answer',
-                    'prompt' => 'вариант ответа №1:',
-                    'type' => 'string',
-                ],
-                
+                ],                  
             ],
         ]);
 
         $this->store = new VotingStoreJSONFile();
-        $this->VotingActor = $this->createNewVotingActor($client);
-        $client->emit('RegisterVoting', $this->VotingActor);
     }
 
     /**
@@ -65,15 +56,25 @@ class VotingCommand extends Command
      * @param bool $fromPattern
      * @return Message|Message[]|ExtendedPromiseInterface|ExtendedPromiseInterface[]|void|null
      */
-    private function createNewVotingActor($client)
+    public function getMessage($message)
     {
-        return new VotingActor($client);
+        return $this->message->edit;
     }
-    public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
+    
+    
+     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $votingUser = $message->author->username;
-        $votingModel = $this->VotingActor->getUser();
-        $voting = $votingModel->getUserVotinh($votingUser);
-        return $message->reply("Ваше голосование: $voting");
-    }
+               $question = '***Вопрос:*** '.\PHP_EOL;  
+        $mess=":one:-за|:two:-против|:three:-подумаю";
+        $poll = explode("|", $mess); 
+         foreach ($poll as $value) {                  
+                   $question .= $value.\PHP_EOL;  
+         }
+        { 
+            return  $message->say($question) ; 
+        }
+    }     
+   
+
+   
 }

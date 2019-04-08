@@ -10,10 +10,10 @@ foreach ($parts as $key => $part) {
         $voting = trim($part);
     }
     if ($key % 2 == 1) {
-        $answer = trim($part);
+        $question = trim($part);
     }
     if ($key % 2 == 2) {
-        array_push($s, ['voting' => $voting, 'answer' => $answer]);
+        array_push($s, ['voting' => $voting, 'question' => $question]);
     }
 }
 

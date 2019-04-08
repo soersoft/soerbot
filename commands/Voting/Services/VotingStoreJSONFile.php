@@ -64,7 +64,7 @@ class VotingStoreJSONFile implements VotingStoreInterface
      */
     public function add(array $args)
     {
-        array_push($this->data, ['voting' => $args[0], 'answer' => $args[1]]);
+        array_push($this->data, ['voting' => $args[0]]);
 
         return true;
     }
