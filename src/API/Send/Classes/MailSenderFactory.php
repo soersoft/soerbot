@@ -6,10 +6,12 @@ use \API\Mail;
 
 namespace \API\Send;
 
-class MailSenderFactory
+class MailSenderFactory implements IFactory
 {
     /**
-     * 
+     * get all classes, implements IMailSender
+     * - API.Common.IFactory
+     *  - scan()
      */
     public function scan():array
     {
@@ -18,6 +20,8 @@ class MailSenderFactory
 
     /**
      * createIntances of all found casses implements IMailSender
+     * - API.Common.IFactory
+     *  - createIntances()
      */
     public function createIntances(array $classes):array
     {
@@ -35,9 +39,9 @@ class MailSenderFactory
      * Subscribe MailPicker.send(IMail) to event send(IMail)
      * for each instance
      */
-    public function subscribe(array $instancesMS)
+    public function subscribe(array $instances)
     {
-        foreach($instancesMS as $instanceMS)
+        foreach($instances as $instance)
         {
             $my_fun = function ($arg){
                 if (!(count($arg)==1))
@@ -47,7 +51,7 @@ class MailSenderFactory
                     throw new UnexpectedValueException();
                 MailPicker.send($mail);
             };
-            $instanceMS.onSendMessage($my_fun);
+            $instance.onSendMessage($my_fun);
         }
     }
 

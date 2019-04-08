@@ -6,11 +6,12 @@ use \API\Mail;
 
 namespace \API\Send;
 
-class PostSenderFactory
+class PostSenderFactory implements IFactory
 {
     /**
      * get all classes, implements
-     * - IPostSender
+     * - API.Common.IFactory
+     *  - scan()
      */
     public function scan():array
     {
@@ -19,6 +20,8 @@ class PostSenderFactory
 
     /**
      * createIntances of all found casses implements IPostSender
+    * - API.Common.IFactory
+     *  - createIntances()
      */
     public function createIntances(array $classes):array
     {
