@@ -52,7 +52,7 @@ class LeaderboardAddCommand extends Command
         $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
 
         $this->allowRoles = [
-          'product owner', 'куратор',
+          'product owner', 'куратор'
         ];
     }
 

@@ -59,9 +59,13 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $message->say(
-            $this->action($args) ? self::SUCCESS_MESSAGE : self::FAILURE_MESSAGE
-        );
+      try {
+        $this->users->removeRewardsByType($args['name']->username, $args['emoji']);
+      }
+      catch (\Exception $e) {
+        return $message->say(self::FAILURE_MESSAGE . $e);
+      }
+    return $message->say(self::SUCCESS_MESSAGE);
     }
 
     /**
@@ -70,7 +74,7 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
      */
     private function action(ArrayObject $args): bool
     {
-        return $this->validateArguments($args) && $this->removeRewards($args);
+        return $this->validateArguments($args);
     }
 
     /**
@@ -80,10 +84,5 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
     private function validateArguments(ArrayObject $args): bool
     {
         return isset($args['name']) && isset($args['emoji']);
-    }
-
-    private function removeRewards(ArrayObject $args): bool
-    {
-        return $this->users->removeRewardsByType($args['name']->username, $args['emoji']);
     }
 }
