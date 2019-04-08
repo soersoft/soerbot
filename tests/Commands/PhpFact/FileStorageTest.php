@@ -68,13 +68,15 @@ class FileStorageTest extends TestCase
         $this->assertNotEmpty($facts);
     }
 
-    public function testGetReturnExpected()
+    public function testGetReturnExpectedCount()
     {
         $file = __DIR__ . '/phpfacts.txt';
         $storage = new FileStorage($file);
         $facts = $storage->get();
 
+        $count = count(file(__DIR__ . '/phpfacts.txt'));
+
         $this->assertIsArray($facts);
-        $this->assertCount(5, $facts);
+        $this->assertCount($count, $facts);
     }
 }

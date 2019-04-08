@@ -16,7 +16,7 @@ class ListCommand extends AbstractCommandWithoutArguments
         return  'Input one of the command:' . PHP_EOL .
                 'fact - get random php fact' . PHP_EOL .
                 'fact [num] - get php fact by number' . PHP_EOL .
-                'fact [word|text] - find php fact by text' . PHP_EOL .
+                'search [word|text] - find php fact by text' . PHP_EOL .
                 'stat - get php facts statistics' . PHP_EOL .
                 'list - list all possible command';
     }

@@ -69,9 +69,9 @@ class FactCommandTest extends TestCase
         $this->assertEquals($content[4], $command->response());
     }
 
-    public function testResponseWithArgumentsWhenPositionIsSix()
+    public function testResponseWithArgumentsWhenPositionMoreThanCount()
     {
-        $position = 6;
+        $position = count(file(__DIR__ . '/../phpfacts.txt')) + 1;
         $command = new FactCommand($this->facts, ['argument' => $position]);
         $expected = 'The ' . $position . ' is wrong fact. Use $phpfact stat to find right position number.';
 
