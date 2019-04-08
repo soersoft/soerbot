@@ -8,19 +8,18 @@ namespace \API\Send;
  * supported interfaces:
  * - API.SendIMailSender
  *  - API.Common.ICreateInstance
- *  - API.Tools.IEventsHub
  */
 abstract class MailSender implements IMailSender
 {
     /**
      * 
-     * events support
+     * event support
      *  - DRY: for 
-     *    - implements API.Tools.IEventsHub 
-     *    - using API.Tools.EventsHub
-     * @var EventsHub
+     *    - using API.Tools.Event
+     * @var sendMessageEvent
      */
-    private $_eventsHub;
+    private $_eventSendMessage;
+
     /**
      * IMailAddress for create message
      * @var IMailAddress;
@@ -29,34 +28,43 @@ abstract class MailSender implements IMailSender
 
     public function __construct()
     {
-      $this->_eventsHub = new EventsHub();
-    }
-
-    /**
-     * implements:
-     * - API.Send.IEventsHub
-     */
-    function eventsHubAddEventHandler(string $eventName, Closure $eventHandler):void
-    {
-        $this->_eventsHub->eventsHubAddEventHandler($eventName, $eventHandler);
+      $this->_eventSendMessage = new ApiEvent();
     }
     /**
-     * implements:
-     * - API.Send.IEventsHub
-     */
-    function eventsHubLaunchEvent(string $eventName, array $arg = null):void
-    {
-        $this->_eventsHub->eventsHubLaunchEvent($eventName, $arg);
-    }
-
-    /**
-     * implements:
-     * - API.Common.ICreateInstance
+     * return instance of this class
+     * - implements:
+     *  - API.Common.ICreateInstance
      * @return instance of this class
      */
     public static function CreateInstance(): object
     {
         return new MailSender();
+    }
+
+    /**
+     * Subscribe event handler to event sendMessage
+     * - implements:
+     *  - API.Send.IMailSender
+     * 
+     *@param $feventHandler function are react to event, handle event
+     *  - instance of Closure https://www.php.net/closure
+     * 
+     * @throws UnexpectedValueException
+     */
+    function onSendMessage(Closure $eventHandler):void
+    {
+        if (!($function instanceof Closure))
+            throw new UnexpectedValueException();
+
+        $this->_eventSendMessage->eventAddHandler($eventHandler);
+    }
+    /**
+     * implements:
+     * - API.Send.IMailSender
+     */
+    public function sendMessage(IMail $mail):void
+    {
+        $this->_eventSendMessage->eventLaunch([$mail]);
     }
 
     /**
@@ -75,12 +83,5 @@ abstract class MailSender implements IMailSender
      */
     public abstract function createMessage():IMail;
 
-    /**
-     * implements:
-     * - API.Send.IMailSender
-     */
-    public function sendMessage(IMail $mail):void
-    {
-        $this->eventsHubLaunchEvent("send",["IMail"=>$mail]);
-    }
+
 }

@@ -1,7 +1,10 @@
 <?php  
 namespace \API\Tools;
 
-class Event implements IEvent
+/**
+ * implements \API\Tools\IEvent
+ */
+class ApiEvent implements IEvent
 {
     // IEvent
     /**
@@ -19,7 +22,7 @@ class Event implements IEvent
      */
     public function eventAddHandler(Closure $function):void
     {
-        if (!\is_callable($function) && !($function instanceof Closure))
+        if (!($function instanceof Closure))
           throw new UnexpectedValueException();
 
         // add value to array

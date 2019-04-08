@@ -7,6 +7,9 @@ class ClassFinder implements IClassFinder
      * finder all registred classes are implemens interfaceName
      * thans to
      * - https://stackoverflow.com/questions/3993759/php-how-to-get-a-list-of-classes-that-implement-certain-interface
+     * needs check for abstract class:
+     * - https://www.php.net/manual/en/reflectionclass.isabstract.php
+     * 
      * @property $interfaceName 
      * - name of looking interface\class (IClassFinder::class)
      * @return List<Type>
@@ -20,5 +23,6 @@ class ClassFinder implements IClassFinder
                 return in_array( $interfaceName, class_implements( $className ) );
             }
         );
+
     }
 }
