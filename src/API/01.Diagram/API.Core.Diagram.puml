@@ -158,7 +158,7 @@ package Core
     namespace API.Send #DDDDDD {
         ' hide members
 
-        interface IMailSender
+        interface IMailSender #PaleGreen-Green
         {
             + void setAddress(IAddress)
             + IMail createMessage()
@@ -167,7 +167,7 @@ package Core
             + void onSendMessage(Closure $eventHandler)
         }
                 
-        class MailSenderFactory << (F,#FF7700) Factory >>
+        class MailSenderFactory << (F,#FF7700) Factory >> #PaleGreen-Green
         {
             + List<IMailSenderClass> scan()
             + List<IMailSenderInstance> createIntances(List<IMailSenderClass>)
@@ -181,7 +181,7 @@ package Core
                 (IMailSender)res.send+=MailPicker.send
             }
         end note
-        class MailSenderStorage << (S,#FF7700) Singleton(static) >>
+        class MailSenderStorage << (S,#FF7700) Singleton(static) >> #PaleGreen-Green
         {
             -static List<IMailSenderInstance> instancesOfIMailSender
             +static void clear()
@@ -196,11 +196,11 @@ package Core
 
             + void send(IMail)
         }
-        interface IPostSender
+        interface IPostSender #PaleGreen-Green
         {
             + void send(IMail)
         }
-        
+
         class PostSenderFactory << (F,#FF7700) Factory >>
         {
             innernn
