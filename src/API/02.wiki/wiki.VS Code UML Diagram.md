@@ -11,7 +11,7 @@ Create file with .puml extension, for show diagram pres Alt+D
   * Use class diagram: http://plantuml.com/ru/class-diagram
   * Full : http://plantuml.com/ru/guide
 
-PlantUML Server
+PlantUML Server RENDER
 * http://www.plantuml.com/plantuml
   * http://plantuml.com/ru/faq
 
