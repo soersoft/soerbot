@@ -1,6 +1,6 @@
 <?php  
 namespace \API\Mail;
 
-interface IMessage extends IHeader, IContext
+interface IMessage extends IHeader, IContent
 {
 }
