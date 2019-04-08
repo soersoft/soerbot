@@ -8,28 +8,33 @@ namespace \API\Send;
 class MailSenderStorage
 {
     /**
-     * 
+     * instance of InstancesStorage
      */
-    private static $instancesOfIMailSender = array();
-    /**
-     * clear list of IMailSender instances
-     */
-    public static function clear()
+    private static $_instancesStorage = null;
+
+
+    private function __clone () {}
+    private function __wakeup () {}
+    private function __construct () {}
+
+    public static function getInstancesStorage(): InstancesStorage
     {
-        self::$instancesOfIMailSender = array();
-        gc_collect_cycles(); // GC Should kill old ones
+        if (self::$_instancesStorage == null)
+            self::$_instancesStorage = new InstancesStorage();
+
+        return self::$_instancesStorage;
     }
+
     /**
      * refresh list of IMailSender instances
-     * - NOT COMPLETED NEEDS:
-     *  - MailPicker.send(IMail)
      */
     public static function refresh()
     {
+        $instancesStorage = getInstancesStorage();
+
         $factory = new \API\Send\MailSenderFactory();
-        
-        $classes = $factory->scan();
-        self::$instancesOfIMailSender = $factory->createIntances($classes);
-        $factory->Subscribe(self::$instancesOfIMailSender);
+        $instancesStorage->refreshInstances($factory);
+
+        $factory->Subscribe($instancesStorage->instances);
     }
 }

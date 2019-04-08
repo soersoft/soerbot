@@ -4,36 +4,37 @@ use \API\Common;
 use \API\Tools;
 
 namespace \API\Send;
-/**
- * supported interfaces:
- * - API.SendIMailSender
- *  - API.Common.ICreateInstance
- */
+
 class PostSenderStorage
 {
     /**
-     * 
+     * instance of InstancesStorage
      */
-    private static $instancesOfIPostSender = array();
-    /**
-     * clear list of IPostSender instances
-     */
-    public static function clearPostSenders()
+    private static $_instancesStorage = null;
+
+
+    private function __clone () {}
+    private function __wakeup () {}
+    private function __construct () {}
+
+    public static function getInstancesStorage(): InstancesStorage
     {
-        self::$instancesOfIPostSender = array();
-        gc_collect_cycles(); // GC Should kill old ones
+        if (self::$_instancesStorage == null)
+            self::$_instancesStorage = new InstancesStorage();
+
+        return self::$_instancesStorage;
     }
+
     /**
-     * refresh list of IMailSender instances
-     * - NOT COMPLETED NEEDS:
-     *  - MailPicker.send(IMail)
+     * refresh list of IPostSender instances
      */
-    public static function refreshPostSenders()
+    public static function refresh()
     {
+        $instancesStorage = getInstancesStorage();
+
         $factory = new \API\Send\PostSenderFactory();
-        
-        $classes = $factory->scan();
-        self::$instancesOfIPostSender = $factory->createIntances($classes);
-        $factory->Subscribe(self::$instancesOfIPostSender);
+        $instancesStorage->refreshInstances($factory);
+
+        $instancesStorage->instances = $factory->test($instancesStorage->instances);
     }
 }
