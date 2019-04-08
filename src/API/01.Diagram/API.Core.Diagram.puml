@@ -50,7 +50,7 @@ package Support {
     }
 
     namespace API.Tools #DDDDDD {
-        hide members
+        ' hide members
 
         interface IClassFinder #yellow-PaleGreen
         {
@@ -109,8 +109,12 @@ package Support {
 
 package Core 
 {
+    ' hide members
+
     ' hide API.Mail
     namespace API.Mail #DDDDDD {
+        ' hide members
+
         IMailAddress "2" *-- IMail
         IMessage "1" *-- IMail
 
@@ -152,6 +156,8 @@ package Core
     }
 
     namespace API.Send #DDDDDD {
+        ' hide members
+
         interface IMailSender
         {
             + void setAddress(IAddress)
@@ -183,7 +189,7 @@ package Core
         }
         MailSenderStorage --o MailSenderFactory
 
-        class MailPicker << (S,#FF7700) Singleton >>
+        class MailPicker << (S,#FF7700) Singleton (static) >>
         {
             - List<IPostSender> sendes
             + void refreshSenders()
@@ -222,6 +228,8 @@ package Core
 
     ' hide API.Receive
     namespace API.Receive #DDDDDD {
+        ' hide members
+
         interface IMailReceiver
         {
             + void handleMessage(IMail)
