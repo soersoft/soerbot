@@ -59,6 +59,18 @@ class ConfiguratorTest extends TestCase
     }
 
     /**
+     * Get default value for not empty key from configs.
+     */
+    public function testGetEmptyKey()
+    {
+        $pathToStubConfig = realpath(__DIR__ . '/Fixtures/config.stub.yaml');
+        Configurator::setConfigPath($pathToStubConfig);
+
+        $this->assertNull(Configurator::get(''));
+        $this->assertEquals('default', Configurator::get('', 'default'));
+    }
+
+    /**
      * Test nested keys.
      */
     public function testGetNestedKeys()
@@ -66,6 +78,29 @@ class ConfiguratorTest extends TestCase
         $pathToStubConfig = realpath(__DIR__ . '/Fixtures/config.stub.yaml');
         Configurator::setConfigPath($pathToStubConfig);
         $this->assertArrayHasKey('branch', Configurator::get('ci'));
+    }
+
+    /**
+     * Test nested keys access via dot notation.
+     */
+    public function testDotNotationGetRightValue()
+    {
+        $pathToStubConfig = realpath(__DIR__ . '/Fixtures/config.stub.yaml');
+        Configurator::setConfigPath($pathToStubConfig);
+
+        $this->assertEquals('develop', Configurator::get('ci.branch'));
+    }
+
+    /**
+     * Test non exist nested key access via dot notation.
+     */
+    public function testDotNotationGetNonExistsValue()
+    {
+        $pathToStubConfig = realpath(__DIR__ . '/Fixtures/config.stub.yaml');
+        Configurator::setConfigPath($pathToStubConfig);
+
+        $this->assertNull(Configurator::get('ci.baz'));
+        $this->assertEquals('default', Configurator::get('ci.baz', 'default'));
     }
 
     /**
