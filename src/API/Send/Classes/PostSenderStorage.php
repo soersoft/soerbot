@@ -1,9 +1,9 @@
 <?php
 
-use SoerBot\API\Common;
-use SoerBot\API\Tools;
+use \API\Common;
+use \API\Tools;
 
-namespace SoerBot\API\Send;
+namespace \API\Send;
 
 class PostSenderStorage
 {
@@ -32,7 +32,7 @@ class PostSenderStorage
     {
         $instancesStorage = getInstancesStorage();
 
-        $factory = new SoerBot\API\Send\PostSenderFactory();
+        $factory = new \API\Send\PostSenderFactory();
         $instancesStorage->refreshInstances($factory);
 
         $instancesStorage->instances = $factory->test($instancesStorage->instances);

@@ -1,17 +1,17 @@
 <?php
 
-use SoerBot\API\Common;
-use SoerBot\API\Tools;
+use \API\Common;
+use \API\Tools;
 
-namespace SoerBot\API\Send;
+namespace \API\Send;
 /***
  * It's provide possibility to send IMail as 
- * - post reguest
+ * - get reguest
  * - interface IPostSender extends 
  *  - ICreateInstance,
  *  - ITest
  */
-class PostSenderHttpPost implements IPostSender
+class PostSenderHttpGet implements IPostSender
 {
     /**
      * returns instance of this class
@@ -21,7 +21,7 @@ class PostSenderHttpPost implements IPostSender
      */
     public static function CreateInstance(): object
     {
-        return new PostSenderHttpPost();
+        return new PostSenderHttpGet();
     }
     /**
      * Test instance
@@ -40,14 +40,14 @@ class PostSenderHttpPost implements IPostSender
 
     /**
      * to sends IMail as 
-     * - post reguest
+     * - get reguest
      *  - probably needs more deep pasrce adderess
      * - implements:
      *  - API.Send.IPostSender
      * - see:
-     *  - http://thisinterestsme.com/sending-json-via-post-php/
+     *  - http://docs.php.net/manual/da/function.http-get.php
      * 
-     *@param $mail this is needs to send
+     * @param $mail this is needs to send
      *  - instance IMail
      * 
      * @throws UnexpectedValueException
@@ -64,22 +64,8 @@ class PostSenderHttpPost implements IPostSender
         $messageHeader = $mail->getMessage()->getHeader();
         $messageContent = $mail->getMessage()->getContent();
         
-        $url = "{$addressReciever}\\{$addresseeReciever}\\{$addressSender}\\{$addresseeSender}\\{$messageHeader}";
-        
-        //Initiate cURL.
-        $ch = curl_init($url);
-        
-        //Tell cURL that we want to send a POST request.
-        curl_setopt($ch, CURLOPT_POST, 1);
-        
-        //Attach our encoded JSON string to the POST fields.
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $messageContent);
-        
-        //Set the content type to application/json
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
-        
-        //Execute the request
-        $result = curl_exec($ch);
+        $url = "{$addressReciever}\\{$addresseeReciever}\\{$addressSender}\\{$addresseeSender}\\{$messageHeader}\\{$messageContent}";
+        $res = http_get($url);
     }
 
 }

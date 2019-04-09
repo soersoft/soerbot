@@ -1,9 +1,9 @@
 <?php
 
-use SoerBot\API\Common;
-use SoerBot\API\Tools;
+use \API\Common;
+use \API\Tools;
 
-namespace SoerBot\API\Send;
+namespace \API\Send;
 
 interface IMailSender extends ICreateInstance
 {
