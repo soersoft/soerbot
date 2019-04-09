@@ -1,11 +1,15 @@
 <?php
 
-use \API\Send;
-use \API\Receive;
-// use \API\Common;
-// use \API\Tools;
+namespace API;
 
-namespace \API;
+spl_autoload_register(function ($class_name) {
+    include "{$class_name}.php";
+});
+
+use API\Send\{MailSenderStorage, PostSenderStorage};
+// use API\Receive;
+// use API\Common;
+// use API\Tools;
 
 class Launcher
 {
@@ -75,7 +79,7 @@ class Launcher
     {
         $instancesStorage = getInstancesStorage();
 
-        $factory = new \API\Send\MailSenderFactory();
+        $factory = new API\Send\MailSenderFactory();
         $instancesStorage->refreshInstances($factory);
 
         $factory->Subscribe($instancesStorage->instances);
