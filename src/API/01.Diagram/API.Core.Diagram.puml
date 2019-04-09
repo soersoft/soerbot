@@ -296,6 +296,13 @@ package Core
     }
     class Incoming << (↑,#FF7700) Stream >>
     API.Receive.IPostReceiver--* Incoming
+
+    class Launcher << (S,#FF7700) Singleton(static) >> #PaleGreen-yellow
+    {
+        ~ LoopInterface loop
+        ~ Livia.Client client
+        + static void start(LoopInterface aLoop, Livia.Client aClient)
+    }
 }
 
 
