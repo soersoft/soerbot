@@ -10,12 +10,35 @@ class MailSenderFactory implements IFactory
 {
     /**
      * get all classes, implements IMailSender
+     * - except all classes inherits from MailSenderNot4Factory
+     *  - https://stackoverflow.com/questions/369602/php-delete-an-element-from-an-array?rq=1
      * - API.Common.IFactory
      *  - scan()
      */
     public function scan():array
     {
-        return \API\Tools\ClassFinder.findClasses(IMailSender::class);
+        $classes = \API\Tools\ClassFinder.findClasses(IMailSender::class);
+
+        //delete all classes inherits from MailSenderNot4Factory
+        $classesNot4Factory = array();
+        foreach($classes as $class)
+            if ($class instanceof MailSenderNot4Factory)
+                $classesNot4Factory[] = $class;
+        \array_diff($classes, $classesNot4Factory);
+
+        // WTF? \unset($classes[i]);
+        // $i = 0;
+        // while ($i < count($classes))
+        // {
+        //     if ($classes[i] instanceof MailSenderNot4Factory)
+        //     {
+        //         \unset($classes[1]);
+        //         continue;
+        //     }
+        //     i++;
+        // }
+
+        return $classes;
     }
 
     /**
