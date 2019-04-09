@@ -9,7 +9,7 @@ namespace \API\Send;
  * - API.SendIMailSender
  *  - API.Common.ICreateInstance
  */
-abstract class MailSender implements IMailSender
+abstract class AMailSender implements IMailSender
 {
     /**
      * 
