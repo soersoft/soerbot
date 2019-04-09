@@ -17,12 +17,26 @@ class ClassFinder implements IClassFinder
      */
     public static function findClasses(string $interfaceName)
     {
-        return array_filter(
+        $classes = array_filter(
             get_declared_classes(),
             function( $className ) use ( $interfaceName ) {
                 return in_array( $interfaceName, class_implements( $className ) );
             }
         );
 
+        // Check for abstract class
+        // https://www.php.net/manual/en/reflectionclass.isabstract.php
+        // https://stackoverflow.com/questions/7131295/dynamic-class-names-in-php
+        $classesAbstract = array();
+        foreach($classes as $class)
+        {
+            $className = get_class($class);
+            $testClass = new ReflectionClass($ClassName);
+            if ($testClass->isAbstract())
+                $classesAbstract[] = $class;
+        }
+        \array_diff($classes, $classesNot4Factory);
+
+        return $classes;
     }
 }
