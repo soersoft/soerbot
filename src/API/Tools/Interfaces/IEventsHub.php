@@ -1,5 +1,5 @@
 <?php  
-namespace \API\Tools;
+namespace API\Tools;
 
 interface IEventsHub
 {

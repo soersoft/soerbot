@@ -1,11 +1,11 @@
 <?php
 
-use \API\Common;
-use \API\Tools;
+use API\Common;
+use API\Tools;
 
-namespace \API\Send;
+namespace API\Send;
 
-class MailSenderStorage
+class PostSenderStorage
 {
     /**
      * instance of InstancesStorage
@@ -26,15 +26,15 @@ class MailSenderStorage
     }
 
     /**
-     * refresh list of IMailSender instances
+     * refresh list of IPostSender instances
      */
     public static function refresh()
     {
         $instancesStorage = getInstancesStorage();
 
-        $factory = new \API\Send\MailSenderFactory();
+        $factory = new API\Send\PostSenderFactory();
         $instancesStorage->refreshInstances($factory);
 
-        $factory->Subscribe($instancesStorage->instances);
+        $instancesStorage->instances = $factory->test($instancesStorage->instances);
     }
 }

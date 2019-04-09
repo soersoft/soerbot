@@ -1,9 +1,9 @@
 <?php
 
-use \API\Common;
-use \API\Tools;
+use API\Common;
+use API\Tools;
 
-namespace \API\Send;
+namespace API\Send;
 /**
  * supported interfaces:
  * - API.SendIMailSender

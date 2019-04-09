@@ -1,5 +1,5 @@
 <?php  
-namespace \API\Mail;
+namespace API\Mail;
 
 interface IMailAddress extends IAddress, IAddressee
 { 

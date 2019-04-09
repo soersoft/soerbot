@@ -1,8 +1,8 @@
 <?php
 
-use \API\Common;
+use API\Common;
 
-namespace \API\Tools;
+namespace API\Tools;
 
 class InstancesStorage
 {

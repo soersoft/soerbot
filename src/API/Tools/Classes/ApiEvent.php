@@ -1,8 +1,8 @@
 <?php  
-namespace \API\Tools;
+namespace API\Tools;
 
 /**
- * implements \API\Tools\IEvent
+ * implements API\Tools\IEvent
  */
 class ApiEvent implements IEvent
 {

@@ -1,10 +1,10 @@
 <?php
 
-use \API\Common;
-use \API\Tools;
-use \API\Mail;
+namespace API\Send;
 
-namespace \API\Send;
+use API\Common;
+use API\Tools;
+use API\Mail;
 
 class PostSenderFactory implements IFactory
 {
@@ -15,7 +15,7 @@ class PostSenderFactory implements IFactory
      */
     public function scan():array
     {
-        return \API\Tools\ClassFinder.findClasses(IPostSender::class);
+        return API\Tools\ClassFinder.findClasses(IPostSender::class);
     }
 
     /**
@@ -44,7 +44,7 @@ class PostSenderFactory implements IFactory
         $res = array();
         foreach($instances as $instance)
         {
-            if (!($instance instanceof \API\Common\ITest))
+            if (!($instance instanceof API\Common\ITest))
                 continue;
             if (!($instance->test()))
                 continue;

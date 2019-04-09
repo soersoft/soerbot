@@ -1,5 +1,5 @@
 <?php  
-namespace \API\Tools;
+namespace API\Tools;
 
 class ClassFinder implements IClassFinder
 {
