@@ -1,11 +1,11 @@
 <?php
 
-use \API\Send;
-use \API\Receive;
-// use \API\Common;
-// use \API\Tools;
+use SoerBot\API\Send\{MailSenderStorage,PostSenderStorage};
+use SoerBot\API\Receive;
+// use SoerBot\API\Common;
+// use SoerBot\API\Tools;
 
-namespace \API;
+namespace SoerBot\API;
 
 class Launcher
 {

@@ -1,9 +1,9 @@
 <?php
 
-use \API\Common;
-use \API\Tools;
+use SoerBot\API\Common;
+use SoerBot\API\Tools;
 
-namespace \API\Send;
+namespace SoerBot\API\Send;
 /**
  * supported interfaces:
  * - API.SendIMailSender

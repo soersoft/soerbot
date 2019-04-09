@@ -1,10 +1,10 @@
 <?php
 
-use \API\Common;
-use \API\Tools;
-use \API\Mail;
+use SoerBot\API\Common;
+use SoerBot\API\Tools;
+use SoerBot\API\Mail;
 
-namespace \API\Send;
+namespace SoerBot\API\Send;
 
 class MailSenderFactory implements IFactory
 {
@@ -17,7 +17,7 @@ class MailSenderFactory implements IFactory
      */
     public function scan():array
     {
-        $classes = \API\Tools\ClassFinder.findClasses(IMailSender::class);
+        $classes = SoerBot\API\Tools\ClassFinder.findClasses(IMailSender::class);
 
         //delete all classes inherits from MailSenderNot4Factory
         $classesNot4Factory = array();
@@ -70,7 +70,7 @@ class MailSenderFactory implements IFactory
                 if (!(count($arg)==1))
                     throw new UnexpectedValueException();
                 $mail = $arg[0];
-                if (!($mail instanceof  \API\Mail\IMail))
+                if (!($mail instanceof  SoerBot\API\Mail\IMail))
                     throw new UnexpectedValueException();
                 MailPicker.send($mail);
             };
