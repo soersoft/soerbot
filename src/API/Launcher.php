@@ -25,6 +25,30 @@ class Launcher
     private function __construct () {}
 
     /**
+     * Getters implements, thanks to:
+     * - https://ttmm.io/tech/php-read-attributes/
+     * 
+     * Magic getter for our object.
+     *
+     * @param string $field
+     * @throws UnexpectedValueException Throws an exception if the field is invalid.
+     * @return mixed
+     */
+    public function __get(string $field ) 
+    {
+        switch( $field ) 
+        {
+            case 'loop':
+                return self::$loop;
+            case 'client':
+                return self::$client;
+            default:
+                $class = __CLASS__;
+                throw new UnexpectedValueException( "Invalid property: {$class}->{$field}");
+        }
+    }
+
+    /**
      * starts API.Core
      * - needs:
      *  - $aLoop - application's work loop
@@ -40,7 +64,8 @@ class Launcher
         self::$loop = $aLoop;
         self::$client = $aClient;
 
-        
+        MailSenderStorage::refresh();
+        PostSenderStorage::refresh();
     }
 
     /**
