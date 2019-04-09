@@ -1,8 +1,8 @@
 <?php
 
-use API\Common;
-
 namespace API\Tools;
+
+use API\Common\{IFactory};
 
 class InstancesStorage
 {

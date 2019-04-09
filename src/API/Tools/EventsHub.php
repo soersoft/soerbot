@@ -1,6 +1,6 @@
 <?php  
-namespace API\Tools;
 
+namespace API\Tools;
 
 /**
  * thanks to https://klisl.com/events_php.html
