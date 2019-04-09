@@ -32,7 +32,7 @@ class Launcher
      * @param $aLoop - application's work loop, not started yet
      *  - instance of React\EventLoop\LoopInterface
      * 
-     * @param $aClient - Livia dicord bot client
+     * @param $aClient - dicord bot client of Livia framework
      *  - instance of CharlotteDunois\Livia\Client
      * */
     public static function start($aLoop, $aClient): void
@@ -40,7 +40,7 @@ class Launcher
         self::$loop = $aLoop;
         self::$client = $aClient;
 
-
+        
     }
 
     /**

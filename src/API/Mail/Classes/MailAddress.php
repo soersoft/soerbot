@@ -5,7 +5,7 @@ class MailAddress implements IMailAddress
 {
   // IAddress
   private $Address = "";
-  public function getAddress($Address):string
+  public function getAddress():string
     { return $this->Address;}
   public function setAddress(string $Address)
   {
