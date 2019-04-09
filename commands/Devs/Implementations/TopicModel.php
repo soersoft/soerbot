@@ -18,10 +18,13 @@ class TopicModel
     /**
      * TopicModel constructor.
      * @param string $topic
+     * @param string $directory
      * @throws TopicException
+     * @throws TopicExceptionFileNotFound
      */
-    public function __construct(string $topic)
+    public function __construct(string $topic, string $directory = '')
     {
+        $this->directory = $this->validate($directory);
         $this->content = $this->load($topic);
     }
 
@@ -34,7 +37,30 @@ class TopicModel
     }
 
     /**
+     * Check and set directory variable.
+     *
+     * @param string $directory
+     * @throws TopicExceptionFileNotFound
+     * @return string
+     */
+    protected function validate(string $directory): string
+    {
+        if (!empty($directory)) {
+            if (!is_dir($directory)) {
+                throw new TopicExceptionFileNotFound('Directory ' . $directory . ' does not exists. Check directory source.');
+            }
+
+            return $directory;
+        }
+
+        return $this->directory;
+    }
+
+    /**
+     * Load Topic from file.
+     *
      * @param string $topic
+     * @param string $directory
      * @throws TopicException
      * @throws TopicExceptionFileNotFound
      * @return string
