@@ -10,9 +10,9 @@ use SoerBot\Commands\Voting\Services\VotingStoreJSONFile;
 
 class VotingCommand extends Command
 {
-    const SUCCESS_MESSAGE = 'Голосование добавлено';
+   // const SUCCESS_MESSAGE = 'Голосование добавлено';
 
-    const FAILURE_MESSAGE = 'Не удалось добавить голосование';
+    //const FAILURE_MESSAGE = 'Не удалось добавить голосование';
 
     /**
      * @var VotingStoreJSONFile
@@ -29,7 +29,7 @@ class VotingCommand extends Command
         parent::__construct($client, [
             'name' => 'voting', // Give command name
             'aliases' => [],
-            'group' => 'games', // Group in ['command', 'util']
+            'group' => 'utils', // Group in ['command', 'util']
             'description' => 'Голосование:', // Fill the description
             'guildOnly' => false,
             'throttling' => [
@@ -41,7 +41,7 @@ class VotingCommand extends Command
                 [
                     'key' => 'question',
                     'label' => 'question',
-                    'prompt' => 'Введите голосование в таком виде (question?|answer1|answer2 ...):',
+                    'prompt' => 'Введите голосование в таком виде ($voting № question?|answer1|answer2 ...):',
                     'type' => 'string',
                 ],                  
             ],
@@ -56,25 +56,15 @@ class VotingCommand extends Command
      * @param bool $fromPattern
      * @return Message|Message[]|ExtendedPromiseInterface|ExtendedPromiseInterface[]|void|null
      */
-    public function getMessage($message)
+    public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        return $this->message->edit;
-    }
-    
-    
-     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
-    {
-               $question = '***Вопрос:*** '.\PHP_EOL;  
-        $mess=":one:-за|:two:-против|:three:-подумаю";
-        $poll = explode("|", $mess); 
-         foreach ($poll as $value) {                  
-                   $question .= $value.\PHP_EOL;  
-         }
+       // $question = '***Вопрос:***'.\PHP_EOL;  
+                $poll = explode("|", $message->message); 
+                foreach ($poll as $value) {                  
+                $answer .=$value.\PHP_EOL;  
+                }
         { 
-            return  $message->say($question) ; 
+            return  $message->say("***".$answer."***") ; 
         }
-    }     
-   
-
-   
+    }        
 }
