@@ -166,6 +166,34 @@ class UserModel implements UserModelInterface
     }
 
     /**
+     * Remove user from store.
+     *
+     * @param string $username
+     * @return bool
+     */
+    public function remove(string $username): bool
+    {
+        $this->store->remove($username);
+
+        return $this->store->save();
+    }
+
+    /**
+     * Check if user exists.
+     *
+     * @param string $username
+     * @return bool
+     */
+    public function hasUser(string $username): bool
+    {
+        if ($this->store->get($username)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns user instance for chosen username.
      *
      * @param $username
