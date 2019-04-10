@@ -2,9 +2,8 @@
 
 namespace API\Send;
 
-use API\Common;
-use API\Tools;
-use API\Mail;
+use API\Common\{ICreateInstance};
+use API\Mail\{IMail};
 
 class MailSenderFactory implements IFactory
 {
@@ -70,7 +69,7 @@ class MailSenderFactory implements IFactory
                 if (!(count($arg)==1))
                     throw new UnexpectedValueException();
                 $mail = $arg[0];
-                if (!($mail instanceof  API\Mail\IMail))
+                if (!($mail instanceof  IMail))
                     throw new UnexpectedValueException();
                 MailPicker.send($mail);
             };
