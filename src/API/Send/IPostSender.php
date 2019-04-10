@@ -2,8 +2,7 @@
 
 namespace API\Send;
 
-use API\Common;
-use API\Tools;
+use API\Common\{ICreateInstance, ITest};
 
 interface IPostSender extends ICreateInstance, ITest
 {
