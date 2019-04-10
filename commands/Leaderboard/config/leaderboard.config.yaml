@@ -1,4 +1,5 @@
-# Leaderboard command settings
+# $leaderboard command settings
 
+name: 'leaderboard'
 description: 'Выводит таблицу участников и набранные очки'
 storeJSONFile: '/../Store/leaderboard.json'
