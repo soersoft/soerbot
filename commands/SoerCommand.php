@@ -3,15 +3,29 @@
 namespace SoerBot\Commands;
 
 use SoerBot\Configurator;
+use CharlotteDunois\Livia\LiviaClient;
+use CharlotteDunois\Livia\Commands\Command;
 
-abstract class SoerCommand extends \CharlotteDunois\Livia\Commands\Command
+abstract class SoerCommand extends Command
 {
-    protected $commandName = '';
+    protected $configName = '';
 
-    public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
+    public function __construct(LiviaClient $client)
     {
-        $this->commandName = $this->makeCommandName(static::class);
-        $this->loadConfig($this->makeConfigName(static::class));
+        $this->configName = $this->makeConfigName();
+
+        if (empty($this->configName)) {
+            throw new \Exception('Command name not found in the class name.');
+        }
+
+        $pathToConfig = $this->makePathToConfig();
+
+        if (empty($pathToConfig) || !file_exists($pathToConfig)) {
+            throw new \Exception("Wrong path or the config file doesn't exist");
+        }
+
+        $this->loadConfig($pathToConfig);
+
         parent::__construct($client, $this->makeParamsForCommand());
     }
 
@@ -21,29 +35,29 @@ abstract class SoerCommand extends \CharlotteDunois\Livia\Commands\Command
             return $this->$name;
         }
 
-        if (array_key_exists($name, $config = Configurator::get($this->commandName))) {
+        if (array_key_exists($name, $config = Configurator::get($this->configName))) {
             return $config[$name];
         }
 
         throw new \RuntimeException('Unknown property ' . \get_class($this) . '::$' . $name);
     }
 
-    protected function loadConfig($configName)
-    {
-        Configurator::merge($configName, $this->commandName);
-    }
-
     protected function makeParamsForCommand()
     {
-        if (is_null($this->commandName) || is_null($this->getCommandOption('description'))) {
-            throw new \InvalidArgumentException('Please set up right values for config file and command description');
+        if (is_null($name = $this->getCommandOption('name'))) {
+            throw new \InvalidArgumentException('You have to set up name for the command in the configuration file');
+        }
+
+        if (is_null($description = $this->getCommandOption('description'))) {
+            throw new \InvalidArgumentException("You have to set up description for the command in \
+            the configuration file");
         }
 
         return [
-          'name' => $this->commandName,
-          'aliases' => $this->getCommandOption('aliases', ['']),
+          'name' => $name,
+          'description' => $description,
           'group' => $this->getCommandOption('group', 'utils'),
-          'description' => $this->getCommandOption('description'),
+          'aliases' => $this->getCommandOption('aliases', ['']),
           'guildOnly' => $this->getCommandOption('guildOnly', false),
           'throttling' => [
             'usages' => 5,
@@ -56,20 +70,25 @@ abstract class SoerCommand extends \CharlotteDunois\Livia\Commands\Command
 
     protected function getCommandOption($optionName, $default = null)
     {
-        return Configurator::get($this->commandName . '.' . $optionName, $default);
+        return Configurator::get($this->configName . '.' . $optionName, $default);
     }
 
-    protected function makeCommandName($classname)
+    protected function loadConfig($path)
     {
-        preg_match('/(\w+)Command/i', strtolower($classname), $m);
+        Configurator::merge($path, $this->configName);
+    }
+
+    protected function makeConfigName()
+    {
+        preg_match('/(\w+)Command/i', strtolower(static::class), $m);
 
         return $m[1] ?? null;
     }
 
-    protected function makeConfigName($classname)
+    protected function makePathToConfig()
     {
-        preg_match('/Commands\\\(\w+)/i', $classname, $m);
+        preg_match('/Commands\\\(\w+)/i', static::class, $m);
 
-        return $m[1] ? __DIR__ . '/' . $m[1] . '/config/' . $this->commandName . '.config.yaml' : null;
+        return $m[1] ? __DIR__ . '/' . $m[1] . '/config/' . $this->configName . '.config.yaml' : null;
     }
 }
