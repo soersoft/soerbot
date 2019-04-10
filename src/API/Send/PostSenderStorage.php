@@ -1,7 +1,6 @@
 <?php
 
-use API\Common;
-use API\Tools;
+use API\Tools\{InstancesStorage};
 
 namespace API\Send;
 
@@ -32,7 +31,7 @@ class PostSenderStorage
     {
         $instancesStorage = getInstancesStorage();
 
-        $factory = new API\Send\PostSenderFactory();
+        $factory = new PostSenderFactory();
         $instancesStorage->refreshInstances($factory);
 
         $instancesStorage->instances = $factory->test($instancesStorage->instances);

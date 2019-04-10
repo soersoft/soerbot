@@ -2,8 +2,7 @@
 
 namespace API\Send;
 
-use API\Common;
-use API\Tools;
+use API\Mail\{IMail};
 
 /***
  * It's provide possibility to send IMail as 
