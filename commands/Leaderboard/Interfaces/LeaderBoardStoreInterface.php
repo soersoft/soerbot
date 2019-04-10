@@ -8,11 +8,11 @@ interface LeaderBoardStoreInterface
 
     public function load();
 
-    public function get($username);
+    public function get(string $username);
 
     public function add(array $args);
 
-    public function remove($username);
+    public function remove(string $username);
 
     public function toArray();
 }

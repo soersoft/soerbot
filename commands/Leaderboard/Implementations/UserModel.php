@@ -93,7 +93,7 @@ class UserModel implements UserModelInterface
     /**
      * Sorts user by their rewards' points.
      *
-     * @param string (desc|asc)
+     * @param string $direction Can be "desc" or "asc" value
      * @return $this
      */
     public function sort($direction = 'desc')
@@ -196,10 +196,10 @@ class UserModel implements UserModelInterface
     /**
      * Returns user instance for chosen username.
      *
-     * @param $username
+     * @param string $username
      * @return User|null
      */
-    protected function get($username)
+    protected function get(string $username)
     {
         if (!empty($this->users)) {
             return $this->first($this->users, function ($user) use ($username) {

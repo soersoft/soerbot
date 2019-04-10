@@ -46,7 +46,7 @@ class User
         $this->rewards = $this->validateRewards($rewards);
         $this->name = $name;
         $this->linesDelimiter = $linesDelimiter;
-        $this->prefix = null;
+        $this->prefix = '';
     }
 
     /**

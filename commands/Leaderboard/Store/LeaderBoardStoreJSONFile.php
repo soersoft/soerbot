@@ -72,10 +72,10 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     }
 
     /**
-     * @param $username
+     * @param string $username
      * @return mixed|null
      */
-    public function get($username)
+    public function get(string $username)
     {
         return $this->first($this->data, function ($user) use ($username) {
             return strtolower($user['username']) === strtolower($username);
@@ -83,10 +83,10 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     }
 
     /**
-     * @param $username
+     * @param string $username
      * @return void
      */
-    public function remove($username)
+    public function remove(string $username)
     {
         if ($this->userExists($username)) {
             $this->data = $this->where($this->data, function ($user) use ($username) {
@@ -104,10 +104,10 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     }
 
     /**
-     * @param $username
+     * @param string $username
      * @return bool
      */
-    protected function userExists($username)
+    protected function userExists(string $username)
     {
         return $this->exists($this->data, 'username', $username);
     }
