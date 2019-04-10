@@ -2,8 +2,7 @@
 
 namespace API\Send;
 
-use API\Common;
-use API\Tools;
+use API\Mail\{Mail, IMail};
 
 /**
  * All classes are inherits from this not will register on factory
@@ -11,15 +10,13 @@ use API\Tools;
 class MailSenderNot4Factory extends AMailSender
 {
     /**
-     * implements:
-     * - API.Send.IMailSender
-     * 
-     * @return IMail
+     * return instance of this class
+     * - implements:
+     *  - API.Common.ICreateInstance
+     * @return instance of this class
      */
-    public function createMessage():IMail
+    public function CreateInstance(): object
     {
-        return new Mail();
+        return new MailSenderNot4Factory();
     }
-
-
 }
