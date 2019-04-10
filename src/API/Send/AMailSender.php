@@ -154,6 +154,9 @@ abstract class AMailSender implements IMailSender
      *  - API.Common.ICreateInstance
      * @return instance of this class
      */
-    public abstract function CreateInstance(): object;
+    public function CreateInstance(): object
+    {
+        return new self();
+    }
 
 }

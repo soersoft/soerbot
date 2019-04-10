@@ -9,14 +9,4 @@ use API\Mail\{Mail, IMail};
  */
 class MailSenderNot4Factory extends AMailSender
 {
-    /**
-     * return instance of this class
-     * - implements:
-     *  - API.Common.ICreateInstance
-     * @return instance of this class
-     */
-    public function CreateInstance(): object
-    {
-        return new MailSenderNot4Factory();
-    }
 }
