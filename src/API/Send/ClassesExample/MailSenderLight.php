@@ -1,24 +1,15 @@
 <?php
 
-use API\Common;
-use API\Tools;
+namespace API\Send\ClassesExample;
 
-namespace API\Send;
+use API\Send\{MailSenderNot4Factory};
+
 /**
+ * Not will registred on factory
  * supported interfaces:
  * - API.SendIMailSender
  *  - API.Common.ICreateInstance
  */
-class MailSenderLight extends AMailSender
+class MailSenderLight extends MailSenderNot4Factory
 {
-    /**
-     * implements:
-     * - API.Send.IMailSender
-     * 
-     * @return IMail
-     */
-    public function createMessage():IMail
-    {
-        $mail = new Mail();
-    }
 }
