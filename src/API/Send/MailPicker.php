@@ -2,8 +2,7 @@
 
 namespace API\Send;
 
-use API\Common;
-use API\Tools;
+use API\Mial\{IMail};
 
 class MailPicker
 {
