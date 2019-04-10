@@ -22,14 +22,17 @@ class UserModel implements UserModelInterface
      * @var UserModel
      */
     protected static $instance;
+
     /**
      * @var User[]
      */
-    protected $users;
+    protected $users = [];
+
     /**
      * @var LeaderBoardStoreInterface
      */
     protected $store;
+
     /**
      * Line delimiter for separating users in stringify functions.
      * @var string
@@ -54,6 +57,7 @@ class UserModel implements UserModelInterface
 
     /**
      * Returns singleton instance.
+     *
      * @param LeaderBoardStoreInterface $store
      * @param string $linesDelimiter
      * @return UserModel
@@ -69,6 +73,7 @@ class UserModel implements UserModelInterface
 
     /**
      * Increments chosen reward and saves the result in the store.
+     *
      * @param string $username
      * @param string $rewardName
      * @return void
@@ -87,6 +92,7 @@ class UserModel implements UserModelInterface
 
     /**
      * Sorts user by their rewards' points.
+     *
      * @param string (desc|asc)
      * @return $this
      */
@@ -115,6 +121,7 @@ class UserModel implements UserModelInterface
 
     /**
      * Remove chosen rewards.
+     *
      * @param string $username
      * @param string $rewardName
      * @return bool
@@ -136,6 +143,7 @@ class UserModel implements UserModelInterface
 
     /**
      * Makes a string from the all user's data.
+     *
      * @return string
      */
     public function getLeaderBoardAsString()
@@ -158,14 +166,8 @@ class UserModel implements UserModelInterface
     }
 
     /**
-     * Singleton cloning is forbidden.
-     */
-    protected function __clone()
-    {
-    }
-
-    /**
      * Returns user instance for chosen username.
+     *
      * @param $username
      * @return User|null
      */
@@ -178,5 +180,12 @@ class UserModel implements UserModelInterface
         }
 
         return null;
+    }
+
+    /**
+     * Singleton cloning is forbidden.
+     */
+    protected function __clone()
+    {
     }
 }
