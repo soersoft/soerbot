@@ -2,9 +2,7 @@
 
 namespace API\Send;
 
-use API\Common;
-use API\Tools;
-use API\Mail;
+use API\Common\{IFactory, ITest};
 
 class PostSenderFactory implements IFactory
 {
@@ -44,7 +42,7 @@ class PostSenderFactory implements IFactory
         $res = array();
         foreach($instances as $instance)
         {
-            if (!($instance instanceof API\Common\ITest))
+            if (!($instance instanceof ITest))
                 continue;
             if (!($instance->test()))
                 continue;
