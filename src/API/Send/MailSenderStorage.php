@@ -2,8 +2,7 @@
 
 namespace API\Send;
 
-use API\Common;
-use API\Tools;
+use API\Tools\{InstancesStorage};
 
 class MailSenderStorage
 {
@@ -32,7 +31,7 @@ class MailSenderStorage
     {
         $instancesStorage = getInstancesStorage();
 
-        $factory = new API\Send\MailSenderFactory();
+        $factory = new MailSenderFactory();
         $instancesStorage->refreshInstances($factory);
 
         $factory->Subscribe($instancesStorage->instances);
