@@ -2,8 +2,8 @@
 
 namespace API\Send;
 
-use API\Common;
-use API\Tools;
+use API\Tools\{ApiEvent};
+use API\Mail\{IMail, IMailAddress, Message};
 
 /**
  * supported interfaces:
@@ -12,6 +12,12 @@ use API\Tools;
  */
 abstract class AMailSender implements IMailSender
 {
+
+    public function __construct()
+    {
+      $this->_eventSendMessage = new ApiEvent();
+    }
+
     /**
      * 
      * event support
@@ -22,24 +28,76 @@ abstract class AMailSender implements IMailSender
     private $_eventSendMessage;
 
     /**
-     * IMailAddress for create message
-     * @var IMailAddress;
+     * MailSample will used as address sender and receiver sourse for new message
+     * @val    address sender and receiver sourse
+     *  - IMail
      */
-    protected $mailAddress;
-
-    public function __construct()
-    {
-      $this->_eventSendMessage = new ApiEvent();
-    }
+    protected $mailSample = null;
     /**
-     * return instance of this class
-     * - implements:
-     *  - API.Common.ICreateInstance
-     * @return instance of this class
+     * MailSample will used as address sender and receiver sourse for new message
+     * @return $mailSample address sender and receiver sourse
+     *  - IMail
+     *  - API.Send.IMailSender
      */
-    public static function CreateInstance(): object
+    function getMailSample():IMail
+    { return $this->mailSample;}
+    /**
+     * MailSample will used as address sender and receiver sourse for new message
+     * @param $mailSample address sender and receiver sourse
+     *  - IMail
+     *  - API.Send.IMailSender
+     */
+    function setMailSample(IMail $mailSample):void
     {
-        return new MailSender();
+        if (!($mailSample instanceof IMail))
+            throw new UnexpectedValueException();
+        $this->mailSample = $mailSample;
+    }
+
+    /**
+     * Getters implements, thanks to:
+     * - https://ttmm.io/tech/php-read-attributes/
+     * 
+     * Magic getter for our object.
+     *
+     * @param string $field
+     * @throws UnexpectedValueException Throws an exception if the field is invalid.
+     * @return mixed
+     */
+    public function __get(string $field ) 
+    {
+        switch( $field ) 
+        {
+          case 'mailSample':
+              return $this->getMailSample();
+          default:
+              $class = __CLASS__;
+              throw new UnexpectedValueException( "Invalid property: {$class}->{$field}");
+        }
+    }
+
+    /**
+     * Setters implements, thanks to:
+     * - https://www.php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.members
+     * - https://ttmm.io/tech/php-read-attributes/
+     * 
+     * Magic setter for our object.
+     *
+     * @param string $field
+     * @param mixed $value
+     * @throws UnexpectedValueException Throws an exception if the field is invalid.
+     * @return void
+     */
+    public function __set(string $field, mixed $value )
+    {
+        switch( $field ) 
+        {
+          case 'mailSample':
+              return $this->setMailSample($value);
+          default:
+              $class = __CLASS__;
+              throw new UnexpectedValueException( "Invalid property: {$class}->{$field}");
+        }
     }
 
     /**
@@ -59,6 +117,7 @@ abstract class AMailSender implements IMailSender
 
         $this->_eventSendMessage->eventAddHandler($eventHandler);
     }
+
     /**
      * implements:
      * - API.Send.IMailSender
@@ -69,20 +128,32 @@ abstract class AMailSender implements IMailSender
     }
 
     /**
-     * implements:
-     * - API.Send.IMailSender
+     * Create message using  $mailSample as address sender and receiver sourse
+     * @param $messageContext
+     *  - JSON string of content 
+     *  - API.Send.IMailSender
      */
-    public function setAddress(IMailAddress $address):void
+    function createMessage(string $messageContent):IMail
     {
-        $this->mailAddress = $address;
+        $class = __CLASS__;
+        // check $messageContent for JSON
+        if (!($this->mailSample instanceof IMail))
+            throw new UnexpectedValueException("{$class}->mailSample has been not defined");
+        $res = clone($this->mailSample);
+        $message = new Message();
+        $message->Header = $this->mailSample->getMessage()->getHeader();
+        $message->Content = $messageContent;
+        $res->setMessage($message);
+        
+        return $res;
     }
-    /**
-     * implements:
-     * - API.Send.IMailSender
-     * 
-     * @return IMail
-     */
-    public abstract function createMessage():IMail;
 
+    /**
+     * return instance of this class
+     * - implements:
+     *  - API.Common.ICreateInstance
+     * @return instance of this class
+     */
+    public abstract function CreateInstance(): object;
 
 }
