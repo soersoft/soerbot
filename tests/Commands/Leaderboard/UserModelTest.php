@@ -51,19 +51,9 @@ class UserModelTest extends TestCase
 
         $this->setPrivateVariableValue($this->users, 'users', $usersData);
 
-        $string = <<<EOT
-:one: Username1
-⭐
-
-:two: Username2
-⭐⭐
-
-:three: Username3
-⭐
-🏅
-
-
-EOT;
+        $string = ':one: Username1' . PHP_EOL . '⭐' . PHP_EOL . PHP_EOL .
+                  ':two: Username2' . PHP_EOL . '⭐⭐' . PHP_EOL . PHP_EOL.
+                  ':three: Username3' . PHP_EOL . '⭐' . PHP_EOL . '🏅' . PHP_EOL . PHP_EOL;
 
         $this->assertSame($string, $this->users->getLeaderBoardAsString());
     }
@@ -78,33 +68,13 @@ EOT;
 
         $this->setPrivateVariableValue($this->users, 'users', $usersData);
 
-        $stringDesc = <<<EOT
-:one: Username3
-⭐
-🏅
+        $stringDesc = ':one: Username3' . PHP_EOL . '⭐' . PHP_EOL . '🏅' . PHP_EOL . PHP_EOL .
+                      ':two: Username2' . PHP_EOL . '⭐⭐' . PHP_EOL . PHP_EOL .
+                      ':three: Username1' . PHP_EOL . '⭐' . PHP_EOL . PHP_EOL;
 
-:two: Username2
-⭐⭐
-
-:three: Username1
-⭐
-
-
-EOT;
-
-        $stringAsc = <<<EOT
-:one: Username1
-⭐
-
-:two: Username2
-⭐⭐
-
-:three: Username3
-⭐
-🏅
-
-
-EOT;
+        $stringAsc = ':one: Username1' . PHP_EOL . '⭐' . PHP_EOL . PHP_EOL .
+                     ':two: Username2' . PHP_EOL . '⭐⭐' . PHP_EOL . PHP_EOL .
+                     ':three: Username3' . PHP_EOL . '⭐' . PHP_EOL . '🏅' . PHP_EOL . PHP_EOL;
 
         $this->assertSame($stringDesc, $this->users->sort()->getLeaderBoardAsString());
         $this->assertSame($stringAsc, $this->users->sort('asc')->getLeaderBoardAsString());
