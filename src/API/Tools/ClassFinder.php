@@ -2,6 +2,8 @@
 
 namespace API\Tools;
 
+use API\Send\{MailSenderExample1};
+
 class ClassFinder implements IClassFinder
 {
     /**
@@ -23,8 +25,11 @@ class ClassFinder implements IClassFinder
      */
     public static function findClasses(string $interfaceName)
     {
-        $classes = get_declared_classes();
-        $classes = array_filter(
+        $vre= new MailSenderExample1(); //dummy force load
+
+        $classesFullNames = get_declared_classes(); // F5 => to check 
+
+        $classesFullNames = array_filter(
             get_declared_classes(),
             function( $className ) use ( $interfaceName ) {
                 return in_array( $interfaceName, class_implements( $className ) );
@@ -34,16 +39,16 @@ class ClassFinder implements IClassFinder
         // Check for abstract class
         // https://www.php.net/manual/en/reflectionclass.isabstract.php
         // https://stackoverflow.com/questions/7131295/dynamic-class-names-in-php
+        // https://www.php.net/manual/ru/class.reflectionclass.php
         $classesAbstract = array();
-        foreach($classes as $class)
+        foreach($classesFullNames as $className)
         {
-            $className = get_class($class);
-            $testClass = new ReflectionClass($ClassName);
-            if ($testClass->isAbstract())
-                $classesAbstract[] = $class;
+            $reflectiontestClass = new \ReflectionClass($className);
+            if ($reflectiontestClass->isAbstract())
+                $classesAbstract[] = $reflectiontestClass->getName();
         }
-        \array_diff($classes, $classesAbstract);
+        $classesFullNames = \array_diff($classesFullNames, $classesAbstract);
 
-        return $classes;
+        return $classesFullNames;
     }
 }
