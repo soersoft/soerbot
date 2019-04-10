@@ -172,8 +172,9 @@ package Core
 
         interface IMailSender #PaleGreen-Green
         {
-            + void setAddress(IAddress)
-            + IMail createMessage()
+            + IMail getMailSample()
+            + setMailSample(IMail mailSample)
+            + IMail createMessage(stringJson messageContent)
 
             + void sendMessage(IMail $mail)
             + void onSendMessage(Closure $eventHandler)
