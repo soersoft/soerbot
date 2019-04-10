@@ -80,14 +80,14 @@ abstract class SoerCommand extends Command
 
     protected function makeConfigName()
     {
-        preg_match('/(\w+)Command/i', strtolower(static::class), $m);
+        preg_match('/(\w+)Command/i', strtolower(get_class($this)), $m);
 
         return $m[1] ?? null;
     }
 
     protected function makePathToConfig()
     {
-        preg_match('/Commands\\\(\w+)/i', static::class, $m);
+        preg_match('/Commands\\\(\w+)/i', get_class($this), $m);
 
         return $m[1] ? __DIR__ . '/' . $m[1] . '/config/' . $this->configName . '.config.yaml' : null;
     }
