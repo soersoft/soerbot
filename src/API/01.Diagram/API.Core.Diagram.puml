@@ -1,0 +1,318 @@
+@startuml
+' icons: http://plantuml.com/ru/stdlib
+
+' // picture scale
+scale 1 
+
+' // to change graphic modifiers to symbol
+' skinparam classAttributeIconSize 0
+title SoerBot.API
+
+' left header
+' <font color=lightblue>    Description:</font> <font color=darkBlue>Diagram SoerBot.API provides ready to implement class system of flexible API (Application Programming Interface)</font>
+' <font color=lightblue>    Status:        </font> <font color=green>WIP ( WorkInProgress )</font>
+' <font color=lightblue>    Creator:      </font> <font color=grey>@DenisGeek (AhokninDenisPavlovich)</font>
+' endheader
+
+center footer @DenisGeek 2019
+
+legend Right
+    <font color=lightblue>    Description:</font> <font color=darkBlue>Diagram SoerBot.API provides ready to implement class system of flexible API (Application Programming Interface)</font>
+    <font color=lightblue>    Status:        </font> <font color=green>WIP ( WorkInProgress )</font>
+    <font color=lightblue>    Creator:      </font> <font color=grey>@DenisGeek (AhokninDenisPavlovich)</font>
+endlegend
+
+package Support {
+    
+    namespace API.Common #DDDDDD {
+        ' hide members
+
+        interface ITest #PaleGreen-Green
+        {
+            bool Test();
+        }
+        interface ICreateInstance #PaleGreen-Green
+        {
+            object CreateInstance();
+        }
+        interface IFactory #PaleGreen-Green
+        {
+            + function scan():array;
+            + function createIntances(array $classes):array;
+        }
+        ' interface IMailHandler
+        ' {
+        ' }
+        ' interface IPostHandler
+        ' {
+        ' }
+
+        ' ITest --|> IPostHandler 
+        ' ICreateInstance  --|> IPostHandler
+        ' ICreateInstance <|-- IMailHandler
+
+    }
+
+    namespace API.Tools #DDDDDD {
+        ' hide members
+
+        class InstancesStorage #PaleGreen-Green
+        {
+            + List<object> instances;
+            + void clearInstances()
+            + void refreshInstances(IFactory factory)
+        }
+        InstancesStorage --o API.Common.IFactory
+
+        interface IClassFinder #yellow-PaleGreen
+        {
+            List<Type> findClasses(Type interface)
+        }
+        class ClassFinder #PaleGreen-Green
+        {
+            List<Type> findClasses(Type interface)
+        }
+        IClassFinder<|..ClassFinder
+
+        interface IEvent #yellow-PaleGreen
+        {
+            + void eventAddHandler(Closure function)
+            + void eventLaunch (arg[])
+        }
+        class ApiEvent #PaleGreen-Green
+        {
+            - List<Closure> _eventHandlers
+            + void eventAddHandler(Closure function)
+            + void eventLaunch (arg[])
+        }
+        IEvent<|..ApiEvent
+
+        interface IEventsHub #yellow-PaleGreen
+        {
+            + void eventsHubAddEventHandler(string eventName, Closure handler)
+            + void eventsHubLaunchEvent (string eventName, arg[])
+        }
+        class EventsHub #PaleGreen-Green
+        {
+            - Dictionary<string,List<Closure>> _eventsDictionary
+            + void eventsHubAddEventHandler(string eventName, Closure handler)
+            + void eventsHubLaunchEvent (string eventName, arg[])
+        }
+        IEventsHub<|..EventsHub
+
+        ' class InstanceCreator
+        ' {
+        '     List<Type> findClasses(Type interface)
+        ' }
+
+        ' interface IMailHandler
+        ' {
+        ' }
+        ' IMailHandler <|-- IMailReceiver
+        ' IMailHandler <|-- IMailSender
+        ' interface IPostHandler
+        ' {
+        ' }
+        ' IPostReceiver --|> IPostHandler 
+        ' IPostSender  --|> IPostHandler
+
+    }
+}
+
+package Core 
+{
+    ' hide members
+
+    ' hide API.Mail
+    namespace API.Mail #DDDDDD {
+        ' hide members
+
+        IMailAddress "2" *-- IMail
+        IMessage "1" *-- IMail
+
+        IContent <|-- IMessage
+        IHeader <|-- IMessage
+        IAddressee <|-- IMailAddress
+        IAddress <|-- IMailAddress
+
+        interface IAddress #PaleGreen-Green
+        {
+            + String Address 
+        }
+        interface IAddressee #PaleGreen-Green
+        {
+            + String Addressee
+        } 
+
+        interface IMailAddress #PaleGreen-Green
+        {
+        }
+
+        interface IHeader #PaleGreen-Green
+        {
+            + String Header 
+        }
+        interface IContent #PaleGreen-Green
+        {
+            + JSON Content
+        }
+        interface IMessage #PaleGreen-Green
+        {
+        }
+        interface IMail #PaleGreen-Green
+        {
+            + IMailAddress reciever
+            + IMailAddress sender
+            + IMessage message
+        }
+    }
+
+    namespace API.Send #DDDDDD {
+        ' hide members
+
+        interface IMailSender #PaleGreen-Green
+        {
+            + IMail getMailSample()
+            + setMailSample(IMail mailSample)
+            + IMail createMessage(stringJson messageContent)
+
+            + void sendMessage(IMail $mail)
+            + void onSendMessage(Closure $eventHandler)
+        }
+
+        class MailSenderFactory << (F,#FF7700) Factory >> #PaleGreen-Green
+        {
+            + List<IMailSenderClass> scan()
+            + List<IMailSenderInstance> createIntances(List<IMailSenderClass>)
+            + void subscribe(List<IMailSenderInstance>)
+        }
+        MailSenderFactory -() IFactory :<b><i>API.Common
+        ' note bottom of MailSenderFactory #grey
+        '     <color:white>Example of event subscription:</color>
+        '     IMailSender CreateIntance(MailSenderClass)
+        '     {
+        '         var res = (ICreateInstance)MailSenderClass.CreateInstance()
+        '         (IMailSender)res.send+=MailPicker.send
+        '     }
+        ' end note
+        class MailSenderStorage << (S,#FF7700) Singleton(static) >> #PaleGreen-Green
+        {
+            -static InstancesStorage _instancesStorage
+            +static InstancesStorage getInstancesStorage()
+            +static void refresh()
+        }
+        MailSenderStorage --o MailSenderFactory
+
+        class MailPicker << (S,#FF7700) Singleton (static) >> #PaleGreen-Green
+        {
+            + void send(IMail)
+        }
+        interface IPostSender #PaleGreen-Green
+        {
+            + void send(IMail)
+        }
+
+        class PostSenderFactory << (F,#FF7700) Factory >> #PaleGreen-Green
+        {
+            + List<IPostSenderClass> scan()
+            + List<IPostSenderClass> testConnection(List<IPostSenderClass>)
+            + List<IPostSender> createIntances(List<IPostSenderClass>)
+        }
+        PostSenderFactory -() IFactory :<b><i>API.Common
+        class PostSenderStorage << (S,#FF7700) Singleton(static) >> #PaleGreen-Green
+        {
+            -static InstancesStorage _instancesStorage
+            +static InstancesStorage getInstancesStorage()
+            +static void refresh()
+        }
+        PostSenderStorage --o PostSenderFactory
+
+        ' MailHendler<--IMailSender
+        MailSenderFactory --o MailPicker
+        MailSenderFactory -> IMailSender
+        ICreateInstance ()-- IMailSender :<b><i>API.Common
+        ' IEventsHub ()-- IMailSender :<b><i>API.Tools
+        IMailSender --> API.Mail.IMail
+        IMailSender "many" .. MailPicker :event send
+        MailPicker --> API.Mail.IMail
+        MailPicker -* PostSenderStorage
+        MailPicker --o "many" IPostSender
+        API.Mail.IMail <-- IPostSender
+        IPostSender <- PostSenderFactory
+        IPostSender --() ITest :<b><i>API.Common
+        IPostSender --() ICreateInstance:<b><i>API.Common
+    }
+    class Outgoing << (↓,#FF7700) Stream >>
+    API.Send.IPostSender--* Outgoing
+
+    ' hide API.Receive
+    namespace API.Receive #DDDDDD {
+        ' hide members
+
+        interface IMailReceiver
+        {
+            + void handleMessage(IMail)
+            + void receive(IMail)
+        }
+        class MailSorter << (S,#FF7700) Singleton >>
+        {
+            - List<IPostReceiver> recieves
+            - List<IMailReceiver> recipients
+            + void refreshReceivers()
+    
+            + void registerRecipient(IMailReceiver)
+            + void deleteRecipient(IMailReceiver)
+
+           + void receive(IMail)
+        }
+        interface IPostReceiver
+        {
+            + IMailReceiver MailReceiver
+            + void init(MailSorter)
+            + void received(IMail)
+        }
+        class FMailReceiver << (F,#FF7700) Factory >>
+        {
+            + List<IMailReceiverClass> scan()
+            + List<IMailReceiver> createIntances(List<IMailReceiverClass>)
+        }
+        class FPostReceiver << (F,#FF7700) Factory >>
+        {
+            + List<IPostReceiverClass> scan()
+            + List<IPostReceiverClass> testConnection(List<IPostReceiverClass>)
+            + List<IPostReceiver> createIntances(List<IPostReceiverClass>)
+        }
+        FMailReceiver --> MailSorter : registerRecipient
+        ICreateInstance ()-- IMailReceiver :<b><i>API.Common
+        IMailReceiver <- FMailReceiver
+        IMailReceiver --> API.Mail.IMail
+        IMailReceiver "many" o-- MailSorter
+        MailSorter --> API.Mail.IMail
+        MailSorter --o "1" FPostReceiver : refreshReceivers
+        MailSorter --o "many" IPostReceiver
+        API.Mail.IMail <-- IPostReceiver
+        IPostReceiver <- FPostReceiver
+        IPostReceiver --() ITest :<b><i>API.Common
+        IPostReceiver --() ICreateInstance:<b><i>API.Common
+    }
+    class Incoming << (↑,#FF7700) Stream >>
+    API.Receive.IPostReceiver--* Incoming
+
+    class Launcher << (S,#FF7700) Singleton(static) >> #PaleGreen-yellow
+    {
+        ~ LoopInterface loop
+        ~ Livia.Client client
+        + static void start(LoopInterface aLoop, Livia.Client aClient)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+@enduml

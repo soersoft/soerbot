@@ -8,6 +8,7 @@
     },
     "autoload": {
         "psr-4": {
+            "API\\": "src/API",
             "SoerBot\\": "src/",
             "SoerBot\\Commands\\": "commands/",
             "Tests\\": "tests/"
