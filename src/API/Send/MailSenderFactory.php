@@ -2,8 +2,9 @@
 
 namespace API\Send;
 
-use API\Common\{ICreateInstance};
+use API\Common\{ICreateInstance, IFactory};
 use API\Mail\{IMail};
+use API\Tools\{ClassFinder};
 
 class MailSenderFactory implements IFactory
 {
@@ -16,26 +17,14 @@ class MailSenderFactory implements IFactory
      */
     public function scan():array
     {
-        $classes = API\Tools\ClassFinder.findClasses(IMailSender::class);
+        $classes = ClassFinder::findClasses(IMailSender::class);
 
         //delete all classes inherits from MailSenderNot4Factory
         $classesNot4Factory = array();
         foreach($classes as $class)
             if ($class instanceof MailSenderNot4Factory)
                 $classesNot4Factory[] = $class;
-        \array_diff($classes, $classesNot4Factory);
-
-        // WTF? \unset($classes[i]);
-        // $i = 0;
-        // while ($i < count($classes))
-        // {
-        //     if ($classes[i] instanceof MailSenderNot4Factory)
-        //     {
-        //         \unset($classes[1]);
-        //         continue;
-        //     }
-        //     i++;
-        // }
+        $classes = \array_diff($classes, $classesNot4Factory);
 
         return $classes;
     }

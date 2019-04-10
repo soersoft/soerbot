@@ -29,7 +29,7 @@ class PostSenderStorage
      */
     public static function refresh()
     {
-        $instancesStorage = getInstancesStorage();
+        $instancesStorage = self::getInstancesStorage();
 
         $factory = new PostSenderFactory();
         $instancesStorage->refreshInstances($factory);

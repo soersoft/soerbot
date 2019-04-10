@@ -29,7 +29,7 @@ class MailSenderStorage
      */
     public static function refresh()
     {
-        $instancesStorage = getInstancesStorage();
+        $instancesStorage = self::getInstancesStorage();
 
         $factory = new MailSenderFactory();
         $instancesStorage->refreshInstances($factory);

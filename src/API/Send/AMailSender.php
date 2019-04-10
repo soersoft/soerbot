@@ -110,7 +110,7 @@ abstract class AMailSender implements IMailSender
      * 
      * @throws UnexpectedValueException
      */
-    function onSendMessage(Closure $eventHandler):void
+    function onSendMessage(\Closure $eventHandler):void
     {
         if (!($function instanceof Closure))
             throw new UnexpectedValueException();
