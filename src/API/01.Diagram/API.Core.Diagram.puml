@@ -118,7 +118,35 @@ package Support {
 
     }
 }
+package System #Blue-Red
+{
+    namespace API.System #DDDDDD {
+        class DirScanner
+        {
+            + static List<string> FindFiles(string rootDir,string regexPattern);
+        }
+        ' interface IClassTools
+        ' {
+        '     + static void InitScan(string rootDir)
+        '     + static void Load(string className)
+        ' }
+        class LazyNameSpace << (S,#FF7700) Singleton(static) >>
+        {
+            ~ static Dictionary<string className, string path2Class> _classPath
+            + static void InitScan(string rootDir)
+            + static void Load(string className)
+        }
+        class ForceClassLoader << (S,#FF7700) Singleton(static) >>
+        {
+            + static void Load()
+        }
+        LazyNameSpace -o DirScanner
+        LazyNameSpace <|-- ForceClassLoader
 
+        ' IClassTools <|.. LazyNameSpace
+        ' IClassTools <|.. ForceClassLoader
+    }
+}
 package Core 
 {
     ' hide members
