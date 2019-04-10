@@ -5,11 +5,16 @@ namespace API\Tools;
 class ClassFinder implements IClassFinder
 {
     /**
+     * DOESN'T WORK NEEDS to force loading classes
+     * - Like this
+     *  - https://stackoverflow.com/questions/36676074/php-how-to-get-all-classes-when-using-autoloader
      * finder all registred classes are implemens interfaceName
      * thans to
      * - https://stackoverflow.com/questions/3993759/php-how-to-get-a-list-of-classes-that-implement-certain-interface
      * needs check for abstract class:
      * - https://www.php.net/manual/en/reflectionclass.isabstract.php
+     * load classes
+     * - composer dump-autoload -o
      * 
      * @property $interfaceName 
      * - name of looking interface\class (IClassFinder::class)
@@ -18,6 +23,7 @@ class ClassFinder implements IClassFinder
      */
     public static function findClasses(string $interfaceName)
     {
+        $classes = get_declared_classes();
         $classes = array_filter(
             get_declared_classes(),
             function( $className ) use ( $interfaceName ) {
@@ -36,7 +42,7 @@ class ClassFinder implements IClassFinder
             if ($testClass->isAbstract())
                 $classesAbstract[] = $class;
         }
-        \array_diff($classes, $classesNot4Factory);
+        \array_diff($classes, $classesAbstract);
 
         return $classes;
     }

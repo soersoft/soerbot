@@ -10,5 +10,5 @@ interface IClassFinder
      * @return List<Type>
      * - type implement or instance of interfaceName
      */
-    function findClasses(string $interfaceName);
+    static function findClasses(string $interfaceName);
 }
