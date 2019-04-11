@@ -196,7 +196,13 @@ class UserModel implements UserModelInterface
     {
         $username = $this->cleanupUsername($username);
 
-        $this->exists($this->users, 'username', $username);
+        foreach ($this->users as $user) {
+            if ($user->getName() === $username) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -71,8 +71,6 @@ class LeaderboardRemoveUser extends Command
             return $message->say('Пользователь ' . $user . ' не существует');
         }
 
-        //return $message->say('Пользователь ' . $user . ' существует');
-
         if (!$this->users->remove($user)) {
             return $message->say('Не удалось удалить пользователя ' . $user . '');
         }

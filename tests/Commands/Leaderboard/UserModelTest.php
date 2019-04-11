@@ -119,4 +119,14 @@ class UserModelTest extends TestCase
 
         $this->assertEquals('existed', $method->invokeArgs($this->users, ['@existed']));
     }
+
+    public function testHasUserReturnExpectedWhenUserExist()
+    {
+        $this->assertTrue($this->users->hasUser('Username1'));
+    }
+
+    public function testHasUserReturnExpectedWhenUserNotExist()
+    {
+        $this->assertFalse($this->users->hasUser('notexist'));
+    }
 }
