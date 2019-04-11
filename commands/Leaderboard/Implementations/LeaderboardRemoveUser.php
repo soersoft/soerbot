@@ -61,7 +61,11 @@ class LeaderboardRemoveUser extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $user = trim($args['name']);
+        $user = trim(@$args['name']);
+
+        if (empty($user)) {
+            return $message->say('Введите имя пользователя для удаления');
+        }
 
         if (!$this->users->hasUser($user)) {
             return $message->say('Пользователь ' . $user . ' не существует');

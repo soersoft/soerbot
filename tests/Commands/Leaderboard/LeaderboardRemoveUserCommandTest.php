@@ -62,7 +62,23 @@ class LeaderboardRemoveUserCommandTest extends TestCase
         }
     }
 
-    public function testRunSayWhenUserNotExist()
+    public function testRunSayDefaultTextWhenArgumentNotExist()
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with('Введите имя пользователя для удаления');
+
+        $this->command->run($commandMessage, new ArrayObject(), false);
+    }
+
+    public function testRunSayDefaultTextWhenArgumentIsEmpty()
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with('Введите имя пользователя для удаления');
+
+        $this->command->run($commandMessage, new ArrayObject(['name' => '']), false);
+    }
+
+    public function testRunSayWhenUseNotExist()
     {
         $user = 'not_exist';
 
