@@ -118,7 +118,44 @@ package Support {
 
     }
 }
+package System #Blue-Red
+{
+    namespace API.System #DDDDDD {
+        class DirScanner
+        {
+            + static List<string> FindFiles(string rootDir,string regexPattern='.+\.[pP][hH][pP]$');
+            + static collection<string, SplFileInfo> FindFilesInfo(string rootDir,string regexPattern='.+\.[pP][hH][pP]$');
+        }
+        class FileParcerPHP
+        {
+            + getClassNameFromFile($filePathName)
+            + getInterfaceNameFromFile($filePathName)
+            + getAbstractClassNameFromFile($filePathName)
+            + getAnyDeclarationsFromFile($filePathName)
 
+            + getNamespaceFromFile($filePathName)
+
+            + getClassFullNameFromFile($filePathName)
+            + getClassObjectFromFile($filePathName)
+        }
+        class LazyNameSpace << (S,#FF7700) Singleton(static) >>
+        {
+            ~ static Dictionary<sting,Dictionary<string,string>> declalations
+            + static void InitScan(string rootDir)
+            + static void LazyLoad(string className, string currentNamespace = "")
+        }
+        class ForceClassLoader << (S,#FF7700) Singleton(static) >>
+        {
+            + static void Load()
+        }
+        FileParcerPHP o- LazyNameSpace
+        LazyNameSpace -o DirScanner
+        LazyNameSpace <|-- ForceClassLoader
+
+        ' IClassTools <|.. LazyNameSpace
+        ' IClassTools <|.. ForceClassLoader
+    }
+}
 package Core 
 {
     ' hide members
