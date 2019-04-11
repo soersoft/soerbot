@@ -81,7 +81,14 @@ class DevsCommandTest extends TestCase
         $this->assertArrayHasKey('storePath', $settings);
     }
 
-    public function testRunSayDefaultText()
+    public function testRunSayDefaultTextWhenArgumentNotExist()
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with($this->message);
+        $this->command->run($commandMessage, new ArrayObject(), false);
+    }
+
+    public function testRunSayDefaultTextWhenArgumentIsEmpty()
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())->method('say')->with($this->message);

@@ -60,7 +60,6 @@ class TopicModel
      * Load Topic from file.
      *
      * @param string $topic
-     * @param string $directory
      * @throws TopicException
      * @throws TopicExceptionFileNotFound
      * @return string

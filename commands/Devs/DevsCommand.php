@@ -26,11 +26,13 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        if (!empty($args) && !empty($args['topic'])) {
+        $topic = trim(@$args['topic']);
+
+        if (!empty($topic)) {
             try {
                 $path = $this->settings['storePath'];
 
-                $topic = new TopicModel($args['topic'], $path);
+                $topic = new TopicModel($topic, $path);
                 $content = $topic->getContent();
             } catch (TopicExceptionFileNotFound $e) {
                 // Exception with low log level: log exception or notify admin with $e->getMessage()
@@ -43,9 +45,9 @@ class DevsCommand extends \CharlotteDunois\Livia\Commands\Command
                 return $message->say('Бот временно не работает. Мы уже занимаемся этой проблемой.');
             }
 
-            return $message->direct($content, ['split' => true])->then(function ($msg) use ($message, $args) {
+            return $message->direct($content, ['split' => true])->then(function ($msg) use ($message, $topic) {
                 if ($message->message->channel->type !== 'dm') {
-                    return $message->reply('Sent you a DM (Direct Message) with ' . $args['topic'] . ' information.');
+                    return $message->reply('Sent you a DM (Direct Message) with ' . $topic . ' information.');
                 }
 
                 return $msg;
