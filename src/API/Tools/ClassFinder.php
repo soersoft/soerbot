@@ -2,7 +2,7 @@
 
 namespace API\Tools;
 
-use API\Send\{MailSenderExample1};
+use API\Send\{MailSenderExample1, MailSenderExampleNot4Factory1};
 
 class ClassFinder implements IClassFinder
 {
@@ -18,6 +18,11 @@ class ClassFinder implements IClassFinder
      * load classes
      * - composer dump-autoload -o
      * 
+     * Check for abstract class
+     * -   // https://www.php.net/manual/en/reflectionclass.isabstract.php
+     * -   // https://stackoverflow.com/questions/7131295/dynamic-class-names-in-php
+     * -   // https://www.php.net/manual/ru/class.reflectionclass.php
+     * 
      * @property $interfaceName 
      * - name of looking interface\class (IClassFinder::class)
      * @return List<Type>
@@ -25,10 +30,7 @@ class ClassFinder implements IClassFinder
      */
     public static function findClasses(string $interfaceName)
     {
-        $vre= new MailSenderExample1(); //dummy force load
-
-        $classesFullNames = get_declared_classes(); // F5 => to check 
-
+        // To get classes which are implements this interface
         $classesFullNames = array_filter(
             get_declared_classes(),
             function( $className ) use ( $interfaceName ) {
@@ -36,10 +38,7 @@ class ClassFinder implements IClassFinder
             }
         );
 
-        // Check for abstract class
-        // https://www.php.net/manual/en/reflectionclass.isabstract.php
-        // https://stackoverflow.com/questions/7131295/dynamic-class-names-in-php
-        // https://www.php.net/manual/ru/class.reflectionclass.php
+        // To check for abstract class
         $classesAbstract = array();
         foreach($classesFullNames as $className)
         {
