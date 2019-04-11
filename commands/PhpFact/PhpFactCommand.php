@@ -39,7 +39,7 @@ class PhpFactCommand extends \CharlotteDunois\Livia\Commands\Command
 
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $parsed = trim($args['command']);
+        $parsed = trim(@$args['command']);
 
         if (empty($parsed)) {
             return $message->say(CommandHelper::getCommandDefaultMessage());
