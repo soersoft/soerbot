@@ -5,7 +5,6 @@ namespace SoerBot\Commands\Leaderboard\Implementations;
 use SoerBot\Commands\SoerCommand;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
-use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
 class LeaderboardAddCommand extends SoerCommand
@@ -19,42 +18,10 @@ class LeaderboardAddCommand extends SoerCommand
      */
     private $users;
 
-    public $allowRoles;
-
     public function __construct(LiviaClient $client)
     {
-        parent::__construct($client, [
-          'name' => 'leaderboard-add', // Give command name
-          'aliases' => [''],
-          'group' => 'utils', // Group in ['command', 'util']
-          'description' => 'Добавляет награду участнику',
-          'guildOnly' => false,
-          'throttling' => [
-            'usages' => 5,
-            'duration' => 10,
-          ],
-          'guarded' => true,
-          'args' => [ // If you need some variables you should either fill this section or remove it
-            [
-              'key' => 'name',
-              'label' => 'name',
-              'prompt' => 'Введите имя пользователя',
-              'type' => 'user',
-            ],
-            [
-              'key' => 'emoji',
-              'label' => 'emoji',
-              'prompt' => 'Какую награду добавить?',
-              'type' => 'reward',
-            ],
-          ],
-        ]);
-
+        parent::__construct($client);
         $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
-
-        $this->allowRoles = [
-          'product owner', 'куратор',
-        ];
     }
 
     /**
@@ -76,8 +43,8 @@ class LeaderboardAddCommand extends SoerCommand
 
     /**
      * Checks if the user has permission to use the command.
-     * @param \CharlotteDunois\Livia\CommandMessage  $message
-     * @param bool                                   $ownerOverride  Whether the bot owner(s) will always have permission.
+     * @param \CharlotteDunois\Livia\CommandMessage $message
+     * @param bool $ownerOverride Whether the bot owner(s) will always have permission.
      * @return bool|string  Whether the user has permission, or an error message to respond with if they don't.
      */
     public function hasPermission(\CharlotteDunois\Livia\CommandMessage $message, bool $ownerOverride = true)
