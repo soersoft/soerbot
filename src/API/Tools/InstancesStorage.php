@@ -15,7 +15,7 @@ class InstancesStorage
      */
     public function clearInstances()
     {
-        self::$instances = array();
+        #self::$instances = array();
         gc_collect_cycles(); // GC Should kill old ones
     }
     /**

@@ -3,6 +3,8 @@
 namespace API\Send;
 
 use API\Common\{IFactory, ITest};
+use API\Tools\{ClassFinder};
+
 
 class PostSenderFactory implements IFactory
 {
@@ -13,7 +15,7 @@ class PostSenderFactory implements IFactory
      */
     public function scan():array
     {
-        return API\Tools\ClassFinder.findClasses(IPostSender::class);
+        return ClassFinder::findClasses(IPostSender::class);
     }
 
     /**
