@@ -59,13 +59,13 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-      try {
-        $this->users->removeRewardsByType($args['name']->username, $args['emoji']);
-      }
-      catch (\Exception $e) {
-        return $message->say(self::FAILURE_MESSAGE . $e);
-      }
-    return $message->say(self::SUCCESS_MESSAGE);
+        try {
+            $this->users->removeRewardsByType($args['name']->username, $args['emoji']);
+        } catch (\Exception $e) {
+            return $message->say(self::FAILURE_MESSAGE . $e);
+        }
+
+        return $message->say(self::SUCCESS_MESSAGE);
     }
 
     /**
