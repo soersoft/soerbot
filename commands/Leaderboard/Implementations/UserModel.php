@@ -120,6 +120,16 @@ class UserModel implements UserModelInterface
     }
 
     /**
+     * Count current user collection.
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->users);
+    }
+
+    /**
      * Remove chosen rewards.
      *
      * @param string $username
@@ -174,6 +184,12 @@ class UserModel implements UserModelInterface
     public function remove(string $username): bool
     {
         $username = $this->cleanupUsername($username);
+
+        foreach ($this->users as $key => $user) {
+            if ($user->getName() === $username) {
+                unset($this->users[$key]);
+            }
+        }
 
         $this->store->remove($username);
 

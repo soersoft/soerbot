@@ -95,7 +95,7 @@ class LeaderboardRemoveUserCommandTest extends TestCase
 
     public function testRunSayWhenUserExistAndCannotBeRemoved()
     {
-        $user = '@ucorp';
+        $user = 'existed';
 
         $userModel = $this->createMock('SoerBot\Commands\Leaderboard\Implementations\UserModel');
         $userModel->expects($this->once())->method('hasUser')->willReturn(true);
@@ -111,7 +111,7 @@ class LeaderboardRemoveUserCommandTest extends TestCase
 
     public function testRunSayWhenUserExistAndSuccessfullyRemoved()
     {
-        $user = '@ucorp';
+        $user = 'existed';
 
         $userModel = $this->createMock('SoerBot\Commands\Leaderboard\Implementations\UserModel');
         $userModel->expects($this->once())->method('hasUser')->willReturn(true);
@@ -148,7 +148,7 @@ class LeaderboardRemoveUserCommandTest extends TestCase
     /**
      * @dataProvider differentRolesProvider
      */
-    public function testHasALlowedRole($roleName): void
+    public function testHasAllowedRole($roleName): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $role = $this->createMock('\CharlotteDunois\Yasmin\Models\Role');

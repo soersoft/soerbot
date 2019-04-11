@@ -59,6 +59,26 @@ namespace Tests\Commands {
             }
         }
 
+        public function testResponseToTheDiscord(): void
+        {
+            $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+            $this->users = $this->getMockBuilder('UserModel')->setMethods(['incrementReward'])->getMock();
+            $user = $this->createMock('\CharlotteDunois\Yasmin\Models\User');
+
+            $promise = new Promise(function () {
+            });
+
+            $commandMessage->expects($this->once())->method('say')->with('Награда добавлена')->willReturn($promise);
+
+            $this->users->method('incrementReward')->willReturn(true);
+
+            $this->setPrivateVariableValue($this->command, 'users', $this->users);
+
+            $user->expects($this->once())->method('__get')->with('username')->willReturn('username');
+
+            $this->command->run($commandMessage, new ArrayObject(['name' => $user, 'emoji' => '🏅']), false);
+        }
+
         public function testHasPermission()
         {
             $client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
@@ -71,8 +91,8 @@ namespace Tests\Commands {
 
             $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
             $commandMock = $this->getMockBuilder('SoerBot\Commands\Leaderboard\Implementations\LeaderboardAddCommand')
-            ->setConstructorArgs([$client])
-            ->setMethodsExcept(['hasPermission'])
+                ->setConstructorArgs([$client])
+                ->setMethodsExcept(['hasPermission'])
                 ->getMock();
             $commandMock->expects($this->once())->method('hasAllowedRole')->willReturn(false);
 
@@ -100,26 +120,6 @@ namespace Tests\Commands {
             } else {
                 $this->assertTrue($permission);
             }
-        }
-
-        public function testResponseToTheDiscord(): void
-        {
-            $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-            $this->users = $this->getMockBuilder('UserModel')->setMethods(['incrementReward'])->getMock();
-            $user = $this->createMock('\CharlotteDunois\Yasmin\Models\User');
-
-            $promise = new Promise(function () {
-            });
-
-            $commandMessage->expects($this->once())->method('say')->with('Награда добавлена')->willReturn($promise);
-
-            $this->users->method('incrementReward')->willReturn(true);
-
-            $this->setPrivateVariableValue($this->command, 'users', $this->users);
-
-            $user->expects($this->once())->method('__get')->with('username')->willReturn('username');
-
-            $this->command->run($commandMessage, new ArrayObject(['name' => $user, 'emoji' => '🏅']), false);
         }
 
         public function differentRolesProvider()

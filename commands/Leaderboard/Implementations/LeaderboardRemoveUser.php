@@ -30,7 +30,7 @@ class LeaderboardRemoveUser extends Command
     {
         parent::__construct($client, [
             'name' => 'leaderboard-remove-user', // Give command name
-            'aliases' => [],
+            'aliases' => ['leaderboard-delete-user'],
             'group' => 'utils', // Group in ['command', 'util']
             'description' => 'Удаляет участника из списка', // Fill the description
             'guildOnly' => false,

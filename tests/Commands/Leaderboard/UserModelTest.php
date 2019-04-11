@@ -22,6 +22,24 @@ class UserModelTest extends TestCase
         parent::setUp();
     }
 
+    public function testRemoveUser()
+    {
+        $username = 'existed';
+        $count = $this->users->count();
+
+        $this->users->incrementReward($username, ':star:');
+        $this->assertEquals($count + 1, $this->users->count());
+
+        $this->users->remove($username);
+
+        $users = $this->getPrivateVariableValue($this->users, 'users');
+        foreach ($users as $key => $user) {
+            if ($user->getName() === $username) {
+                $this->fail('User was not deleted from collection');
+            }
+        }
+    }
+
     public function testIncrementReward()
     {
         $rewards = [
@@ -105,7 +123,6 @@ class UserModelTest extends TestCase
     {
         $method = $this->getPrivateMethod($this->users, 'cleanupUsername');
 
-        $this->assertEquals('bonzaza', $method->invokeArgs($this->users, ['@bonzaza']));
+        $this->assertEquals('existed', $method->invokeArgs($this->users, ['@existed']));
     }
-
 }
