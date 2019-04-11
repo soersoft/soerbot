@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Karma\WatcherActor\AbstractClasses;
+namespace SoerBot\Commands\Karma\AbstractClasses;
 
 abstract class AbstractUserModel
 {

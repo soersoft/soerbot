@@ -73,6 +73,14 @@ class DevsCommandTest extends TestCase
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
+    public function testConstructorSetGlobalSettings()
+    {
+        $settings = $this->getPrivateVariableValue($this->command, 'settings');
+
+        $this->assertNotEmpty($settings);
+        $this->assertArrayHasKey('storePath', $settings);
+    }
+
     public function testRunSayDefaultText()
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
