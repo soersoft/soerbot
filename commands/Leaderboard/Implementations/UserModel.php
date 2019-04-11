@@ -120,16 +120,6 @@ class UserModel implements UserModelInterface
     }
 
     /**
-     * Count current user collection.
-     *
-     * @return int
-     */
-    public function count(): int
-    {
-        return count($this->users);
-    }
-
-    /**
      * Remove chosen rewards.
      *
      * @param string $username
