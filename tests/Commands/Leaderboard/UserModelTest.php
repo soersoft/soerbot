@@ -52,7 +52,7 @@ class UserModelTest extends TestCase
         $this->setPrivateVariableValue($this->users, 'users', $usersData);
 
         $string = ':one: Username1' . PHP_EOL . '⭐' . PHP_EOL . PHP_EOL .
-                  ':two: Username2' . PHP_EOL . '⭐⭐' . PHP_EOL . PHP_EOL.
+                  ':two: Username2' . PHP_EOL . '⭐⭐' . PHP_EOL . PHP_EOL .
                   ':three: Username3' . PHP_EOL . '⭐' . PHP_EOL . '🏅' . PHP_EOL . PHP_EOL;
 
         $this->assertSame($string, $this->users->getLeaderBoardAsString());

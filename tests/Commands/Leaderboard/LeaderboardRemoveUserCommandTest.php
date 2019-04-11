@@ -93,7 +93,23 @@ class LeaderboardRemoveUserCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['name' => $user]), false);
     }
 
-    public function testRunSayWhenUserExist()
+    public function testRunSayWhenUserExistAndCannotBeRemoved()
+    {
+        $user = '@ucorp';
+
+        $userModel = $this->createMock('SoerBot\Commands\Leaderboard\Implementations\UserModel');
+        $userModel->expects($this->once())->method('hasUser')->willReturn(true);
+        $userModel->expects($this->once())->method('remove')->with($user)->willReturn(false);
+
+        $this->setPrivateVariableValue($this->command, 'users', $userModel);
+
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with('Не удалось удалить пользователя ' . $user . '');
+
+        $this->command->run($commandMessage, new ArrayObject(['name' => $user]), false);
+    }
+
+    public function testRunSayWhenUserExistAndSuccessfullyRemoved()
     {
         $user = '@ucorp';
 
