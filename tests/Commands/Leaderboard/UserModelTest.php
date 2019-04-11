@@ -92,4 +92,20 @@ class UserModelTest extends TestCase
         $this->assertTrue($this->users->removeRewardsByType('Username1', '⭐'));
         $this->assertTrue($this->users->removeRewardsByType('Username3', '🏅'));
     }
+
+    public function testGetReturnExpectedWithoutAt()
+    {
+        $method = $this->getPrivateMethod($this->users, 'get');
+        $user = $method->invokeArgs($this->users, ['@Username1']);
+
+        $this->assertEquals('Username1', $user->getName());
+    }
+
+    public function testCleanUsernameWhenUsernameStartWithAt()
+    {
+        $method = $this->getPrivateMethod($this->users, 'cleanupUsername');
+
+        $this->assertEquals('bonzaza', $method->invokeArgs($this->users, ['@bonzaza']));
+    }
+
 }
