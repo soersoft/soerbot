@@ -2,12 +2,13 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
+use SoerBot\Commands\SoerCommand;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
-class LeaderboardAddCommand extends Command
+class LeaderboardAddCommand extends SoerCommand
 {
     const SUCCESS_MESSAGE = 'Награда добавлена';
 
