@@ -65,7 +65,19 @@ class PhpFactCommandTest extends TestCase
         $this->assertEquals($this->command->args[0]['type'], 'string');
     }
 
-    public function testRunSayDefaultTextWhenEmptyCommand()
+    public function testRunSayDefaultTextWhenArgumentNotExist()
+    {
+        $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())
+                        ->method('say')
+                        ->with(
+                            CommandHelper::getCommandDefaultMessage()
+                        );
+
+        $this->command->run($commandMessage, new ArrayObject(), false);
+    }
+
+    public function testRunSayDefaultTextWhenArgumentIsEmpty()
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
         $commandMessage->expects($this->once())
