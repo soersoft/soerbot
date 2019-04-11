@@ -78,10 +78,8 @@ class UserModel implements UserModelInterface
      * @param string $rewardName
      * @return void
      */
-    public function incrementReward(string $username, $rewardName)
+    public function incrementReward($username, $rewardName)
     {
-        $username = $this->cleanupUsername($username);
-
         if (!$user = $this->get($username)) {
             $this->users[] = $user = new User($username, []);
         }
@@ -90,30 +88,6 @@ class UserModel implements UserModelInterface
 
         $this->store->add([$user->getName(), $user->getRewards()]);
         $this->store->save();
-    }
-
-    /**
-     * Remove chosen rewards.
-     *
-     * @param string $username
-     * @param string $rewardName
-     * @return bool
-     */
-    public function removeRewardsByType(string $username, $rewardName)
-    {
-        $username = $this->cleanupUsername($username);
-
-        if (!$user = $this->get($username)) {
-            return false;
-        }
-
-        if (empty($user->getReward($rewardName))) {
-            return false;
-        }
-
-        $user->removeReward($rewardName);
-
-        return true;
     }
 
     /**
@@ -146,6 +120,28 @@ class UserModel implements UserModelInterface
     }
 
     /**
+     * Remove chosen rewards.
+     *
+     * @param string $username
+     * @param string $rewardName
+     * @return bool
+     */
+    public function removeRewardsByType($username, $rewardName)
+    {
+        if (!$user = $this->get($username)) {
+            return false;
+        }
+
+        if (empty($user->getReward($rewardName))) {
+            return false;
+        }
+
+        $user->removeReward($rewardName);
+
+        return true;
+    }
+
+    /**
      * Makes a string from the all user's data.
      *
      * @return string
@@ -170,6 +166,38 @@ class UserModel implements UserModelInterface
     }
 
     /**
+     * Remove user from store.
+     *
+     * @param string $username
+     * @return bool
+     */
+    public function remove(string $username): bool
+    {
+        $username = $this->cleanupUsername($username);
+
+        $this->store->remove($username);
+
+        return $this->store->save();
+    }
+
+    /**
+     * Check if user exists.
+     *
+     * @param string $username
+     * @return bool
+     */
+    public function hasUser(string $username): bool
+    {
+        $username = $this->cleanupUsername($username);
+
+        if ($this->store->get($username)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns user instance for chosen username.
      *
      * @param string $username
@@ -186,37 +214,6 @@ class UserModel implements UserModelInterface
         }
 
         return null;
-    }
-
-    /**
-     * Remove user from store.
-     *
-     * @param string $username
-     * @return bool
-     */
-    public function remove(string $username): bool
-    {
-        $username = $this->cleanupUsername($username);
-
-        $this->store->remove($username);
-
-        return $this->store->save();
-    }
-    /**
-     * Check if user exists.
-     *
-     * @param string $username
-     * @return bool
-     */
-    public function hasUser(string $username): bool
-    {
-        $username = $this->cleanupUsername($username);
-
-        if ($this->store->get($username)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
