@@ -7,7 +7,7 @@ use API\Mail\{IMail, IMailAddress, Message};
 
 /**
  * supported interfaces:
- * - API.SendIMailSender
+ * - API.Send.IMailSender
  *  - API.Common.ICreateInstance
  */
 abstract class AMailSender implements IMailSender
@@ -16,6 +16,17 @@ abstract class AMailSender implements IMailSender
     public function __construct()
     {
       $this->_eventSendMessage = new ApiEvent();
+    }
+
+    /**
+     * return instance of this class
+     * - implements:
+     *  - API.Common.ICreateInstance
+     * @return instance of this class
+     */
+    public function CreateInstance(): object
+    {
+        return new self();
     }
 
     /**
@@ -148,15 +159,5 @@ abstract class AMailSender implements IMailSender
         return $res;
     }
 
-    /**
-     * return instance of this class
-     * - implements:
-     *  - API.Common.ICreateInstance
-     * @return instance of this class
-     */
-    public function CreateInstance(): object
-    {
-        return new self();
-    }
 
 }

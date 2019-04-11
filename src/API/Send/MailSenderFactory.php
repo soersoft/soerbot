@@ -17,16 +17,20 @@ class MailSenderFactory implements IFactory
      */
     public function scan():array
     {
-        $classes = ClassFinder::findClasses(IMailSender::class);
+        $classesFullNames = ClassFinder::findClasses(IMailSender::class);
 
         //delete all classes inherits from MailSenderNot4Factory
         $classesNot4Factory = array();
-        foreach($classes as $class)
-            if ($class instanceof MailSenderNot4Factory)
-                $classesNot4Factory[] = $class;
-        $classes = \array_diff($classes, $classesNot4Factory);
+        foreach($classesFullNames as $className)
+        {
+            $reflectiontestClass = new \ReflectionClass($className);
+            // if ($className instanceof MailSenderNot4Factory)
+            if ($reflectiontestClass->isInstance(MailSenderNot4Factory))
+                $classesNot4Factory[] = $className;
+        }
+        $classesFullNames = \array_diff($classesFullNames, $classesNot4Factory);
 
-        return $classes;
+        return $classesFullNames;
     }
 
     /**

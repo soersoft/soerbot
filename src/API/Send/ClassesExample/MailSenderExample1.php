@@ -4,7 +4,7 @@ namespace API\Send;
 
 
 /**
- * Not will registred on factory
+ * This will registred on factory
  * supported interfaces:
  * - API.SendIMailSender
  *  - API.Common.ICreateInstance
