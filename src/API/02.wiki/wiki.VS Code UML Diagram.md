@@ -21,3 +21,6 @@ Aditional
 
 * event in uml
   * https://stackoverflow.com/questions/24681328/how-to-represent-event-in-a-uml-class-diagram
+
+* books about UML
+  * http://agilemodeling.com/style/classDiagram.htm

@@ -28,3 +28,25 @@ Yasmin is a Discord API library for PHP
 
 PHP Get JSON
     - https://stackoverflow.com/questions/10217068/receive-json-object-from-http-get-in-php
+
+i find an api for book searchin from google
+     https://developers.google.com/books/
+
+/**
+* usefull api.system links:
+* 
+* autoloadClass
+* komposer file fix https://klisl.com/composer_autoload.html
+* ready 
+* - https://gist.github.com/Nilpo/5de133d2ab7a025bebeb
+* File search
+* - https://ruseller.com/lessons.php?id=1575&rub=37
+* - https://stackoverflow.com/questions/1860393/recursive-file-search-php
+* Get Namespace current
+* - https://www.php.net/manual/ru/language.namespaces.nsconstants.php
+* Get namespace dir
+* - https://stackoverflow.com/questions/46555446/php-7-1-get-file-path-from-namespace
+* Autoload
+* - https://stackoverflow.com/questions/7651509/what-is-autoloading-how-do-you-use-spl-autoload-autoload-and-spl-autoload-re
+* - 
+*/
