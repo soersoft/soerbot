@@ -123,23 +123,32 @@ package System #Blue-Red
     namespace API.System #DDDDDD {
         class DirScanner
         {
-            + static List<string> FindFiles(string rootDir,string regexPattern);
+            + static List<string> FindFiles(string rootDir,string regexPattern='.+\.[pP][hH][pP]$');
+            + static collection<string, SplFileInfo> FindFilesInfo(string rootDir,string regexPattern='.+\.[pP][hH][pP]$');
         }
-        ' interface IClassTools
-        ' {
-        '     + static void InitScan(string rootDir)
-        '     + static void Load(string className)
-        ' }
+        class FileParcerPHP
+        {
+            + getClassNameFromFile($filePathName)
+            + getInterfaceNameFromFile($filePathName)
+            + getAbstractClassNameFromFile($filePathName)
+            + getAnyDeclarationsFromFile($filePathName)
+
+            + getNamespaceFromFile($filePathName)
+
+            + getClassFullNameFromFile($filePathName)
+            + getClassObjectFromFile($filePathName)
+        }
         class LazyNameSpace << (S,#FF7700) Singleton(static) >>
         {
-            ~ static Dictionary<string className, string path2Class> _classPath
+            ~ static Dictionary<sting,Dictionary<string,string>> declalations
             + static void InitScan(string rootDir)
-            + static void Load(string className)
+            + static void LazyLoad(string className, string currentNamespace = "")
         }
         class ForceClassLoader << (S,#FF7700) Singleton(static) >>
         {
             + static void Load()
         }
+        FileParcerPHP o- LazyNameSpace
         LazyNameSpace -o DirScanner
         LazyNameSpace <|-- ForceClassLoader
 
