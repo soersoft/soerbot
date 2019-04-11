@@ -49,8 +49,6 @@ class LeaderboardRemoveUser extends Command
         ]);
 
         $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
-
-        $this->init();
     }
 
     /**
@@ -101,27 +99,15 @@ class LeaderboardRemoveUser extends Command
      */
     public function hasAllowedRole(CommandMessage $message)
     {
-        $roles = $message->member->roles;
-
-        foreach ($roles as $role) {
-            $name = mb_strtolower($role->name);
-            if (in_array($name, $this->allowedRoles)) {
-                return true;
+        if (!empty($this->allowedRoles) && $roles = $message->member->roles) {
+            foreach ($roles as $role) {
+                $name = mb_strtolower($role->name);
+                if (in_array($name, $this->allowedRoles, true)) {
+                    return true;
+                }
             }
         }
 
         return false;
-    }
-
-    /**
-     * Check if allowedRoles is set.
-     *
-     * @throws LeaderboardException
-     */
-    private function init(): void
-    {
-        if (empty($this->allowedRoles)) {
-            throw new LeaderboardException('You must specify allowed roles. Check command file.');
-        }
     }
 }
