@@ -65,6 +65,11 @@ class Launcher
      * */
     public static function start($aLoop, $aClient): void
     {
+        $dirRoot = __DIR__;
+        \API\System\LasyNameSpace::InitScan($dirRoot);
+        \API\System\ForceClassLoader::InitScan("{$dirRoot}\\Send\\ClassesExample");
+        \API\System\ForceClassLoader::Load();
+
         self::$loop = $aLoop;
         self::$client = $aClient;
 
