@@ -62,10 +62,10 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
         if (!$this->users->removeRewardsByType($args['name']->username, $args['emoji'])) {
-            return $message->say('Не удалось удалить награды пользователя ' . $user . '');
+            return $message->say(self::FAILURE_MESSAGE);
         }
 
-        return $message->say('Награды удалены');
+        return $message->say(self::SUCCESS_MESSAGE);
     }
 
     /**
