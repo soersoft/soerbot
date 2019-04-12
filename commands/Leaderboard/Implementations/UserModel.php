@@ -138,6 +138,13 @@ class UserModel implements UserModelInterface
 
         $user->removeReward($rewardName);
 
+        if ($user->getPointsAmount() == 0) {
+            $this->remove($username);
+        } else {
+            $this->store->add([$user->getName(), $user->getRewards()]);
+            $this->store->save();
+        }
+
         return true;
     }
 
