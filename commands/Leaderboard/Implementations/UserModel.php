@@ -232,7 +232,8 @@ class UserModel implements UserModelInterface
      */
     private function cleanupUsername(string $username): string
     {
-        return ltrim($username, '@');
+
+        return preg_replace('/^(\@)?(\w+)(\#\d{4})?$/Su', '${2}', $username);
     }
 
     /**

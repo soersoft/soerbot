@@ -22,7 +22,7 @@ class UserModelTest extends TestCase
         parent::setUp();
     }
 
-    public function testRemoveUser()
+    public function testRemoveUserWithoutAt()
     {
         $username = 'existed';
         $method = $this->getPrivateMethod($this->users, 'get');
@@ -31,6 +31,30 @@ class UserModelTest extends TestCase
         $this->assertInstanceOf(User::class, $method->invokeArgs($this->users, [$username]));
 
         $this->users->remove($username);
+        $this->assertEmpty($method->invokeArgs($this->users, [$username]));
+    }
+
+    public function testRemoveUserWithAt()
+    {
+        $username = 'existed';
+        $method = $this->getPrivateMethod($this->users, 'get');
+
+        $this->users->incrementReward($username, ':star:');
+        $this->assertInstanceOf(User::class, $method->invokeArgs($this->users, [$username]));
+
+        $this->users->remove('@' . $username);
+        $this->assertEmpty($method->invokeArgs($this->users, [$username]));
+    }
+
+    public function testRemoveUserWithAtAndNumbers()
+    {
+        $username = 'existed';
+        $method = $this->getPrivateMethod($this->users, 'get');
+
+        $this->users->incrementReward($username, ':star:');
+        $this->assertInstanceOf(User::class, $method->invokeArgs($this->users, [$username]));
+
+        $this->users->remove('@' . $username . '#1234');
         $this->assertEmpty($method->invokeArgs($this->users, [$username]));
     }
 
