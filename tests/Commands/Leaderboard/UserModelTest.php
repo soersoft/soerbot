@@ -94,6 +94,7 @@ class UserModelTest extends TestCase
 
     public function testRemoveRewardsByType()
     {
+        $this->markTestSkipped();
         $usersData = [
             new User('Username1', [['emoji' => '⭐', 'count' => '1']]),
             new User('Username3', [['emoji' => '⭐', 'count' => '1'], ['emoji' => '🏅', 'count' => '1']]),
