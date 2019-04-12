@@ -2,6 +2,7 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
+use CharlotteDunois\Yasmin\Models\User;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
 use React\Promise\ExtendedPromiseInterface;
@@ -43,7 +44,7 @@ class LeaderboardRemoveUser extends Command
                     'key' => 'name',
                     'label' => 'name',
                     'prompt' => 'Введите имя пользователя',
-                    'type' => 'string',
+                    'type' => 'user',
                 ],
             ],
         ]);
@@ -59,21 +60,26 @@ class LeaderboardRemoveUser extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $user = trim(@$args['name']);
-
-        if (empty($user)) {
+        if (!isset($args['name']) || empty($args['name'])) {
             return $message->say('Введите имя пользователя для удаления');
         }
 
-        if (!$this->users->hasUser($user)) {
-            return $message->say('Пользователь ' . $user . ' не существует');
+        if (is_a($args['name'], User::class)) {
+            $username = $args['name']->username;
+
+            if (!$this->users->hasUser($username)) {
+                return $message->say('Пользователь ' . $username . ' не существует');
+            }
+
+            if (!$this->users->remove($username)) {
+                return $message->say('Не удалось удалить пользователя ' . $username . '');
+            }
+
+            return $message->say('Пользователь ' . $username . ' успешно удален');
         }
 
-        if (!$this->users->remove($user)) {
-            return $message->say('Не удалось удалить пользователя ' . $user . '');
-        }
-
-        return $message->say('Пользователь ' . $user . ' успешно удален');
+        // Error with high log level: log error and notify admin
+        return $message->say('Команда не может быть выполнена. Мы уже занимаемся этой проблемой.');
     }
 
     /**
