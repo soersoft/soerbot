@@ -30,7 +30,7 @@ class LeaderboardRemoveUser extends Command
     {
         parent::__construct($client, [
             'name' => 'leaderboard-remove-user', // Give command name
-            'aliases' => [],
+            'aliases' => ['leaderboard-delete-user'],
             'group' => 'utils', // Group in ['command', 'util']
             'description' => 'Удаляет участника из списка', // Fill the description
             'guildOnly' => false,
@@ -49,8 +49,6 @@ class LeaderboardRemoveUser extends Command
         ]);
 
         $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
-
-        $this->init();
     }
 
     /**
@@ -70,8 +68,6 @@ class LeaderboardRemoveUser extends Command
         if (!$this->users->hasUser($user)) {
             return $message->say('Пользователь ' . $user . ' не существует');
         }
-
-        //return $message->say('Пользователь ' . $user . ' существует');
 
         if (!$this->users->remove($user)) {
             return $message->say('Не удалось удалить пользователя ' . $user . '');
@@ -103,27 +99,15 @@ class LeaderboardRemoveUser extends Command
      */
     public function hasAllowedRole(CommandMessage $message)
     {
-        $roles = $message->member->roles;
-
-        foreach ($roles as $role) {
-            $name = mb_strtolower($role->name);
-            if (in_array($name, $this->allowedRoles)) {
-                return true;
+        if (!empty($this->allowedRoles) && $roles = $message->member->roles) {
+            foreach ($roles as $role) {
+                $name = mb_strtolower($role->name);
+                if (in_array($name, $this->allowedRoles, true)) {
+                    return true;
+                }
             }
         }
 
         return false;
-    }
-
-    /**
-     * Check if allowedRoles is set.
-     *
-     * @throws LeaderboardException
-     */
-    private function init(): void
-    {
-        if (empty($this->allowedRoles)) {
-            throw new LeaderboardException('You must specify allowed roles. Check command file.');
-        }
     }
 }

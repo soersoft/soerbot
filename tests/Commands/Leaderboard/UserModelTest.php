@@ -22,6 +22,18 @@ class UserModelTest extends TestCase
         parent::setUp();
     }
 
+    public function testRemoveUser()
+    {
+        $username = 'existed';
+        $method = $this->getPrivateMethod($this->users, 'get');
+
+        $this->users->incrementReward($username, ':star:');
+        $this->assertInstanceOf(User::class, $method->invokeArgs($this->users, [$username]));
+
+        $this->users->remove($username);
+        $this->assertEmpty($method->invokeArgs($this->users, [$username]));
+    }
+
     public function testIncrementReward()
     {
         $rewards = [
@@ -91,5 +103,30 @@ class UserModelTest extends TestCase
 
         $this->assertTrue($this->users->removeRewardsByType('Username1', '⭐'));
         $this->assertTrue($this->users->removeRewardsByType('Username3', '🏅'));
+    }
+
+    public function testGetReturnExpectedWithoutAt()
+    {
+        $method = $this->getPrivateMethod($this->users, 'get');
+        $user = $method->invokeArgs($this->users, ['@Username1']);
+
+        $this->assertEquals('Username1', $user->getName());
+    }
+
+    public function testCleanUsernameWhenUsernameStartWithAt()
+    {
+        $method = $this->getPrivateMethod($this->users, 'cleanupUsername');
+
+        $this->assertEquals('existed', $method->invokeArgs($this->users, ['@existed']));
+    }
+
+    public function testHasUserReturnExpectedWhenUserExist()
+    {
+        $this->assertTrue($this->users->hasUser('Username1'));
+    }
+
+    public function testHasUserReturnExpectedWhenUserNotExist()
+    {
+        $this->assertFalse($this->users->hasUser('notexist'));
     }
 }

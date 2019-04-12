@@ -173,6 +173,14 @@ class UserModel implements UserModelInterface
      */
     public function remove(string $username): bool
     {
+        $username = $this->cleanupUsername($username);
+
+        foreach ($this->users as $key => $user) {
+            if ($user->getName() === $username) {
+                unset($this->users[$key]);
+            }
+        }
+
         $this->store->remove($username);
 
         return $this->store->save();
@@ -186,8 +194,12 @@ class UserModel implements UserModelInterface
      */
     public function hasUser(string $username): bool
     {
-        if ($this->store->get($username)) {
-            return true;
+        $username = $this->cleanupUsername($username);
+
+        foreach ($this->users as $user) {
+            if ($user->getName() === $username) {
+                return true;
+            }
         }
 
         return false;
@@ -201,6 +213,8 @@ class UserModel implements UserModelInterface
      */
     protected function get(string $username)
     {
+        $username = $this->cleanupUsername($username);
+
         if (!empty($this->users)) {
             return $this->first($this->users, function ($user) use ($username) {
                 return $user->getName() === $username;
@@ -208,6 +222,17 @@ class UserModel implements UserModelInterface
         }
 
         return null;
+    }
+
+    /**
+     * Cleanup username from unwanted characters.
+     *
+     * @param string $username
+     * @return string
+     */
+    private function cleanupUsername(string $username): string
+    {
+        return ltrim($username, '@');
     }
 
     /**
