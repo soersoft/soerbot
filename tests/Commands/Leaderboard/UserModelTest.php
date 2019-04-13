@@ -22,40 +22,9 @@ class UserModelTest extends TestCase
         parent::setUp();
     }
 
-    public function testRemoveUserWithoutAt()
+    public function tearDown()
     {
-        $username = 'existed';
-        $method = $this->getPrivateMethod($this->users, 'get');
-
-        $this->users->incrementReward($username, ':star:');
-        $this->assertInstanceOf(User::class, $method->invokeArgs($this->users, [$username]));
-
-        $this->users->remove($username);
-        $this->assertEmpty($method->invokeArgs($this->users, [$username]));
-    }
-
-    public function testRemoveUserWithAt()
-    {
-        $username = 'existed';
-        $method = $this->getPrivateMethod($this->users, 'get');
-
-        $this->users->incrementReward($username, ':star:');
-        $this->assertInstanceOf(User::class, $method->invokeArgs($this->users, [$username]));
-
-        $this->users->remove('@' . $username);
-        $this->assertEmpty($method->invokeArgs($this->users, [$username]));
-    }
-
-    public function testRemoveUserWithAtAndNumbers()
-    {
-        $username = 'existed';
-        $method = $this->getPrivateMethod($this->users, 'get');
-
-        $this->users->incrementReward($username, ':star:');
-        $this->assertInstanceOf(User::class, $method->invokeArgs($this->users, [$username]));
-
-        $this->users->remove('@' . $username . '#1234');
-        $this->assertEmpty($method->invokeArgs($this->users, [$username]));
+        $this->setPrivateVariableValue($this->users, 'instance', null);
     }
 
     public function testIncrementReward()
@@ -118,25 +87,38 @@ class UserModelTest extends TestCase
 
     public function testRemoveRewardsByType()
     {
-        $this->markTestSkipped();
         $usersData = [
-            new User('Username1', [['emoji' => '⭐', 'count' => '1']]),
-            new User('Username3', [['emoji' => '⭐', 'count' => '1'], ['emoji' => '🏅', 'count' => '1']]),
+            new User('Username4', [['emoji' => '⭐', 'count' => '1']]),
+            new User('Username5', [['emoji' => '⭐', 'count' => '1'], ['emoji' => '🏅', 'count' => '1']]),
         ];
 
         $this->setPrivateVariableValue($this->users, 'users', $usersData);
 
-        $this->assertTrue($this->users->removeRewardsByType('Username1', '⭐'));
-        $this->assertTrue($this->users->removeRewardsByType('Username3', '🏅'));
+        $this->assertTrue($this->users->removeRewardsByType('Username4', '⭐'));
+        $this->assertTrue($this->users->removeRewardsByType('Username5', '🏅'));
+        $this->users->removeRewardsByType('Username5', '⭐');
     }
 
     public function testGetReturnExpectedWithoutAt()
     {
         $method = $this->getPrivateMethod($this->users, 'get');
-        $user = $method->invokeArgs($this->users, ['@Username1']);
+        $user = $method->invokeArgs($this->users, ['Username1']);
 
         $this->assertEquals('Username1', $user->getName());
     }
+
+    public function testRemoveUser()
+    {
+        $username = 'existed';
+        $method = $this->getPrivateMethod($this->users, 'get');
+
+        $this->users->incrementReward($username, ':star:');
+        $this->assertInstanceOf(User::class, $method->invokeArgs($this->users, [$username]));
+
+        $this->assertTrue($this->users->remove($username));
+        $this->assertEmpty($method->invokeArgs($this->users, [$username]));
+    }
+
 
     public function testCleanUsernameWhenUsernameStartWithAt()
     {
