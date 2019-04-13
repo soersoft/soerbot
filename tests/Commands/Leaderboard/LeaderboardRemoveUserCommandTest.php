@@ -5,6 +5,7 @@ namespace Tests\Commands;
 use ArrayObject;
 use Tests\TestCase;
 use CharlotteDunois\Livia\LiviaClient;
+use CharlotteDunois\Yasmin\Models\User;
 use SoerBot\Commands\Leaderboard\Implementations\LeaderboardRemoveUser;
 
 class LeaderboardRemoveUserCommandTest extends TestCase
@@ -78,49 +79,67 @@ class LeaderboardRemoveUserCommandTest extends TestCase
         $this->command->run($commandMessage, new ArrayObject(['name' => '']), false);
     }
 
-    public function testRunSayWhenUseNotExist()
+    public function testRunSayWhenUserNotExist()
     {
-        $user = 'not_exist';
+        $username = 'not_exist';
+        $user = new class() extends User {
+            public $username = 'not_exist';
+
+            public function __construct()
+            {
+            }
+        };
 
         $userModel = $this->createMock('SoerBot\Commands\Leaderboard\Implementations\UserModel');
         $userModel->expects($this->once())->method('hasUser')->willReturn(false);
-
         $this->setPrivateVariableValue($this->command, 'users', $userModel);
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $commandMessage->expects($this->once())->method('say')->with('Пользователь ' . $user . ' не существует');
+        $commandMessage->expects($this->once())->method('say')->with('Пользователь ' . $username . ' не существует');
 
         $this->command->run($commandMessage, new ArrayObject(['name' => $user]), false);
     }
 
     public function testRunSayWhenUserExistAndCannotBeRemoved()
     {
-        $user = 'existed';
+        $username = 'existed';
+        $user = new class() extends User {
+            public $username = 'existed';
+
+            public function __construct()
+            {
+            }
+        };
 
         $userModel = $this->createMock('SoerBot\Commands\Leaderboard\Implementations\UserModel');
         $userModel->expects($this->once())->method('hasUser')->willReturn(true);
-        $userModel->expects($this->once())->method('remove')->with($user)->willReturn(false);
-
+        $userModel->expects($this->once())->method('remove')->with($username)->willReturn(false);
         $this->setPrivateVariableValue($this->command, 'users', $userModel);
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $commandMessage->expects($this->once())->method('say')->with('Не удалось удалить пользователя ' . $user . '');
+        $commandMessage->expects($this->once())->method('say')->with('Не удалось удалить пользователя ' . $username . '');
 
         $this->command->run($commandMessage, new ArrayObject(['name' => $user]), false);
     }
 
     public function testRunSayWhenUserExistAndSuccessfullyRemoved()
     {
-        $user = 'existed';
+        $username = 'existed';
+        $user = new class() extends User {
+            public $username = 'existed';
+
+            public function __construct()
+            {
+            }
+        };
 
         $userModel = $this->createMock('SoerBot\Commands\Leaderboard\Implementations\UserModel');
         $userModel->expects($this->once())->method('hasUser')->willReturn(true);
-        $userModel->expects($this->once())->method('remove')->with($user)->willReturn(true);
-
+        $userModel->expects($this->once())->method('remove')->with($username)->willReturn(true);
         $this->setPrivateVariableValue($this->command, 'users', $userModel);
 
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $commandMessage->expects($this->once())->method('say')->with('Пользователь ' . $user . ' успешно удален');
+        $commandMessage->expects($this->once())->method('say')->with('Пользователь ' . $username . ' успешно удален');
 
         $this->command->run($commandMessage, new ArrayObject(['name' => $user]), false);
     }
