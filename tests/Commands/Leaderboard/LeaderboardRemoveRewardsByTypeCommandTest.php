@@ -56,7 +56,7 @@ class LeaderboardRemoveCommandTest extends TestCase
         $promise = new Promise(function () {
         });
 
-        $commandMessage->expects($this->once())->method('say')->with('Награды удаленны')->willReturn($promise);
+        $commandMessage->expects($this->once())->method('say')->with('Награды удалены')->willReturn($promise);
 
         $this->users->method('removeRewardsByType')->willReturn(true);
 

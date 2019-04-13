@@ -140,6 +140,8 @@ class User
         if ($this->exists($this->rewards, 'emoji', $rewardName)) {
             $key = $this->findKey($this->rewards, 'emoji', $rewardName);
             unset($this->rewards[$key]);
+            //Without that json is saved incorrect way
+            $this->rewards = array_values($this->rewards);
         }
     }
 

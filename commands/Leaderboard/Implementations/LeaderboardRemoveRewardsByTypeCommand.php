@@ -2,20 +2,22 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
-use ArrayObject;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
+use React\Promise\ExtendedPromiseInterface;
 use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
 class LeaderboardRemoveRewardsByTypeCommand extends Command
 {
-    const SUCCESS_MESSAGE = 'Награды удаленны';
+    const SUCCESS_MESSAGE = 'Награды удалены';
 
     const FAILURE_MESSAGE = 'Не удалось удалить награды';
 
     /** @var UserModel */
     private $users;
+
+    private $allowedRoles = ['product owner', 'куратор'];
 
     protected $config = [
       'name' => 'leaderboard-remove-rewards', // Give command name
@@ -55,34 +57,49 @@ class LeaderboardRemoveRewardsByTypeCommand extends Command
      * @param CommandMessage $message
      * @param \ArrayObject $args
      * @param bool $fromPattern
-     * @return \React\Promise\ExtendedPromiseInterface
+     * @return ExtendedPromiseInterface|null
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        try {
-            $this->users->removeRewardsByType($args['name']->username, $args['emoji']);
-        } catch (\Exception $e) {
-            return $message->say(self::FAILURE_MESSAGE . $e);
+        if (!$this->users->removeRewardsByType($args['name']->username, $args['emoji'])) {
+            return $message->say(self::FAILURE_MESSAGE);
         }
 
         return $message->say(self::SUCCESS_MESSAGE);
     }
 
     /**
-     * @param ArrayObject $args
-     * @return bool
+     * Checks if the user has permission to use the command.
+     *
+     * @param \CharlotteDunois\Livia\CommandMessage $message
+     * @param bool $ownerOverride Whether the bot owner(s) will always have permission.
+     * @return bool|string  Whether the user has permission, or an error message to respond with if they don't.
      */
-    private function action(ArrayObject $args): bool
+    public function hasPermission(CommandMessage $message, bool $ownerOverride = true)
     {
-        return $this->validateArguments($args);
+        $hasPermission = parent::hasPermission($message, $ownerOverride);
+        if ($hasPermission === true) {
+            $hasPermission = $this->hasAllowedRole($message);
+        }
+
+        return $hasPermission;
     }
 
     /**
-     * @param ArrayObject $args
+     * @param CommandMessage $message
      * @return bool
      */
-    private function validateArguments(ArrayObject $args): bool
+    public function hasAllowedRole(CommandMessage $message)
     {
-        return isset($args['name']) && isset($args['emoji']);
+        if (!empty($this->allowedRoles) && $roles = $message->member->roles) {
+            foreach ($roles as $role) {
+                $name = mb_strtolower($role->name);
+                if (in_array($name, $this->allowedRoles, true)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
