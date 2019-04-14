@@ -96,7 +96,7 @@ class UserModelTest extends TestCase
 
         $this->assertTrue($this->users->removeRewardsByType('Username4', '⭐'));
         $this->assertTrue($this->users->removeRewardsByType('Username5', '🏅'));
-        $this->users->removeRewardsByType('Username5', '⭐');
+        $this->assertTrue($this->users->removeRewardsByType('Username5', '⭐'));
     }
 
     public function testGetReturnExpectedWithoutAt()
