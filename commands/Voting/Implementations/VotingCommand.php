@@ -41,7 +41,7 @@ class VotingCommand extends Command
                 [
                     'key' => 'question',
                     'label' => 'question',
-                    'prompt' => 'Введите голосование в таком виде ($voting № question?|answer1|answer2 ...):',
+                    'prompt' => 'Введите голосование в таком виде ($voting question?|:one: answer1|:two: answer2 ...):',
                     'type' => 'string',
                 ],                  
             ],
@@ -58,13 +58,15 @@ class VotingCommand extends Command
      */
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-       // $question = '***Вопрос:***'.\PHP_EOL;  
-                $poll = explode("|", $message->message); 
-                foreach ($poll as $value) {                  
+        $question = '**Вопрос:**'.\PHP_EOL;  
+                $poll =explode("|", $message->message); 
+                $poll1 = str_replace('$voting ', '', $poll);
+                foreach ($poll1 as $value) {                  
                 $answer .=$value.\PHP_EOL;  
+                
                 }
         { 
-            return  $message->say("***".$answer."***") ; 
+            return  $message->say($question."***".$answer."***") ; 
         }
     }        
 }
