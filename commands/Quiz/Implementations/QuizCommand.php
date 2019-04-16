@@ -25,6 +25,11 @@ class QuizCommand extends Command
     private $store;
     private $questionsLeft;
 
+    /**
+     * Собирает отвыеты, по заданным условиям
+     */
+    private $answerCollector;
+
     public function __construct(LiviaClient $client)
     {
         parent::__construct($client, [
@@ -55,6 +60,10 @@ class QuizCommand extends Command
         $this->client->on('QuizEnd', \Closure::fromCallable([$this, 'quizEndAction']));
     }
 
+    /**
+     * Запускает викторину.
+     * @param message сообщение полученное от пользователя
+     */
     private function quizStartAction(CommandMessage $message)
     {
         $this->questionsLeft = $this->numQuestionsInRound;
@@ -65,6 +74,10 @@ class QuizCommand extends Command
         });
     }
 
+    /**
+     * Выводит следующий вопрос викторины.
+     * @param message сообщение, полученное от пользователя
+     */
     private function quizNextAction(CommandMessage $message)
     {
         $this->askQuestionAndCollectAnswers($message, $this->getNextMessage())->then(function () use ($message) {
@@ -76,6 +89,10 @@ class QuizCommand extends Command
         });
     }
 
+    /**
+     * Завершает викторину.
+     * @param message сообщение полученное от пользователя
+     */
     private function quizEndAction(CommandMessage $message)
     {
         $this->questionsLeft = 0;

@@ -4,7 +4,9 @@ namespace SoerBot;
 
 use React\EventLoop\Factory;
 use CharlotteDunois\Livia\LiviaClient;
+use CharlotteDunois\Yasmin\Models\Message;
 use SoerBot\Database\Settings\CapsuleSetup;
+use SoerBot\Watcher\Interfaces\WatcherActorInterface;
 
 class Runner
 {
@@ -17,6 +19,12 @@ class Runner
      * @var LiviaClient
      */
     private $client;
+
+    /**
+     * Список наблюдателей.
+     * @var WatcherActorInterface
+     */
+    private $watcherActors = [];
 
     /**
      * Runner constructor.
@@ -40,6 +48,14 @@ class Runner
                 echo $message . "\n";
             });
         }
+
+        $this->client->on('message', function ($message) {
+            $this->watchMessages($message);
+        });
+
+        $this->client->on('RegisterWatcher', function ($watcher) {
+            $this->watcherActors[] = $watcher;
+        });
 
         $this->settings();
         $this->logReadyState();
@@ -72,6 +88,9 @@ class Runner
         // Register the command group for our example command
         $this->client->registry->registerGroup(['id' => 'moderation', 'name' => 'Moderation']);
 
+        //Register our types
+        $this->client->registry->registerTypesIn(__DIR__ . '/Types');
+
         // Register our commands (this is an example path)
         // TODO вынести регистрацию команд из файла в структуру.
         $this->client->registry->registerCommand(...$this->loadCommands());
@@ -83,8 +102,8 @@ class Runner
     public function logReadyState(): void
     {
         $this->client->on('ready', function () {
-            echo 'Logged in as ' . $this->client->user->tag . ' created on ' .
-                $this->client->user->createdAt->format('d.m.Y H:i:s') . PHP_EOL;
+            echo 'Logged in as ' . $this->client->user->tag . ' started at ' .
+            date('d.m.Y H:i:s') . PHP_EOL;
         });
     }
 
@@ -94,8 +113,10 @@ class Runner
      */
     public function login(): void
     {
+        $config = $this->config('discord');
+
         $this->client
-            ->login($this->config('key'))
+            ->login($config['token'])
             ->done();
     }
 
@@ -105,7 +126,6 @@ class Runner
     private function registerExitEvent(): void
     {
         $this->client->once('stop', function () {
-            echo 'stop';
             $this->loop->stop();
         });
     }
@@ -119,7 +139,9 @@ class Runner
         $this->client->once('ready', function () {
             try {
                 $channel = $this->client->channels->first(function ($channel) {
-                    return $channel->name === 'основной';
+                    $config = $this->config('discord');
+
+                    return $channel->name === $config['channel'];
                 });
 
                 if ($channel && Configurator::get('development', false)) {
@@ -159,10 +181,12 @@ class Runner
      */
     private function configurationForClient()
     {
+        $config = $this->config('discord');
+
         return [
-            'owners' => $this->config('users'),
+            'owners' => $config['admin-users'],
             'unknownCommandResponse' => false,
-            'commandPrefix' => $this->config('command-prefix'),
+            'commandPrefix' => $config['command-prefix'],
         ];
     }
 
@@ -182,6 +206,15 @@ class Runner
      */
     private function loadCommands()
     {
-        return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch(__DIR__ . '/../commands', '*.command.php');
+        return \CharlotteDunois\Livia\Utils\FileHelpers::recursiveFileSearch('./commands', '*.command.php');
+    }
+
+    private function watchMessages(Message $message)
+    {
+        foreach ($this->watcherActors as $actor) {
+            if ($actor->isPassRequirements($message)) {
+                $actor->run($message);
+            }
+        }
     }
 }

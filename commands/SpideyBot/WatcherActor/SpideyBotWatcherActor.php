@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Watch\WatcherActors;
+namespace SoerBot\Commands\SpideyBot\WatcherActor;
 
 use SoerBot\Configurator;
 use SoerBot\Watcher\Interfaces\WatcherActorInterface;

@@ -24,11 +24,7 @@ class QuizCommandTest extends TestCase
 
         // Подменяем store через reflection
         $this->store = $this->getMockBuilder('QuizStore')->setMethods(['add', 'get', 'save', 'load'])->getMock();
-
-        $reflection = new \ReflectionClass($this->command);
-        $storeProperty = $reflection->getProperty('store');
-        $storeProperty->setAccessible(true);
-        $storeProperty->setValue($this->command, $this->store);
+        $this->setPrivateVariableValue($this->command, 'store', $this->store);
 
         parent::setUp();
     }
@@ -49,38 +45,37 @@ class QuizCommandTest extends TestCase
     public function testQuizStartAction()
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $reflection = new \ReflectionClass($this->command);
-        $quizStartMethod = $reflection->getMethod('quizStartAction');
-        $quizStartMethod->setAccessible(true);
 
         $this->store->expects($this->once())->method('load');
         $this->store->expects($this->once())->method('get');
         $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
-        $quizStartMethod->invoke($this->command, $commandMessage, 1);
+
+        $this
+            ->getPrivateMethod($this->command, 'quizStartAction')
+            ->invoke($this->command, $commandMessage);
     }
 
     public function testQuizNextAction()
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $reflection = new \ReflectionClass($this->command);
-        $quizNextMethod = $reflection->getMethod('quizNextAction');
-        $quizNextMethod->setAccessible(true);
 
         $this->store->expects($this->once())->method('load');
         $this->store->expects($this->once())->method('get');
         $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
-        $quizNextMethod->invoke($this->command, $commandMessage, 1);
+
+        $this
+            ->getPrivateMethod($this->command, 'quizNextAction')
+            ->invoke($this->command, $commandMessage);
     }
 
     public function testQuizEndAction()
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-        $reflection = new \ReflectionClass($this->command);
-        $quizEndMethod = $reflection->getMethod('quizEndAction');
-        $quizEndMethod->setAccessible(true);
-
         $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
-        $quizEndMethod->invoke($this->command, $commandMessage, 0);
+
+        $this
+            ->getPrivateMethod($this->command, 'quizEndAction')
+            ->invoke($this->command, $commandMessage);
     }
 
     public function __sleep()

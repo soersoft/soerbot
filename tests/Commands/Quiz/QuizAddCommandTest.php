@@ -58,11 +58,7 @@ class QuizAddCommandTest extends TestCase
         $questionStore->expects($this->once())->method('add')->with(['Вопрос', 'Ответ', 'Теги'])->willReturn(true);
         $questionStore->method('save')->willReturn(true);
 
-        // Подменяем store через reflection
-        $reflection = new \ReflectionClass($this->command);
-        $storeProperty = $reflection->getProperty('store');
-        $storeProperty->setAccessible(true);
-        $storeProperty->setValue($this->command, $questionStore);
+        $this->setPrivateVariableValue($this->command, 'store', $questionStore);
 
         $this->command->run($commandMessage, new ArrayObject(['question' => 'Вопрос', 'answer' => 'Ответ', 'tags' => 'Теги']), false);
     }
