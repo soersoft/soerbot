@@ -21,121 +21,30 @@ class LeaderBoardStoreJSONFileTest extends TestCase
         $this->store->load();
     }
 
-    public function tearDown(): void
+    public function testLoad()
     {
-        copy(__DIR__ . '/../../Fixtures/leaderboard.json', __DIR__ . '/../../Fixtures/leaderboard.tmp.json');
+        $this->assertTrue($this->store->load());
     }
 
-    public function testConstructThrowExceptionWhenFileNotFound()
+    public function testLoadFileNotFoundException()
     {
-        $file = __DIR__ . '/not_exist.json';
         $this->expectException(StoreFileNotFoundException::class);
-        $this->expectExceptionMessage('File ' . $file . ' was not found.');
-
-        new LeaderBoardStoreJSONFile($file);
+        (new LeaderBoardStoreJSONFile('filename.json'))->load();
     }
 
-    public function testLoadThrowExceptionWhenFileNotFound()
+    public function testLoadEmptyStore()
     {
-        $file = __DIR__ . '/not_exist.json';
-        $this->expectException(StoreFileNotFoundException::class);
-        $this->expectExceptionMessage('File ' . $file . ' was not found.');
-
-        $this->setPrivateVariableValue($this->store, 'file', $file);
-        $this->store->load();
+        $this->store = new LeaderBoardStoreJSONFile(__DIR__ . '/../../Fixtures/leaderboard.empty.tmp.json');
+        $this->assertTrue($this->store->load());
     }
 
-    public function testGetThrowTooFewArgumentsForUserAddingException()
-    {
-        $this->expectException(TooFewArgumentsForUserAdding::class);
-        $this->store->add(['Username']);
-    }
-
-    public function testLoadReturnTrueWhenEmptyFile()
-    {
-        $store = new LeaderBoardStoreJSONFile(__DIR__ . '/../../Fixtures/leaderboard.empty.tmp.json');
-        $this->assertTrue($store->load());
-    }
-
-    public function testLoadReturnTrueWhenFileWithJson()
-    {
-        $store = new LeaderBoardStoreJSONFile(__DIR__ . '/../../Fixtures/leaderboard.tmp.json');
-        $this->assertTrue($store->load());
-    }
-
-    public function testSaveReturnFalseWhenFileCannotBeWrite()
-    {
-        $file = __DIR__ . '/..';
-        $this->setPrivateVariableValue($this->store, 'file', $file);
-
-        $this->assertFalse($this->store->save());
-    }
-
-    public function testSaveReturnExpectedWhenEmptyData()
-    {
-        $this->setPrivateVariableValue($this->store, 'data', []);
-
-        $this->assertEquals(2, $this->store->save());
-    }
-
-    // @see надо ли этот тест или это уже перебор?
-    public function testSaveReturnExpected()
-    {
-        $data = $this->getPrivateVariableValue($this->store, 'data');
-        $count = mb_strlen(json_encode(array_values($data), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-
-        $this->assertEquals($count, $this->store->save());
-    }
-
-    public function testGetReturnExpectedData()
-    {
-        $user = $this->store->get('Username1');
-
-        $this->assertArrayHasKey('username', $user);
-        $this->assertArrayHasKey('rewards', $user);
-
-        $this->assertIsString($user['username']);
-        $this->assertIsArray($user['rewards']);
-
-        $this->assertSame('Username1', $user['username']);
-    }
-
-    public function testGetReturnNullWhenUserNotExist()
-    {
-        $this->assertNull($this->store->get('NotExist'));
-    }
-
-    public function testAddReturnExpectedWhenAddUser()
-    {
-        $rewards = [
-            ['emoji' => ':star:'],
-            ['count' => 3],
-        ];
-
-        $this->store->add(['Username3', $rewards]);
-        $this->assertSame('Username3', $this->store->get('Username3')['username']);
-    }
-
-    public function testRemoveWorkAsExpected()
-    {
-        $rewards = [
-            ['emoji' => ':star:'],
-            ['count' => 3],
-        ];
-
-        $this->store->add(['Username3', $rewards]);
-        $this->store->remove('Username3');
-
-        $this->assertNull($this->store->get('Username3'));
-    }
-
-    public function testToArrayReturnExpectedType()
+    public function testToArray()
     {
         $users = $this->store->toArray();
         $this->assertIsArray($users);
     }
 
-    public function testToArrayReturnExpectedArray()
+    public function testToArrayReturnedTheSameData()
     {
         $array = [
           [
@@ -165,7 +74,59 @@ class LeaderBoardStoreJSONFileTest extends TestCase
         $this->assertSame($array, $this->store->toArray());
     }
 
-    public function testUserExistsWorkAsExpected()
+    public function testSave()
+    {
+        $this->assertNotFalse($this->store->save());
+    }
+
+    public function testGet()
+    {
+        $user = $this->store->get('Username1');
+
+        $this->assertArrayHasKey('username', $user);
+        $this->assertArrayHasKey('rewards', $user);
+
+        $this->assertSame('Username1', $user['username']);
+
+        $this->assertIsArray($user['rewards']);
+    }
+
+    public function testGetNonExistingUser()
+    {
+        $this->assertNull($this->store->get('Username10'));
+    }
+
+    public function testGetTooFewArgumentsForUserAddingException()
+    {
+        $this->expectException(TooFewArgumentsForUserAdding::class);
+        $this->store->add(['Username']);
+    }
+
+    public function testAdd()
+    {
+        $rewards = [
+          ['emoji' => ':star:'],
+          ['count' => 3],
+        ];
+
+        $this->store->add(['Username3', $rewards]);
+        $this->assertSame('Username3', $this->store->get('Username3')['username']);
+    }
+
+    public function testRemove()
+    {
+        $rewards = [
+          ['emoji' => ':star:'],
+          ['count' => 3],
+        ];
+
+        $this->store->add(['Username3', $rewards]);
+        $this->store->remove('Username3');
+
+        $this->assertNull($this->store->get('Username3'));
+    }
+
+    public function testExists()
     {
         $userExists = $this->getPrivateMethod(LeaderBoardStoreJSONFile::class, 'userExists');
 

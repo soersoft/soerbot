@@ -21,27 +21,30 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 
     use ArrayServiceMethods;
 
-    /**
-     * LeaderBoardStoreJSONFile constructor.
-     *
-     * @param string $filename
-     * @throws StoreFileNotFoundException
-     */
-    public function __construct(string $filename = __DIR__ . '/../Store/leaderboard.json')
+    public function __construct($filename = __DIR__ . '/../Store/leaderboard.json')
     {
-        $this->file = $this->init($filename);
+        $this->file = $filename;
+    }
+
+    /**
+     * Saves all the data to JSON with pretty print.
+     * @return bool|int
+     */
+    public function save()
+    {
+        return file_put_contents($this->file, json_encode(array_values($this->data), JSON_UNESCAPED_UNICODE |
+          JSON_PRETTY_PRINT));
     }
 
     /**
      * Loads data from JSON file.
-     *
      * @throws StoreFileNotFoundException
      * @return bool
      */
     public function load()
     {
         if (!file_exists($this->file)) {
-            throw new StoreFileNotFoundException('File ' . $this->file . ' was not found.');
+            throw new StoreFileNotFoundException('File ' . $this->file . ' have not found');
         }
 
         if (empty($content = file_get_contents($this->file))) {
@@ -51,28 +54,6 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
         $this->data = json_decode($content, true);
 
         return $this->data === null ? false : true;
-    }
-
-    /**
-     * Saves all the data to JSON with pretty print.
-     *
-     * @return bool|int
-     */
-    public function save()
-    {
-        return @file_put_contents($this->file, json_encode(array_values($this->data), JSON_UNESCAPED_UNICODE |
-            JSON_PRETTY_PRINT));
-    }
-
-    /**
-     * @param string $username
-     * @return mixed|null
-     */
-    public function get(string $username)
-    {
-        return $this->first($this->data, function ($user) use ($username) {
-            return strtolower($user['username']) === strtolower($username);
-        });
     }
 
     /**
@@ -88,6 +69,17 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
         [$username, $rewards] = $args;
         $this->remove($username);
         array_push($this->data, ['username' => $username, 'rewards' => $rewards]);
+    }
+
+    /**
+     * @param string $username
+     * @return mixed|null
+     */
+    public function get(string $username)
+    {
+        return $this->first($this->data, function ($user) use ($username) {
+            return strtolower($user['username']) === strtolower($username);
+        });
     }
 
     /**
@@ -109,22 +101,6 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
     public function toArray()
     {
         return $this->data;
-    }
-
-    /*
-     * Init LeaderBoardStorage.
-     *
-     * @param string $filename
-     * @return string
-     * @throws StoreFileNotFoundException
-     */
-    protected function init(string $filename): string
-    {
-        if (!file_exists($filename)) {
-            throw new StoreFileNotFoundException('File ' . $filename . ' was not found.');
-        }
-
-        return $filename;
     }
 
     /**
