@@ -2,11 +2,10 @@
 
 namespace SoerBot\Commands\Karma\Implementations;
 
-use SoerBot\Commands\Karma\AbstractClasses\AbstractUserModel;
 use SoerBot\Commands\Karma\Exceptions\InvalidUserNameException;
 use SoerBot\Commands\Karma\Exceptions\StoreFileNotFoundException;
 
-class UserModel extends AbstractUserModel
+class UserModel
 {
     /**
      * @var KarmaStoreJSONFile
