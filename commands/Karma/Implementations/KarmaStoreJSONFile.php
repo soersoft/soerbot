@@ -85,13 +85,13 @@ class KarmaStoreJSONFile implements KarmaStoreInterface
             $storeFile = @fopen($this->file, 'w');
 
             if (!$storeFile) {
-                throw new StoreFileNotFoundException('Failed to create karma store file. Check the path to file');
+                throw new StoreFileNotFoundException('Failed to create karma store file. Check the file in folder "commands/Karma/store/karma.json"');
             }
             if (!fwrite($storeFile, '[]')) {
-                throw new StoreFileNotFoundException('Failed to write in karma store file. Check the path to file');
+                throw new StoreFileNotFoundException('Failed to write in karma store file. Check the file in folder "commands/Karma/store/karma.json"');
             }
             if (!fclose($storeFile)) {
-                throw new StoreFileNotFoundException('Failed to save karma store file. Check the path to file');
+                throw new StoreFileNotFoundException('Failed to save karma store file. Check the file in folder "commands/Karma/store/karma.json"');
             }
         } catch (StoreFileNotFoundException $error) {
             throw new StoreFileNotFoundException($error->getMessage());
