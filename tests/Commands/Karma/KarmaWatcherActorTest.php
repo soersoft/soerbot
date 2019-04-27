@@ -28,7 +28,7 @@ class KarmaWatcherTest extends TestCase
         $this->assertEquals($this->watcher->isPassRequirements($commandMessage), true);
     }
 
-    public function testFaildIsPassRequirements(): void
+    public function testFailedIsPassRequirements(): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
         $user = $this->createMock('CharlotteDunois\Yasmin\Models\User');
