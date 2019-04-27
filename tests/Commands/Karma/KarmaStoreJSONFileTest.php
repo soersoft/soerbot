@@ -4,6 +4,7 @@ namespace Tests\Commands\Karma;
 
 use Tests\TestCase;
 use SoerBot\Commands\Karma\Implementations\KarmaStoreJSONFile;
+use SoerBot\Commands\Karma\Exceptions\StoreFileNotFoundException;
 
 class KarmaStoreTest extends TestCase
 {
@@ -77,5 +78,14 @@ class KarmaStoreTest extends TestCase
 
         $this->store->createStoreFile();
         $this->assertEquals(file_exists($filePath), true);
+    }
+
+    public function testExeptionCreateStore()
+    {
+        $wrongFilePath = 'wrong/path';
+        $this->setPrivateVariableValue($this->store, 'file', $wrongFilePath);
+
+        $this->expectException(StoreFileNotFoundException::class);
+        $this->store->createStoreFile();
     }
 }
