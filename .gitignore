@@ -9,6 +9,6 @@ composer.lock
 index.php
 .idea
 config.yaml
-commands/Karma/WatcherActor/store/*.json
+commands/Karma/store/*.json
 tests/Fixtures/karma.tmp.json
 tests/Fixtures/karma.create-store.tmp.json
