@@ -4,6 +4,7 @@ namespace Tests\Commands\Karma;
 
 use Tests\TestCase;
 use SoerBot\Commands\Karma\Implementations\KarmaStoreJSONFile;
+use SoerBot\Commands\Karma\Exceptions\StoreFileNotFoundException;
 
 class KarmaStoreTest extends TestCase
 {
@@ -46,7 +47,7 @@ class KarmaStoreTest extends TestCase
 
     public function testLoadFunction()
     {
-        $this->setPrivateVariableValue($this->store, 'file', __DIR__ . '/../../Fixtures/karma.json');
+        $this->setPrivateVariableValue($this->store, 'file', __DIR__.'/../../Fixtures/karma.json');
         $this->store->load();
 
         $result = $this->getPrivateVariableValue($this->store, 'data');
@@ -59,7 +60,7 @@ class KarmaStoreTest extends TestCase
 
     public function testSaveFunction()
     {
-        $filePath = __DIR__ . '/../../Fixtures/karma.tmp.json';
+        $filePath = __DIR__.'/../../Fixtures/karma.tmp.json';
         $expectedResult = [['name' => 'username', 'karma' => 1]];
 
         $this->setPrivateVariableValue($this->store, 'file', $filePath);
@@ -70,12 +71,21 @@ class KarmaStoreTest extends TestCase
         $this->assertEquals($result, $expectedResult);
     }
 
-    public function testCreateStoreFilFunction()
+    public function testCreateStoreFileFunction()
     {
-        $filePath = __DIR__ . '/../../Fixtures/karma.create-store.tmp.json';
+        $filePath = __DIR__.'/../../Fixtures/karma.create-store.tmp.json';
         $this->setPrivateVariableValue($this->store, 'file', $filePath);
 
         $this->store->createStoreFile();
         $this->assertEquals(file_exists($filePath), true);
+    }
+
+    public function testExeptionCreateStore()
+    {
+        $wrongFilePath = 'wrong/path';
+        $this->setPrivateVariableValue($this->store, 'file', $wrongFilePath);
+
+        $this->expectException(StoreFileNotFoundException::class);
+        $this->store->createStoreFile();
     }
 }
