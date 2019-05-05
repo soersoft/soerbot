@@ -16,15 +16,6 @@ class KarmaWatcherActor implements WatcherActorInterface
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
         $this->client = $client;
-        $this->user = new UserModel();
-    }
-
-    /**
-     * @return SoerBot\Commands\Karma\Implementations\UserModel;
-     */
-    public function getUser(): UserModel
-    {
-        return $this->user;
     }
 
     /**
@@ -50,10 +41,6 @@ class KarmaWatcherActor implements WatcherActorInterface
      */
     public function run(Message $message)
     {
-        try {
-            $this->user->incrementUserKarma($message->author->username);
-        } catch (InvalidUserNameException $error) {
-            $this->client->emit('debug', $error->getMessage());
-        }
+        $this->client->emit('KarmaWatchMessage', $message);
     }
 }

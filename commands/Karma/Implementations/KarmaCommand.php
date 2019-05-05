@@ -4,10 +4,13 @@ namespace SoerBot\Commands\Karma\Implementations;
 
 use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor;
+use SoerBot\Commands\Karma\Implementations\UserModel;
 
 class KarmaCommand extends Command
 {
     private $karmaWatcherActor;
+
+    private $user;
 
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
@@ -27,7 +30,18 @@ class KarmaCommand extends Command
 
         $this->karmaWatcherActor = $this->createKarmaWatcherActor($client);
 
+        $this->user = new UserModel();
+
         $client->emit('RegisterWatcher', $this->karmaWatcherActor);
+
+        $client->on('KarmaWatchMessage', function ($message) {
+            $this->incrementKarma($message);
+        });
+    }
+
+    private function incrementKarma(\CharlotteDunois\Yasmin\Models\Message $message)
+    {
+        $this->user->incrementKarma($message->author->username);
     }
 
     private function createKarmaWatcherActor($client)
@@ -37,9 +51,7 @@ class KarmaCommand extends Command
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $userName = $message->author->username;
-        $userModel = $this->karmaWatcherActor->getUser();
-        $karma = $userModel->getUserKarma($userName);
+        $karma = $this->user->getKarma($message->author->username);
 
         return $message->reply("Ваша карма: $karma");
     }
