@@ -18,7 +18,7 @@ class VotingActor implements VotingStoreInterface
      * @param $message
      * @return void
      */
-    public function voting(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
+    public function voting (CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
     
         try {
@@ -27,5 +27,4 @@ class VotingActor implements VotingStoreInterface
             $this->client->emit('debug', $error->getMessage());
         }
 
-}
-}
+}}
