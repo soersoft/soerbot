@@ -12,25 +12,25 @@ class KarmaCommand extends Command
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
         parent::__construct($client, [
-                'name' => 'karma', // Give command name
-                'aliases' => [],
-                'group' => 'utils', // Group in ['command', 'util']
-                'description' => 'Выводит состояние кармы пользователя', // Fill the description
-                'guildOnly' => false,
-                'throttling' => [
-                    'usages' => 5,
-                    'duration' => 10,
-                ],
-                'guarded' => true,
-                'args' => [],
-            ]);
+            'name' => 'karma', // Give command name
+            'aliases' => [],
+            'group' => 'utils', // Group in ['command', 'util']
+            'description' => 'Выводит состояние кармы пользователя', // Fill the description
+            'guildOnly' => false,
+            'throttling' => [
+                'usages' => 5,
+                'duration' => 10,
+            ],
+            'guarded' => true,
+            'args' => []
+        ]);
 
-        $this->karmaWatcherActor = $this->createNewKarmaWatcherActor($client);
+        $this->karmaWatcherActor = $this->createKarmaWatcherActor($client);
 
         $client->emit('RegisterWatcher', $this->karmaWatcherActor);
     }
 
-    private function createNewKarmaWatcherActor($client)
+    private function createKarmaWatcherActor($client)
     {
         return new KarmaWatcherActor($client);
     }
