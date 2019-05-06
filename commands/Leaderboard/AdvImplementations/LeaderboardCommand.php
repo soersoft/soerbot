@@ -45,10 +45,20 @@ class LeaderboardCommand extends Command
           ->all()
           ->sort(function (User $a, User $b) {
               return $b->getPointsAmount() - $a->getPointsAmount();
-          })->map(function (User $user) {
+          })
+          ->map(function (User $user) {
               return $user->toString();
           });
 
-        return $message->say(implode($leaderboard->all()));
+        $leaderboard = $leaderboard->all();
+
+        $i = 0;
+
+        while (self::EMOJI_OF_PRIZE_PLACES[$i] && $leaderboard[$i]) {
+            $leaderboard[$i] = self::EMOJI_OF_PRIZE_PLACES[$i] . $leaderboard[$i];
+            $i++;
+        }
+
+        return $message->say(implode($leaderboard));
     }
 }
