@@ -9,7 +9,6 @@ class LeaderboardCommandTest extends TestCase
 {
     private $command;
     private $client;
-    private $users;
 
     protected function setUp()
     {
@@ -17,10 +16,6 @@ class LeaderboardCommandTest extends TestCase
 
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
         $this->command = $commandCreate($this->client);
-
-        $this->users = $this->createMock('SoerBot\Commands\Leaderboard\Implementations\UserModel');
-
-        $this->setPrivateVariableValue($this->command, 'users', $this->users);
 
         parent::setUp();
     }
@@ -35,9 +30,6 @@ class LeaderboardCommandTest extends TestCase
     public function testResponseToTheDiscord(): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
-
-        $this->users->expects($this->once())->method('sort')->will($this->returnValue($this->users));
-        $this->users->expects($this->once())->method('getLeaderBoardAsString')->will($this->returnValue('string'));
         $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
 
         $this->command->run($commandMessage, new ArrayObject(), false);
