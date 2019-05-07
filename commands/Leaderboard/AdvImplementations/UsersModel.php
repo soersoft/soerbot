@@ -77,7 +77,7 @@ class UsersModel
     {
         $key = $this->users->indexOf($user);
 
-        if ($key) {
+        if ($key >= 0) {
             $this->users->delete($key);
             $this->save();
         }
@@ -102,7 +102,7 @@ class UsersModel
     {
         $key = $this->users->indexOf($oldUser);
 
-        if ($key) {
+        if ($key >= 0) {
             $this->users->set($key, $newUser);
             $this->save();
         }

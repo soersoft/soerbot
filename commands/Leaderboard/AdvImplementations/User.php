@@ -114,8 +114,11 @@ class User
      */
     public function removeReward($rewardName)
     {
-        if ($reward = $this->getReward($rewardName)) {
-            ($key = $this->rewards->indexOf($reward)) && $this->rewards->delete($key);
+        if (($reward = $this->getReward($rewardName))) {
+            $key = $this->rewards->indexOf($reward);
+            if ($key >= 0) {
+                $this->rewards->delete($key);
+            }
         }
     }
 
@@ -126,9 +129,9 @@ class User
      */
     public function changeRewardAmount($rewardName, $value)
     {
-        if ($reward = $this->getReward($rewardName)) {
+        if (($reward = $this->getReward($rewardName))) {
             $key = $this->rewards->indexOf($reward);
-            if ($key) {
+            if ($key >= 0) {
                 $value += $this->rewards->get($key)['count'];
             }
         }
