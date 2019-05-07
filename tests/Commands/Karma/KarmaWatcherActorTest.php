@@ -45,10 +45,10 @@ class KarmaWatcherTest extends TestCase
         $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
         $user->expects($this->once())->method('__get')->with('username')->willReturn('username');
 
-        $userModel = $this->getMockBuilder('UserModel')->setMethods(['incrementUserKarma'])->getMock();
+        $userModel = $this->getMockBuilder('UserModel')->setMethods(['incrementKarma'])->getMock();
         $userModel
             ->expects($this->once())
-            ->method('incrementUserKarma')
+            ->method('incrementKarma')
             ->with('username')
             ->will($this->returnValue('username'));
 
@@ -75,11 +75,6 @@ class KarmaWatcherTest extends TestCase
         $this->expectException(InvalidUserNameException::class);
         $this->setPrivateVariableValue($this->watcher, 'user', $userModel);
         $this->watcher->run($commandMessage);
-    }
-
-    public function testGetUser(): void
-    {
-        $this->assertInstanceOf('SoerBot\Commands\Karma\Implementations\UserModel', $this->watcher->getUser());
     }
 
     public function __sleep()

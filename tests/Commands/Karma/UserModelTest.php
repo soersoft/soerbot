@@ -15,7 +15,7 @@ class UserModelTest extends TestCase
         parent::setUp();
     }
 
-    public function testIncrementUserKarmaFunction()
+    public function testIncrementKarmaFunction()
     {
         $testUserName = 'username';
 
@@ -28,16 +28,16 @@ class UserModelTest extends TestCase
 
         $this->setPrivateVariableValue($this->user, 'store', $store);
 
-        $this->user->incrementUserKarma($testUserName);
+        $this->user->incrementKarma($testUserName);
     }
 
-    public function testIncrementUserKarmaException()
+    public function testIncrementKarmaException()
     {
         $invalidTestUserName = '';
 
         $this->expectException(InvalidUserNameException::class);
 
-        $this->user->incrementUserKarma($invalidTestUserName);
+        $this->user->incrementKarma($invalidTestUserName);
     }
 
     public function __sleep()
