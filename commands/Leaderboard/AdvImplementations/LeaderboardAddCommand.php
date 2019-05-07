@@ -1,27 +1,47 @@
 <?php
 
-namespace SoerBot\Commands\Leaderboard\Implementations;
+namespace SoerBot\Commands\Leaderboard\AdvImplementations;
 
-use SoerBot\Commands\SoerCommand;
+use CharlotteDunois\Livia\Commands\Command;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
-use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
 
-class LeaderboardAddCommand extends SoerCommand
+class LeaderboardAddCommand extends Command
 {
     const SUCCESS_MESSAGE = 'Награда добавлена';
-
     const FAILURE_MESSAGE = 'Не удалось добавить награду';
 
-    /**
-     * @var UserModel
-     */
-    private $users;
+    protected $allowRoles = [
+      'product owner',
+      'куратор'
+    ];
 
     public function __construct(LiviaClient $client)
     {
-        parent::__construct($client);
-        $this->users = UserModel::getInstance(new LeaderBoardStoreJSONFile());
+        parent::__construct($client, [
+          'name' => 'leaderboard-add', // Give command name
+          'group' => 'utils', // Group in ['command', 'util']
+          'description' => 'Добавляет награду участнику', // Fill the description
+          'guildOnly' => false,
+          'throttling' => [
+            'usages' => 5,
+            'duration' => 10,
+          ],
+          'args' => [
+            [
+              'key' => 'name',
+              'name' => 'name',
+              'prompt' => 'Введите имя пользователя',
+              'type' => 'user'
+            ],
+            [
+              'key' => 'emoji',
+              'name' => 'emoji',
+              'prompt' => 'Какую награду добавить?',
+              'type' => 'reward'
+            ],
+          ],
+        ]);
     }
 
     /**
@@ -32,8 +52,12 @@ class LeaderboardAddCommand extends SoerCommand
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
+        $users = new UsersModel(new LeaderBoardStoreJSONFile(__DIR__ . '/../Store/leaderboard.json'));
+        $users->load();
+
         try {
-            $this->users->incrementReward($args['name']->username, $args['emoji']);
+            $users->get($args['name']->username)->incrementReward($args['emoji']);
+            $users->save();
         } catch (\Exception $e) {
             return $message->say(self::FAILURE_MESSAGE);
         }
