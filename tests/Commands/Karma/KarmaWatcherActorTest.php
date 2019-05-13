@@ -40,21 +40,11 @@ class KarmaWatcherTest extends TestCase
 
     public function testSuccessRun(): void
     {
-        $commandMessage = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
-        $user = $this->createMock('CharlotteDunois\Yasmin\Models\User');
-        $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
-        $user->expects($this->once())->method('__get')->with('username')->willReturn('username');
+        $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
 
-        $userModel = $this->getMockBuilder('UserModel')->setMethods(['incrementKarma'])->getMock();
-        $userModel
-            ->expects($this->once())
-            ->method('incrementKarma')
-            ->with('username')
-            ->will($this->returnValue('username'));
+        $this->client->expects($this->once())->method('emit')->with('KarmaWatchMessage', $message);
 
-        $this->setPrivateVariableValue($this->watcher, 'user', $userModel);
-
-        $this->watcher->run($commandMessage);
+        $this->watcher->run($message);
     }
 
     public function testExcpetionRun(): void

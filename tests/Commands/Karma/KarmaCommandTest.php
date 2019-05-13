@@ -12,7 +12,7 @@ class KarmaCommandTest extends TestCase
 
     protected function setUp()
     {
-        $commandCreate = require __DIR__ . '/../../../commands/Karma/Karma.command.php';
+        $commandCreate = require __DIR__.'/../../../commands/Karma/Karma.command.php';
 
         $client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
 
@@ -39,8 +39,7 @@ class KarmaCommandTest extends TestCase
 
         $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
         $user->expects($this->once())->method('__get')->with('username')->willReturn($userName);
-        $karmaWatcherActor->expects($this->once())->method('getUser')->willReturn($userModel);
-        $userModel->expects($this->once())->method('getUserKarma')->with($userName)->willReturn(20);
+        $userModel->expects($this->once())->method('getKarma')->with($userName)->willReturn(20);
 
         $commandMessage->expects($this->once())->method('reply')->with('Ваша карма: 20')->willReturn($promise);
 
