@@ -1,6 +1,6 @@
 <?php
 
-use SoerBot\Commands\Leaderboard\Implementations\LeaderboardRemoveUser;
+use SoerBot\Commands\Leaderboard\AdvImplementations\LeaderboardRemoveUser;
 
 return function ($client) {
     return new LeaderboardRemoveUser($client);
