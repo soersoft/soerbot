@@ -4,16 +4,17 @@ namespace SoerBot\Commands\Karma\Implementations;
 
 use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor;
+use SoerBot\Commands\Karma\Exceptions\InvalidUserNameException;
 
 class KarmaCommand extends Command
 {
     /**
-     * @var KarmaWatcherActor
+     * @var \SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor
      */
     private $karmaWatcherActor;
 
     /**
-     * @var UserModel
+     * @var \SoerBot\Commands\Karma\Implementations\UserModel
      */
     private $user;
 
@@ -44,15 +45,23 @@ class KarmaCommand extends Command
         });
     }
 
-    private function incrementKarma(\CharlotteDunois\Yasmin\Models\Message $message)
+    public function incrementKarma(\CharlotteDunois\Livia\CommandMessage $message)
     {
-        $this->user->incrementKarma($message->author->username);
+        try {
+            $this->user->incrementKarma($message->author->username);
+        } catch (InvalidUserNameException $error) {
+            $this->client->emit('debug', $error->getMessage());
+        }
     }
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $karma = $this->user->getKarma($message->author->username);
+        try {
+            $karma = $this->user->getKarma($message->author->username);
 
-        return $message->reply("Ваша карма: $karma");
+            return $message->reply("Ваша карма: $karma");
+        } catch (InvalidUserNameException $error) {
+            $this->client->emit('debug', $error->getMessage());
+        }
     }
 }

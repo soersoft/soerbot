@@ -10,39 +10,64 @@ class KarmaCommandTest extends TestCase
 {
     private $command;
 
+    /**
+     * @var \CharlotteDunois\Yasmin\Models\User
+     */
+    private $user;
+
+    /**
+     * @var \SoerBot\Commands\Karma\Implementations\UserModel
+     */
+    private $userModel;
+
+    /**
+     * @var \CharlotteDunois\Livia\CommandMessage
+     */
+    private $commandMessage;
+
     protected function setUp()
     {
         $commandCreate = require __DIR__.'/../../../commands/Karma/Karma.command.php';
 
         $client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
 
+        $this->user = $this->createMock('\CharlotteDunois\Yasmin\Models\User');
+        $this->userModel = $this->createMock('\SoerBot\Commands\Karma\Implementations\UserModel');
+        $this->commandMessage = $this->createMock('\CharlotteDunois\Livia\CommandMessage');
+
         $this->command = $commandCreate($client);
 
         parent::setUp();
     }
 
-    public function testSimpleResponseToTheDiscord(): void
+    public function testIncrementKarma(): void
     {
         $userName = 'username';
 
-        $commandMessage = $this->createMock('\CharlotteDunois\Livia\CommandMessage');
+        $this->commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($this->user);
+        $this->user->expects($this->once())->method('__get')->with('username')->willReturn($userName);
+        $this->userModel->expects($this->once())->method('incrementKarma')->with($userName);
+
+        $this->setPrivateVariableValue($this->command, 'user', $this->userModel);
+
+        $this->command->incrementKarma($this->commandMessage);
+    }
+
+    public function testRun(): void
+    {
+        $userName = 'username';
+
         $promise = new Promise(function () {
         });
-        $userModel = $this->createMock('\SoerBot\Commands\Karma\Implementations\UserModel');
-        $user = $this->createMock('\CharlotteDunois\Yasmin\Models\User');
-        $karmaWatcherActor = $this->createMock('SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor');
 
-        $reflection = new \ReflectionObject($this->command);
-        $reflection_property = $reflection->getProperty('karmaWatcherActor');
-        $reflection_property->setAccessible(true);
-        $reflection_property->setValue($this->command, $karmaWatcherActor);
+        $this->userModel->expects($this->once())->method('getKarma')->with($userName)->willReturn(20);
+        $this->commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($this->user);
+        $this->user->expects($this->once())->method('__get')->with('username')->willReturn($userName);
 
-        $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
-        $user->expects($this->once())->method('__get')->with('username')->willReturn($userName);
-        $userModel->expects($this->once())->method('getKarma')->with($userName)->willReturn(20);
+        $this->setPrivateVariableValue($this->command, 'user', $this->userModel);
 
-        $commandMessage->expects($this->once())->method('reply')->with('Ваша карма: 20')->willReturn($promise);
+        $this->commandMessage->expects($this->once())->method('reply')->with('Ваша карма: 20')->willReturn($promise);
 
-        $this->command->run($commandMessage, new ArrayObject(), false);
+        $this->command->run($this->commandMessage, new ArrayObject(), false);
     }
 }

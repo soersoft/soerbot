@@ -9,7 +9,7 @@ use SoerBot\Commands\Karma\Exceptions\StoreFileNotFoundException;
 class UserModel extends AbstractUserModel
 {
     /**
-     * @var KarmaStoreJSONFile
+     * @var \SoerBot\Commands\Karma\Implementations\KarmaStoreJSONFile
      */
     private $store;
 
