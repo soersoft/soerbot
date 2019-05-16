@@ -9,7 +9,7 @@ use SoerBot\Commands\Karma\Exceptions\StoreFileNotFoundException;
 class UserModel extends AbstractUserModel
 {
     /**
-     * @var KarmaStoreJSONFile
+     * @var \SoerBot\Commands\Karma\Implementations\KarmaStoreJSONFile
      */
     private $store;
 
@@ -37,9 +37,9 @@ class UserModel extends AbstractUserModel
         $this->store->save();
     }
 
-    public function getUserKarma(string $userName): int
+    public function getKarma(string $userName): int
     {
-        if (!$this->validateUserName($userName)) {
+        if (!$this->validateName($userName)) {
             throw new InvalidUserNameException('Invalid username. Username must be a string');
         }
 
@@ -52,16 +52,16 @@ class UserModel extends AbstractUserModel
         return self::KARMA_EMPTY;
     }
 
-    public function incrementUserKarma(string $userName)
+    public function incrementKarma(string $userName)
     {
-        $karma = $this->getUserKarma($userName);
+        $karma = $this->getKarma($userName);
         $karma += self::KARMA_ONE_STEP;
 
         $this->store->add(['name' => $userName, 'karma' => $karma]);
         $this->save();
     }
 
-    private function validateUserName(string $userName)
+    private function validateName(string $userName)
     {
         return isset($userName) && !empty($userName) && is_string($userName);
     }

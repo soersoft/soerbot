@@ -4,43 +4,64 @@ namespace SoerBot\Commands\Karma\Implementations;
 
 use CharlotteDunois\Livia\Commands\Command;
 use SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor;
+use SoerBot\Commands\Karma\Exceptions\InvalidUserNameException;
 
 class KarmaCommand extends Command
 {
+    /**
+     * @var \SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor
+     */
     private $karmaWatcherActor;
+
+    /**
+     * @var \SoerBot\Commands\Karma\Implementations\UserModel
+     */
+    private $user;
 
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
         parent::__construct($client, [
-                'name' => 'karma', // Give command name
-                'aliases' => [],
-                'group' => 'utils', // Group in ['command', 'util']
-                'description' => 'Выводит состояние кармы пользователя', // Fill the description
-                'guildOnly' => false,
-                'throttling' => [
-                    'usages' => 5,
-                    'duration' => 10,
-                ],
-                'guarded' => true,
-                'args' => [],
-            ]);
+            'name' => 'karma', // Give command name
+            'aliases' => [],
+            'group' => 'utils', // Group in ['command', 'util']
+            'description' => 'Выводит состояние кармы пользователя', // Fill the description
+            'guildOnly' => false,
+            'throttling' => [
+                'usages' => 5,
+                'duration' => 10,
+            ],
+            'guarded' => true,
+            'args' => [],
+        ]);
 
-        $this->karmaWatcherActor = $this->createNewKarmaWatcherActor($client);
+        $this->karmaWatcherActor = new KarmaWatcherActor($client);
+
+        $this->user = new UserModel();
 
         $client->emit('RegisterWatcher', $this->karmaWatcherActor);
+
+        $client->on('KarmaWatchMessage', function ($message) {
+            $this->incrementKarma($message);
+        });
     }
 
-    private function createNewKarmaWatcherActor($client)
+    public function incrementKarma(\CharlotteDunois\Livia\CommandMessage $message)
     {
-        return new KarmaWatcherActor($client);
+        try {
+            $this->user->incrementKarma($message->author->username);
+        } catch (InvalidUserNameException $error) {
+            $this->client->emit('debug', $error->getMessage());
+        }
     }
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $userName = $message->author->username;
-        $userModel = $this->karmaWatcherActor->getUser();
-        $karma = $userModel->getUserKarma($userName);
+        try {
+            $karma = $this->user->getKarma($message->author->username);
 
-        return $message->reply("Ваша карма: $karma");
+            return $message->reply("Ваша карма: $karma");
+        } catch (InvalidUserNameException $error) {
+            $this->client->emit('debug', $error->getMessage());
+        }
     }
 }

@@ -4,7 +4,6 @@ namespace Tests\Commands;
 
 use Tests\TestCase;
 use SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor;
-use SoerBot\Commands\Karma\Exceptions\InvalidUserNameException;
 
 class KarmaWatcherTest extends TestCase
 {
@@ -38,48 +37,13 @@ class KarmaWatcherTest extends TestCase
         $this->assertEquals($this->watcher->isPassRequirements($commandMessage), false);
     }
 
-    public function testSuccessRun(): void
+    public function testRun(): void
     {
-        $commandMessage = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
-        $user = $this->createMock('CharlotteDunois\Yasmin\Models\User');
-        $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
-        $user->expects($this->once())->method('__get')->with('username')->willReturn('username');
+        $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
 
-        $userModel = $this->getMockBuilder('UserModel')->setMethods(['incrementUserKarma'])->getMock();
-        $userModel
-            ->expects($this->once())
-            ->method('incrementUserKarma')
-            ->with('username')
-            ->will($this->returnValue('username'));
+        $this->client->expects($this->once())->method('emit')->with('KarmaWatchMessage', $message);
 
-        $this->setPrivateVariableValue($this->watcher, 'user', $userModel);
-
-        $this->watcher->run($commandMessage);
-    }
-
-    public function testExcpetionRun(): void
-    {
-        $incorrectUserName = 0;
-        $commandMessage = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
-        $user = $this->createMock('CharlotteDunois\Yasmin\Models\User');
-        $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
-        $user->expects($this->once())->method('__get')->with('username')->willReturn($incorrectUserName);
-
-        $userModel = $this->getMockBuilder('UserModel')->setMethods(['incrementUserKarma'])->getMock();
-        $userModel
-            ->expects($this->once())
-            ->method('incrementUserKarma')
-            ->with($incorrectUserName)
-            ->will($this->throwException(new InvalidUserNameException()));
-
-        $this->expectException(InvalidUserNameException::class);
-        $this->setPrivateVariableValue($this->watcher, 'user', $userModel);
-        $this->watcher->run($commandMessage);
-    }
-
-    public function testGetUser(): void
-    {
-        $this->assertInstanceOf('SoerBot\Commands\Karma\Implementations\UserModel', $this->watcher->getUser());
+        $this->watcher->run($message);
     }
 
     public function __sleep()
