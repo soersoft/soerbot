@@ -1,8 +1,9 @@
 <?php
 
-namespace SoerBot\Commands\Leaderboard\AdvImplementations;
+namespace SoerBot\Commands\Leaderboard\Implementations;
 
 use SoerBot\Commands\Leaderboard\Exceptions\StoreFileNotFoundException;
+use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 
 class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 {
@@ -29,8 +30,8 @@ class LeaderBoardStoreJSONFile implements LeaderBoardStoreInterface
 
     /**
      * Loads data from JSON file.
-     * @throws StoreFileNotFoundException
      * @return array|null
+     * @throws StoreFileNotFoundException
      */
     public function load(): ?array
     {
