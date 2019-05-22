@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Commands\LeaderboardAdv;
+namespace Tests\Commands\Leaderboard;
 
 use Tests\TestCase;
 use CharlotteDunois\Yasmin\Utils\Collection;
-use SoerBot\Commands\Leaderboard\AdvImplementations\User;
-use SoerBot\Commands\Leaderboard\AdvImplementations\UsersModel;
-use SoerBot\Commands\Leaderboard\AdvImplementations\LeaderBoardStoreJSONFile;
+use SoerBot\Commands\Leaderboard\Implementations\User;
+use SoerBot\Commands\Leaderboard\Implementations\UsersModel;
+use SoerBot\Commands\Leaderboard\Implementations\LeaderBoardStoreJSONFile;
 
 class UsersModelTest extends TestCase
 {

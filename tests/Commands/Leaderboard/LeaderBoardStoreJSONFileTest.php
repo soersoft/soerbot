@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Commands\LeaderboardAdv;
+namespace Tests\Commands\Leaderboard;
 
 use Tests\TestCase;
 use SoerBot\Commands\Leaderboard\Exceptions\StoreFileNotFoundException;
-use SoerBot\Commands\Leaderboard\AdvImplementations\LeaderBoardStoreJSONFile;
-use SoerBot\Commands\Leaderboard\AdvImplementations\LeaderBoardStoreInterface;
+use SoerBot\Commands\Leaderboard\Implementations\LeaderBoardStoreJSONFile;
+use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 
 class LeaderBoardStoreJSONFileTest extends TestCase
 {

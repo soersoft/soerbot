@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Commands;
+namespace Tests\Commands\Leaderboard;
 
 use ArrayObject;
 use Tests\TestCase;
-use React\Promise\Promise;
 
 class LeaderboardRemoveCommandTest extends TestCase
 {
@@ -50,21 +49,8 @@ class LeaderboardRemoveCommandTest extends TestCase
     public function testResponseToTheDiscord(): void
     {
         $commandMessage = $this->createMock('CharlotteDunois\Livia\CommandMessage');
+        $commandMessage->expects($this->once())->method('say')->with($this->isType('string'));
 
-        $this->users = $this->getMockBuilder('UserModel')->setMethods(['removeRewardsByType'])->getMock();
-
-        $promise = new Promise(function () {
-        });
-
-        $commandMessage->expects($this->once())->method('say')->with('Награды удалены')->willReturn($promise);
-
-        $this->users->method('removeRewardsByType')->willReturn(true);
-
-        $this->setPrivateVariableValue($this->command, 'users', $this->users);
-
-        $user = $this->createMock('\CharlotteDunois\Yasmin\Models\User');
-        $user->expects($this->once())->method('__get')->with('username')->willReturn('username');
-
-        $this->command->run($commandMessage, new ArrayObject(['name' => $user, 'emoji' => '🏅']), false);
+        $this->command->run($commandMessage, new ArrayObject(), false);
     }
 }
