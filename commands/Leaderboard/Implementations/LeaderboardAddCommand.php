@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Leaderboard\AdvImplementations;
+namespace SoerBot\Commands\Leaderboard\Implementations;
 
 use CharlotteDunois\Livia\Commands\Command;
 use CharlotteDunois\Livia\LiviaClient;
@@ -30,13 +30,13 @@ class LeaderboardAddCommand extends Command
           'args' => [
             [
               'key' => 'name',
-              'name' => 'name',
+              'label' => 'name',
               'prompt' => 'Введите имя пользователя',
               'type' => 'user'
             ],
             [
               'key' => 'emoji',
-              'name' => 'emoji',
+              'label' => 'emoji',
               'prompt' => 'Какую награду добавить?',
               'type' => 'reward'
             ],
@@ -56,7 +56,15 @@ class LeaderboardAddCommand extends Command
         $users->load();
 
         try {
-            $users->get($args['name']->username)->incrementReward($args['emoji']);
+            $user = $users->get($args['name']->username);
+
+            if ($user) {
+                $user->incrementReward($args['emoji']);
+            } else {
+                $user = new User($args['name']->username, [['emoji' => $args['emoji'], 'count' => 1]]);
+                $users->create($user);
+            }
+
             $users->save();
         } catch (\Exception $e) {
             return $message->say(self::FAILURE_MESSAGE);
