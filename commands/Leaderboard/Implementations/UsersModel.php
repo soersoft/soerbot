@@ -1,8 +1,9 @@
 <?php
 
-namespace SoerBot\Commands\Leaderboard\AdvImplementations;
+namespace SoerBot\Commands\Leaderboard\Implementations;
 
 use CharlotteDunois\Yasmin\Utils\Collection;
+use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 
 class UsersModel
 {
