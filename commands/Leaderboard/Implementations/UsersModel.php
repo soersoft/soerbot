@@ -47,7 +47,7 @@ class UsersModel
     public function save()
     {
         if (!($this->users instanceof Collection)) {
-            $this->load();
+            throw new \RuntimeException('You have to load users collection before saving it.');
         }
 
         $data = [];

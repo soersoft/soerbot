@@ -29,8 +29,15 @@ class UsersModelTest extends TestCase
         $this->assertInstanceOf(Collection::class, $this->users->all());
     }
 
+    public function testLoadFileNotFoundException()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->users->save();
+    }
+
     public function testSave()
     {
+        $this->users->load();
         $this->assertNotFalse($this->users->save());
     }
 
