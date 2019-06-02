@@ -1,6 +1,6 @@
 <?php
 
-use SoerBot\Commands\Leaderboard\AdvImplementations\LeaderboardAddCommand;
+use SoerBot\Commands\Leaderboard\Implementations\LeaderboardAddCommand;
 
 return function ($client) {
     return new LeaderboardAddCommand($client);

@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Leaderboard\AdvImplementations;
+namespace SoerBot\Commands\Leaderboard\Implementations;
 
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
@@ -11,6 +11,8 @@ class LeaderboardRemoveUser extends Command
 {
     const SUCCESS_MESSAGE = 'Пользователь успешно удален';
     const FAILURE_MESSAGE = 'Не удалось удалить пользователя';
+    const LEADERBOARD_IS_EMPTY = 'Необходимо добавить хотя бы одного пользователя в таблицу лидеров';
+    const USER_NOT_EXISTS = 'Такой пользователь не найден';
 
     /**
      * @var array
@@ -56,6 +58,14 @@ class LeaderboardRemoveUser extends Command
     {
         $users = new UsersModel(new LeaderBoardStoreJSONFile(__DIR__ . '/../Store/leaderboard.json'));
         $users->load();
+
+        if ($users->all()->count() === 0) {
+            return $message->say(self::LEADERBOARD_IS_EMPTY);
+        }
+
+        if (!$user = $users->get($args['name']->username)) {
+            return $message->say(self::USER_NOT_EXISTS);
+        }
 
         try {
             $users->delete($users->get($args['name']->username));
