@@ -3,7 +3,6 @@
 namespace SoerBot\Commands\Karma\Implementations;
 
 use CharlotteDunois\Livia\Commands\Command;
-use SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor;
 use SoerBot\Commands\Karma\Exceptions\InvalidUserNameException;
 
 class KarmaCommand extends Command
@@ -34,24 +33,7 @@ class KarmaCommand extends Command
             'args' => [],
         ]);
 
-        $this->karmaWatcherActor = new KarmaWatcherActor($client);
-
         $this->user = new UserModel();
-
-        $client->emit('RegisterWatcher', $this->karmaWatcherActor);
-
-        $client->on('KarmaWatchMessage', function ($message) {
-            $this->incrementKarma($message);
-        });
-    }
-
-    public function incrementKarma(\CharlotteDunois\Livia\CommandMessage $message)
-    {
-        try {
-            $this->user->incrementKarma($message->author->username);
-        } catch (InvalidUserNameException $error) {
-            $this->client->emit('debug', $error->getMessage());
-        }
     }
 
     public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
