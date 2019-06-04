@@ -1,6 +1,6 @@
 <?php
 
-namespace SoerBot\Commands\Leaderboard\AdvImplementations;
+namespace SoerBot\Commands\Leaderboard\Implementations;
 
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
@@ -54,7 +54,7 @@ class LeaderboardCommand extends Command
 
         $i = 0;
 
-        while (self::EMOJI_OF_PRIZE_PLACES[$i] && $leaderboard[$i]) {
+        while (array_key_exists($i, $leaderboard) && array_key_exists($i, self::EMOJI_OF_PRIZE_PLACES)) {
             $leaderboard[$i] = self::EMOJI_OF_PRIZE_PLACES[$i] . $leaderboard[$i];
             $i++;
         }

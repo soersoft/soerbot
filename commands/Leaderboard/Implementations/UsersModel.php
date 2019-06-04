@@ -1,8 +1,9 @@
 <?php
 
-namespace SoerBot\Commands\Leaderboard\AdvImplementations;
+namespace SoerBot\Commands\Leaderboard\Implementations;
 
 use CharlotteDunois\Yasmin\Utils\Collection;
+use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 
 class UsersModel
 {
@@ -41,11 +42,12 @@ class UsersModel
 
     /**
      * Saves users data to the store.
+     * @return bool|int
      */
     public function save()
     {
         if (!($this->users instanceof Collection)) {
-            $this->load();
+            throw new \RuntimeException('You have to load users collection before saving it.');
         }
 
         $data = [];
@@ -54,7 +56,7 @@ class UsersModel
             $data[] = ['username' => $user->getName(), 'rewards' => $user->getRewards()];
         }
 
-        $this->store->save($data);
+        return $this->store->save($data);
     }
 
     /**
@@ -64,6 +66,10 @@ class UsersModel
      */
     public function get($username): ?User
     {
+        if (!($this->users instanceof Collection)) {
+            return null;
+        }
+
         return $this->users->first(function ($user) use ($username) {
             return $user->getName() === $username;
         });
@@ -110,9 +116,9 @@ class UsersModel
 
     /**
      * Returns instance of users collection.
-     * @return Collection
+     * @return Collection | null
      */
-    public function all(): Collection
+    public function all(): ?Collection
     {
         return $this->users;
     }

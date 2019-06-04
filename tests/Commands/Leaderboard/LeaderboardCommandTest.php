@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Commands;
+namespace Tests\Commands\Leaderboard;
 
 use ArrayObject;
 use Tests\TestCase;

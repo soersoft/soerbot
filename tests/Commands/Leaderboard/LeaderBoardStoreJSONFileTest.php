@@ -3,10 +3,9 @@
 namespace Tests\Commands\Leaderboard;
 
 use Tests\TestCase;
-use SoerBot\Commands\Leaderboard\Store\LeaderBoardStoreJSONFile;
-use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 use SoerBot\Commands\Leaderboard\Exceptions\StoreFileNotFoundException;
-use SoerBot\Commands\Leaderboard\Exceptions\TooFewArgumentsForUserAdding;
+use SoerBot\Commands\Leaderboard\Implementations\LeaderBoardStoreJSONFile;
+use SoerBot\Commands\Leaderboard\Interfaces\LeaderBoardStoreInterface;
 
 class LeaderBoardStoreJSONFileTest extends TestCase
 {
@@ -23,7 +22,7 @@ class LeaderBoardStoreJSONFileTest extends TestCase
 
     public function testLoad()
     {
-        $this->assertTrue($this->store->load());
+        $this->assertIsArray($this->store->load());
     }
 
     public function testLoadFileNotFoundException()
@@ -35,18 +34,15 @@ class LeaderBoardStoreJSONFileTest extends TestCase
     public function testLoadEmptyStore()
     {
         $this->store = new LeaderBoardStoreJSONFile(__DIR__ . '/../../Fixtures/leaderboard.empty.tmp.json');
-        $this->assertTrue($this->store->load());
+        $this->assertNull($this->store->load());
     }
 
-    public function testToArray()
+    public function testSave()
     {
-        $users = $this->store->toArray();
-        $this->assertIsArray($users);
-    }
+        $data = [];
+        $this->assertNotFalse($this->store->save($data));
 
-    public function testToArrayReturnedTheSameData()
-    {
-        $array = [
+        $data = [
           [
             'username' => 'Username1',
             'rewards' => [
@@ -64,73 +60,12 @@ class LeaderBoardStoreJSONFileTest extends TestCase
             'username' => 'Username2',
             'rewards' => [
               [
-                'emoji' => ':smile:',
+                'emoji' => ':star:',
                 'count' => 5,
               ],
             ],
           ],
         ];
-
-        $this->assertSame($array, $this->store->toArray());
-    }
-
-    public function testSave()
-    {
-        $this->assertNotFalse($this->store->save());
-    }
-
-    public function testGet()
-    {
-        $user = $this->store->get('Username1');
-
-        $this->assertArrayHasKey('username', $user);
-        $this->assertArrayHasKey('rewards', $user);
-
-        $this->assertSame('Username1', $user['username']);
-
-        $this->assertIsArray($user['rewards']);
-    }
-
-    public function testGetNonExistingUser()
-    {
-        $this->assertNull($this->store->get('Username10'));
-    }
-
-    public function testGetTooFewArgumentsForUserAddingException()
-    {
-        $this->expectException(TooFewArgumentsForUserAdding::class);
-        $this->store->add(['Username']);
-    }
-
-    public function testAdd()
-    {
-        $rewards = [
-          ['emoji' => ':star:'],
-          ['count' => 3],
-        ];
-
-        $this->store->add(['Username3', $rewards]);
-        $this->assertSame('Username3', $this->store->get('Username3')['username']);
-    }
-
-    public function testRemove()
-    {
-        $rewards = [
-          ['emoji' => ':star:'],
-          ['count' => 3],
-        ];
-
-        $this->store->add(['Username3', $rewards]);
-        $this->store->remove('Username3');
-
-        $this->assertNull($this->store->get('Username3'));
-    }
-
-    public function testExists()
-    {
-        $userExists = $this->getPrivateMethod(LeaderBoardStoreJSONFile::class, 'userExists');
-
-        $this->assertTrue($userExists->invokeArgs($this->store, ['Username1']));
-        $this->assertFalse($userExists->invokeArgs($this->store, ['Username10']));
+        $this->assertIsInt($this->store->save($data));
     }
 }

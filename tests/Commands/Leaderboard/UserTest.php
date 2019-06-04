@@ -26,9 +26,9 @@ class UserTest extends TestCase
 
     public function testGetReward()
     {
-        $this->assertEquals(['emoji' => '🏅', 'count' => 3], $this->user->getReward('🏅'));
         $this->assertEquals(['emoji' => '⭐', 'count' => 5], $this->user->getReward('⭐'));
-        $this->assertFalse($this->user->getReward(':emoji:'));
+        $this->assertEquals(['emoji' => '🏅', 'count' => 3], $this->user->getReward('🏅'));
+        $this->assertNull($this->user->getReward(':emoji:'));
     }
 
     public function testAddReward()
@@ -53,7 +53,7 @@ class UserTest extends TestCase
         $this->assertIsArray($this->user->getRewards());
     }
 
-    public function testAddToRewardAmount()
+    public function testChangeRewardAmount()
     {
         $this->user->changeRewardAmount('⭐', 5);
         $this->assertEquals(['emoji' => '⭐', 'count' => 10], $this->user->getReward('⭐'));
@@ -81,24 +81,17 @@ class UserTest extends TestCase
         $this->user->addReward('⭐', 2);
         $this->user->decrementReward('⭐');
         $this->user->decrementReward('⭐');
-        $this->assertFalse($this->user->getReward('⭐'));
+        $this->assertNull($this->user->getReward('⭐'));
     }
 
     public function testRemoveReward()
     {
         $this->assertEquals(['emoji' => '⭐', 'count' => 5], $this->user->getReward('⭐'));
         $this->user->removeReward('⭐');
-        $this->assertFalse($this->user->getReward('⭐'));
+        $this->assertNull($this->user->getReward('⭐'));
     }
 
     public function testToString()
-    {
-        $string = 'Username' . PHP_EOL . '⭐⭐⭐⭐⭐' . PHP_EOL . '🏅🏅🏅' .
-          PHP_EOL;
-        $this->assertEquals($string, (string)$this->user);
-    }
-
-    public function testToStringAsNonMagicMethod()
     {
         $string = 'Username' . PHP_EOL . '⭐⭐⭐⭐⭐' . PHP_EOL . '🏅🏅🏅' .
           PHP_EOL;
@@ -110,8 +103,7 @@ class UserTest extends TestCase
         $string = ':one: Username' . PHP_EOL . '⭐⭐⭐⭐⭐' . PHP_EOL . '🏅🏅🏅'
           . PHP_EOL;
 
-        $this->user->addPrefix(':one: ');
-        $this->assertEquals($string, (string)$this->user);
+        $this->assertEquals($string, $this->user->toString(PHP_EOL, ':one: '));
     }
 
     public function testGetPointsAmount()

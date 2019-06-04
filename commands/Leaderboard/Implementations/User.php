@@ -2,33 +2,19 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
-use SoerBot\Commands\Leaderboard\Traits\ArrayServiceMethods;
+use CharlotteDunois\Yasmin\Utils\Collection;
 
 class User
 {
     /**
-     * The name of the user.
      * @var string
      */
     protected $name;
 
     /**
-     * The array of user's rewards.
-     * @var array
+     * @var Collection
      */
-    protected $rewards = [];
-
-    /**
-     * Line delimiter for separating name and rewards in stringify functions.
-     * @var string
-     */
-    protected $linesDelimiter;
-
-    /**
-     * Useful thing for adding something before username in stringify functions.
-     * @var string
-     */
-    protected $prefix;
+    protected $rewards;
 
     /**
      * Determines how many points gives each reward.
@@ -39,17 +25,19 @@ class User
       '🏅' => 5,
     ];
 
-    use ArrayServiceMethods;
-
-    public function __construct($name, array $rewards, $linesDelimiter = PHP_EOL)
+    /**
+     * User constructor.
+     * @param $name
+     * @param array $rewards
+     */
+    public function __construct($name, array $rewards)
     {
-        $this->rewards = $this->validateRewards($rewards);
         $this->name = $name;
-        $this->linesDelimiter = $linesDelimiter;
-        $this->prefix = '';
+        $this->rewards = new Collection($this->validateRewards($rewards));
     }
 
     /**
+     * Returns name of the user.
      * @return string
      */
     public function getName()
@@ -58,11 +46,12 @@ class User
     }
 
     /**
+     * Returns rewards of the user.
      * @return array
      */
     public function getRewards()
     {
-        return $this->rewards;
+        return array_values($this->rewards->all());
     }
 
     /**
@@ -77,9 +66,7 @@ class User
 
         if (!empty($rewards)) {
             foreach ($rewards as $reward) {
-                if ($this->validateReward($reward)) {
-                    $validRewards[] = $reward;
-                }
+                $this->validateReward($reward) && $validRewards[] = $reward;
             }
         }
 
@@ -99,71 +86,62 @@ class User
 
     /**
      * Returns array which contains name of the reward and its count.
-     *
-     * @param string $rewardName
-     * @return bool|array
+     * @param $rewardName
+     * @return array|null
      */
     public function getReward($rewardName)
     {
-        $key = $this->findKey($this->rewards, 'emoji', $rewardName);
-
-        return ($key === false) ? false : $this->rewards[$key];
+        return $this->rewards->first(function ($reward) use ($rewardName) {
+            return $reward['emoji'] === $rewardName;
+        });
     }
 
     /**
      * Updates reward if it exists or creates the new one if it doesn't exist.
      *
-     * @param string $rewardName
-     * @param int $rewardCount
-     * @return void
+     * @param $rewardName
+     * @param $rewardCount
      */
     public function addReward($rewardName, $rewardCount)
     {
-        $newReward = ['emoji' => $rewardName, 'count' => $rewardCount];
-
-        if ($this->exists($this->rewards, 'emoji', $rewardName)) {
-            $key = $this->findKey($this->rewards, 'emoji', $rewardName);
-            $this->rewards[$key] = $newReward;
-        } else {
-            $this->rewards[] = $newReward;
-        }
+        $key = ($reward = $this->getReward($rewardName)) ? $this->rewards->indexOf($reward) : $this->rewards->count();
+        $this->rewards->set($key, ['emoji' => $rewardName, 'count' => $rewardCount]);
     }
 
     /**
      * Removes reward if the user has it.
-     *
-     * @param string $rewardName
-     * @return void
+     * @param $rewardName
      */
     public function removeReward($rewardName)
     {
-        if ($this->exists($this->rewards, 'emoji', $rewardName)) {
-            $key = $this->findKey($this->rewards, 'emoji', $rewardName);
-            unset($this->rewards[$key]);
-            //Without that json is saved incorrect way
-            $this->rewards = array_values($this->rewards);
+        if (($reward = $this->getReward($rewardName))) {
+            $key = $this->rewards->indexOf($reward);
+            if ($key >= 0) {
+                $this->rewards->delete($key);
+            }
         }
     }
 
     /**
      * Changes reward amount, can take a positive or negative number. Removes reward if its count less then one.
-     *
-     * @param string $rewardName
-     * @param int $value
-     * @return void
+     * @param $rewardName
+     * @param $value
      */
     public function changeRewardAmount($rewardName, $value)
     {
-        if ($reward = $this->getReward($rewardName)) {
-            $value += $reward['count'];
+        if (($reward = $this->getReward($rewardName))) {
+            $key = $this->rewards->indexOf($reward);
+            if ($key >= 0) {
+                $value += $this->rewards->get($key)['count'];
+            }
         }
 
         $value > 0 ? $this->addReward($rewardName, $value) : $this->removeReward($rewardName);
     }
 
     /**
-     * @param string $rewardName
-     * @return void
+     * Increments reward amount by 1.
+     * @param $rewardName
      */
     public function incrementReward($rewardName)
     {
@@ -171,8 +149,8 @@ class User
     }
 
     /**
-     * @param string $rewardName
-     * @return void
+     * Decrements reward amount by 1.
+     * @param $rewardName
      */
     public function decrementReward($rewardName)
     {
@@ -180,59 +158,48 @@ class User
     }
 
     /**
-     * @param string $prefix
-     */
-    public function addPrefix($prefix)
-    {
-        $this->prefix = $prefix;
-    }
-
-    /**
      * Returns a string which contains the username and his rewards.
-     *
+     * @param string $linesDelimiter
+     * @param null $prefix
      * @return string
      */
-    public function __toString()
+    public function toString($linesDelimiter = PHP_EOL, $prefix = null)
     {
-        return ($this->prefix ?? '') . $this->name . $this->linesDelimiter . $this->makeRewardsAsString();
+        return ($prefix ?? '') . $this->name . $linesDelimiter . $this->makeRewardsAsString($linesDelimiter);
     }
 
     /**
+     * Returns a string which contains all the rewards of the user.
+     * @param $linesDelimiter
      * @return string
      */
-    public function toString()
+    protected function makeRewardsAsString($linesDelimiter)
     {
-        return (string)$this;
+        $rewards = '';
+
+        foreach ($this->rewards->all() as $reward) {
+            $rewards .= str_repeat($reward['emoji'], $reward['count']) . $linesDelimiter;
+        }
+
+        return $rewards;
     }
 
     /**
      * Returns user's total rewards points. If points for current reward don't define function adds 0 for this reward.
-     *
      * @return int
      */
     public function getPointsAmount()
     {
+        if ($this->rewards->count() === 0) {
+            return 0;
+        }
+
         return (function ($rewardsPoints) {
-            return array_reduce($this->rewards, function ($amount, $reward) use ($rewardsPoints) {
+            return array_reduce($this->rewards->all(), function ($amount, $reward) use ($rewardsPoints) {
                 $points = array_key_exists($reward['emoji'], $rewardsPoints) ? $rewardsPoints[$reward['emoji']] : 0;
 
                 return $amount += $reward['count'] * $points;
             });
         })(self::$rewardsPoints);
-    }
-
-    /**
-     * Returns a string which contains all the rewards of the user.
-     * @return string
-     */
-    protected function makeRewardsAsString()
-    {
-        $rewards = '';
-
-        foreach ($this->rewards as $reward) {
-            $rewards .= str_repeat($reward['emoji'], $reward['count']) . $this->linesDelimiter;
-        }
-
-        return $rewards;
     }
 }
