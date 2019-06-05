@@ -40,19 +40,6 @@ class KarmaCommandTest extends TestCase
         parent::setUp();
     }
 
-    public function testIncrementKarma(): void
-    {
-        $userName = 'username';
-
-        $this->commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($this->user);
-        $this->user->expects($this->once())->method('__get')->with('username')->willReturn($userName);
-        $this->userModel->expects($this->once())->method('incrementKarma')->with($userName);
-
-        $this->setPrivateVariableValue($this->command, 'user', $this->userModel);
-
-        $this->command->incrementKarma($this->commandMessage);
-    }
-
     public function testRun(): void
     {
         $userName = 'username';

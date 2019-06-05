@@ -18,7 +18,7 @@ class KarmaWatcherActor implements WatcherActorInterface
      *
      * @return boolean;
      */
-    public function isPassRequirements(\CharlotteDunois\Yasmin\Models\Message $message)
+    public function isPassRequirements(\CharlotteDunois\Yasmin\Models\Message $message): bool
     {
         if (!$message->author->bot) {
             return true;
@@ -32,7 +32,7 @@ class KarmaWatcherActor implements WatcherActorInterface
      *
      * @param $message
      */
-    public function run(\CharlotteDunois\Yasmin\Models\Message $message)
+    public function run(\CharlotteDunois\Yasmin\Models\Message $message): void
     {
         $this->client->emit('incrementKarma', $message);
     }

@@ -2,11 +2,15 @@
 
 namespace SoerBot\Commands\Karma\Implementations;
 
-use SoerBot\Commands\Karma\Implementations\UserModel;
 use SoerBot\Commands\Karma\Exceptions\InvalidUserNameException;
 
 class KarmaListener
 {
+    /**
+     * @var SoerBot\Commands\Karma\Implementations\UserModel;
+     */
+    private $user;
+
     public function __construct(\CharlotteDunois\Livia\LiviaClient $client)
     {
         $this->client = $client;

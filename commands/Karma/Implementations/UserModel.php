@@ -4,7 +4,6 @@ namespace SoerBot\Commands\Karma\Implementations;
 
 use SoerBot\Commands\Karma\AbstractClasses\AbstractUserModel;
 use SoerBot\Commands\Karma\Exceptions\InvalidUserNameException;
-use SoerBot\Commands\Karma\Exceptions\StoreFileNotFoundException;
 
 class UserModel extends AbstractUserModel
 {
@@ -23,16 +22,16 @@ class UserModel extends AbstractUserModel
         $this->load();
     }
 
-    protected function load()
+    protected function load(): void
     {
         try {
             $this->store->load();
-        } catch (StoreFileNotFoundException $error) {
+        } catch (\SoerBot\Commands\Karma\Exceptions\StoreFileNotFoundException $error) {
             exit($error->getMessage());
         }
     }
 
-    protected function save()
+    protected function save(): void
     {
         $this->store->save();
     }
@@ -43,6 +42,8 @@ class UserModel extends AbstractUserModel
             throw new InvalidUserNameException('Invalid username. Username must be a string');
         }
 
+        $this->load();
+
         $user = $this->store->get($userName);
 
         if (!empty($user)) {
@@ -52,7 +53,7 @@ class UserModel extends AbstractUserModel
         return self::KARMA_EMPTY;
     }
 
-    public function incrementKarma(string $userName)
+    public function incrementKarma(string $userName): void
     {
         $karma = $this->getKarma($userName);
         $karma += self::KARMA_ONE_STEP;
@@ -61,7 +62,7 @@ class UserModel extends AbstractUserModel
         $this->save();
     }
 
-    private function validateName(string $userName)
+    private function validateName(string $userName): bool
     {
         return isset($userName) && !empty($userName) && is_string($userName);
     }

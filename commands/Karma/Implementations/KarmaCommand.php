@@ -8,11 +8,6 @@ use SoerBot\Commands\Karma\Exceptions\InvalidUserNameException;
 class KarmaCommand extends Command
 {
     /**
-     * @var \SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor
-     */
-    private $karmaWatcherActor;
-
-    /**
      * @var \SoerBot\Commands\Karma\Implementations\UserModel
      */
     private $user;
@@ -36,7 +31,7 @@ class KarmaCommand extends Command
         $this->user = new UserModel();
     }
 
-    public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern)
+    public function run(\CharlotteDunois\Livia\CommandMessage $message, \ArrayObject $args, bool $fromPattern): \React\Promise\ExtendedPromiseInterface
     {
         try {
             $karma = $this->user->getKarma($message->author->username);
