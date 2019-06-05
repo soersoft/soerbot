@@ -16,9 +16,10 @@ class SpideyBotWatcherActor implements WatcherActorInterface
      * Проверяет соответствует ли сообщение требованиям Watcher-а.
      *
      * @param $message
+     *
      * @return boolean;
      */
-    public function isPassRequirements(\CharlotteDunois\Yasmin\Models\Message $message)
+    public function isPassRequirements(\CharlotteDunois\Yasmin\Models\Message $message): bool
     {
         $config = Configurator::get('SpideyBot', ['branch' => 'develop', 'color' => 3066993]);
         if ($message->author->username == 'Spidey Bot' && $message->embeds[0]->color == $config['color']) {
@@ -36,9 +37,8 @@ class SpideyBotWatcherActor implements WatcherActorInterface
      * Выполняет действие, заложенное в Wathcher.
      *
      * @param $message
-     * @return void
      */
-    public function run(\CharlotteDunois\Yasmin\Models\Message $message)
+    public function run(\CharlotteDunois\Yasmin\Models\Message $message): void
     {
         $this->client->emit('stop');
         $this->client->emit('debug', 'it seems test is ok');

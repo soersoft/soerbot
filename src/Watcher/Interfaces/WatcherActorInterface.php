@@ -10,15 +10,17 @@ interface WatcherActorInterface
      * Проверяет соответствует ли сообщение требованиям Watcher-а.
      *
      * @param $message
+     *
      * @return boolean;
      */
-    public function isPassRequirements(\CharlotteDunois\Yasmin\Models\Message $message);
+    public function isPassRequirements(\CharlotteDunois\Yasmin\Models\Message $message): bool;
 
     /**
      * Выполняет действие, заложенное в Wathcher.
      *
      * @param $message
-     * @return void
+     *
+     * @return void;
      */
-    public function run(\CharlotteDunois\Yasmin\Models\Message $message);
+    public function run(\CharlotteDunois\Yasmin\Models\Message $message): void;
 }
