@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Implementations;
+namespace SoerBot\Classes;
 
-use App\Interfaces\StoreInterface;
-use App\Implementations\Exceptions\StoreFileNotFoundException;
+use SoerBot\Classes\Interfaces\StoreInterface;
+use SoerBot\Classes\Exceptions\StoreFileNotFoundException;
 
 class StoreJSONFile implements StoreInterface
 {

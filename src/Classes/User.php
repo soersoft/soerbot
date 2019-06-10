@@ -1,49 +1,29 @@
 <?php
 
-namespace App\Implementations;
+namespace SoerBot\Classes;
 
-use App\Implementations\Features\Feature;
-use CharlotteDunois\Yasmin\Utils\Collection;
+use SoerBot\Classes\Traits\HasRewards;
 
 class User
 {
+    use HasRewards;
+
     /**
      * @var string
      */
     protected $name;
 
-    /**
-     * @var Collection
-     */
-    protected $features;
-
-    /**
-     * User constructor.
-     * @param string $name
-     */
-    public function __construct(string $name)
+    public function __construct($name)
     {
         $this->name = $name;
-        $this->features = new Collection();
     }
 
-    public function getName(): string
+    /**
+     * Returns name of the user.
+     * @return string
+     */
+    public function getName()
     {
         return $this->name;
-    }
-
-    public function addFeature(string $name, Feature $feature)
-    {
-        return $this->features->set($name, $feature);
-    }
-
-    public function getFeature(string $name)
-    {
-        return $this->features->has($name) ? $this->features->get($name) : null;
-    }
-
-    public function removeFeature(string $name)
-    {
-        return $this->features->has($name) ? $this->features->delete($name) : null;
     }
 }

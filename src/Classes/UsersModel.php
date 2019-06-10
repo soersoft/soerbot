@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Implementations;
+namespace SoerBot\Classes;
 
-use App\Interfaces\StoreInterface;
-use App\Implementations\Features\Feature;
 use CharlotteDunois\Yasmin\Utils\Collection;
 
 class UsersModel
@@ -11,120 +9,48 @@ class UsersModel
     /**
      * @var Collection
      */
-    protected $users = null;
+    protected $features = null;
 
-    /**
-     * UsersModel constructor.
-     */
     public function __construct()
     {
-        $this->users = new Collection();
+        $this->features = new Collection();
     }
 
-    public function addFeature(string $name, $featureClassname, StoreInterface $store)
+    public function load()
     {
-        $usersData = $store->load();
-
-        foreach ($usersData as $userData) {
-            if (!array_key_exists('username', $userData)) {
-                continue;
-            }
-
-            if (!($user = $this->get($userData['username']))) {
-                $user = new User($userData['username']);
-                $this->create($user);
-            }
-
-            $feature = new $featureClassname($userData['data']);
-
-            if (!($feature instanceof Feature)) {
-                throw new \RuntimeException('feature must be an instance of Feature!');
-            }
-
-            $user->addFeature($name, $feature);
-        }
-    }
-
-    /**
-     * Saves users data to the store.
-     * @return bool|int
-     */
-    public function save()
-    {
-        if (!($this->users instanceof Collection)) {
-            throw new \RuntimeException('You have to load users collection before saving it.');
-        }
-
-        $data = [];
-
-        foreach ($this->users->all() as $user) {
-            $data[] = ['username' => $user->getName(), 'rewards' => $user->getRewards()];
-        }
-
-        return $this->store->save($data);
-    }
-
-    /**
-     * Returns instance of User for particular username.
-     * @param $username
-     * @return User|null
-     */
-    public function get($username): ?User
-    {
-        if (!($this->users instanceof Collection)) {
-            return null;
-        }
-
-        return $this->users->first(function ($user) use ($username) {
-            return $user->getName() === $username;
+        return $this->features->each(function ($feature) {
+            $feature->load();
         });
     }
 
-    /**
-     * Deletes user from collection.
-     * @param User $user
-     */
-    public function delete(User $user)
+    public function save()
     {
-        $key = $this->users->indexOf($user);
+        return $this->features->each(function ($feature) {
+            $feature->save();
+        });
+    }
 
-        if ($key >= 0) {
-            $this->users->delete($key);
-            $this->save();
+    public function feature(string $featureName): Feature
+    {
+        return $this->get($featureName);
+    }
+
+    public function get($featureName): ?Feature
+    {
+        if (!($this->features instanceof Collection)) {
+            return null;
         }
+
+        return $this->features->get($featureName);
     }
 
-    /**
-     * Creates user.
-     * @param User $user
-     */
-    public function create(User $user)
+    public function addFeature(string $featureName, Feature $feature)
     {
-        $this->users->set($this->users->count(), $user);
-        $this->save();
+        return $this->features->set($featureName, $feature);
     }
 
-    /**
-     * Updates user data.
-     * @param User $oldUser
-     * @param User $newUser
-     */
-    public function update(User $oldUser, User $newUser)
-    {
-        $key = $this->users->indexOf($oldUser);
-
-        if ($key >= 0) {
-            $this->users->set($key, $newUser);
-            $this->save();
-        }
-    }
-
-    /**
-     * Returns instance of users collection.
-     * @return Collection | null
-     */
     public function all(): ?Collection
     {
-        return $this->users;
+        return $this->features;
     }
 }
