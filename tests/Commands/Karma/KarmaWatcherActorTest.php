@@ -7,8 +7,6 @@ use SoerBot\Commands\Karma\WatcherActor\KarmaWatcherActor;
 
 class KarmaWatcherTest extends TestCase
 {
-    private $command;
-
     protected function setUp()
     {
         $this->client = $this->createMock('\CharlotteDunois\Livia\LiviaClient');
@@ -21,7 +19,8 @@ class KarmaWatcherTest extends TestCase
     {
         $commandMessage = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
         $user = $this->createMock('CharlotteDunois\Yasmin\Models\User');
-        $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
+
+        $commandMessage->expects($this->at(0))->method('__get')->with('author')->willReturn($user);
         $user->expects($this->once())->method('__get')->with('bot')->willReturn(false);
 
         $this->assertEquals($this->watcher->isPassRequirements($commandMessage), true);
@@ -31,6 +30,7 @@ class KarmaWatcherTest extends TestCase
     {
         $commandMessage = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
         $user = $this->createMock('CharlotteDunois\Yasmin\Models\User');
+
         $commandMessage->expects($this->once())->method('__get')->with('author')->willReturn($user);
         $user->expects($this->once())->method('__get')->with('bot')->willReturn(true);
 
@@ -41,7 +41,7 @@ class KarmaWatcherTest extends TestCase
     {
         $message = $this->createMock('CharlotteDunois\Yasmin\Models\Message');
 
-        $this->client->expects($this->once())->method('emit')->with('KarmaWatchMessage', $message);
+        $this->client->expects($this->once())->method('emit')->with('incrementKarma', $message);
 
         $this->watcher->run($message);
     }
