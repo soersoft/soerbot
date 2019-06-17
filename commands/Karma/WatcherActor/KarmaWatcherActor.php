@@ -34,6 +34,6 @@ class KarmaWatcherActor implements WatcherActorInterface
      */
     public function run(\CharlotteDunois\Yasmin\Models\Message $message)
     {
-        $this->client->emit('KarmaWatchMessage', $message);
+//        $this->client->emit('KarmaWatchMessage', $message);
     }
 }
