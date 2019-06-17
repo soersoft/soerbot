@@ -1,9 +1,10 @@
 <?php
 
-namespace SoerBot\Classes\Features;
+namespace SoerBot\Commands\Leaderboard\Features;
 
 use SoerBot\Classes\Feature;
 use CharlotteDunois\Yasmin\Utils\Collection;
+use SoerBot\Classes\User;
 
 class RewardsFeature extends Feature
 {
@@ -16,7 +17,8 @@ class RewardsFeature extends Feature
 
         foreach ($this->store->load() as $userdata) {
             $user = new User($userdata['username']);
-            $user->setRewards($userdata['rewards']);
+
+            $user->addFeature('rewards', new CanUseRewards($userdata['rewards']));
 
             $data[] = $user;
         }

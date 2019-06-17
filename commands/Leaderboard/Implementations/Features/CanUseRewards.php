@@ -1,10 +1,10 @@
 <?php
 
-namespace SoerBot\Classes\Traits;
+namespace SoerBot\Commands\Leaderboard\Features;
 
 use CharlotteDunois\Yasmin\Utils\Collection;
 
-trait HasRewards
+class CanUseRewards
 {
     /**
      * @var Collection
@@ -21,10 +21,10 @@ trait HasRewards
     ];
 
     /**
-     * Sets rewards of the user.
+     * CanUseRewards constructor.
      * @param array $rewards
      */
-    public function setRewards(array $rewards)
+    public function __construct(array $rewards)
     {
         $this->rewards = new Collection($this->validateRewards($rewards));
     }
@@ -144,12 +144,17 @@ trait HasRewards
     /**
      * Returns a string which contains the username and his rewards.
      * @param string $linesDelimiter
-     * @param null $prefix
      * @return string
      */
-    public function toString($linesDelimiter = PHP_EOL, $prefix = null)
+    public function toString($linesDelimiter = PHP_EOL)
     {
-        return ($prefix ?? '') . $this->name . $linesDelimiter . $this->makeRewardsAsString($linesDelimiter);
+        $rewards = '';
+
+        foreach ($this->rewards->all() as $reward) {
+            $rewards .= str_repeat($reward['emoji'], $reward['count']) . $linesDelimiter;
+        }
+
+        return $rewards;
     }
 
     /**
