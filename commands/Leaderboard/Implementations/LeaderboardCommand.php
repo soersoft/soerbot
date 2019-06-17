@@ -2,9 +2,13 @@
 
 namespace SoerBot\Commands\Leaderboard\Implementations;
 
+use SoerBot\Classes\User;
+use SoerBot\Classes\UsersModel;
+use SoerBot\Classes\StoreJSONFile;
 use CharlotteDunois\Livia\LiviaClient;
 use CharlotteDunois\Livia\CommandMessage;
 use CharlotteDunois\Livia\Commands\Command;
+use SoerBot\Commands\Leaderboard\Features\RewardsFeature;
 
 class LeaderboardCommand extends Command
 {
@@ -34,14 +38,16 @@ class LeaderboardCommand extends Command
      */
     public function run(CommandMessage $message, \ArrayObject $args, bool $fromPattern)
     {
-        $users = new UsersModel(new LeaderBoardStoreJSONFile(__DIR__ . '/../Store/leaderboard.json'));
-        $users->load();
+        $store = new StoreJSONFile(__DIR__ . '/../Store/leaderboard.json');
+        $feature = new RewardsFeature($store);
 
-        if ($users->all()->count() === 0) {
-            return $message->say(self::LEADERBOARD_IS_EMPTY);
-        }
+        $users = new UsersModel();
+
+        $users->addFeature('rewards', $feature);
+        $users->feature('rewards')->load();
 
         $leaderboard = $users
+          ->feature('rewards')
           ->all()
           ->sort(function (User $a, User $b) {
               return $b->getPointsAmount() - $a->getPointsAmount();

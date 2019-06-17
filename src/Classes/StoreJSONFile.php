@@ -12,7 +12,7 @@ class StoreJSONFile implements StoreInterface
      */
     protected $file;
 
-    public function __construct($filename = __DIR__ . '/../Store/leaderboard.json')
+    public function __construct($filename)
     {
         $this->file = $filename;
     }
